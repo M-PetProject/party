@@ -1,0 +1,17 @@
+${AnsiColor.RED}=========================================================================
+${AnsiColor.RED} aaaaaaaa    aaa     aaa     aaa    aaaa      aaa                   aaa
+${AnsiColor.RED}    aa       aaa     aaa     aaa              aaa      aaaaaaaa     aaa
+${AnsiColor.BRIGHT_YELLOW}    aa       aaa     aaa     aaa   aaaaaaaaa  aaa           aaa     aaa
+${AnsiColor.BRIGHT_YELLOW}   aaaa    aaaaa     aaa     aaa       aaaa   aaa           aaa  aaaaaa
+${AnsiColor.BRIGHT_YELLOW}   aaaa    aaaaa    aaaa     aaa       aaaa   aaa        aaaaaa  aaaaaa
+${AnsiColor.BRIGHT_GREEN}  aa  aa     aaa    aaaa     aaa      aaaa    aaa       aaaaaa      aaa
+${AnsiColor.BRIGHT_GREEN} aa    aa    aaa   aaa aaa   aaa     aaaa     aaaaaa   aaa          aaa
+${AnsiColor.BRIGHT_GREEN}             aaa  aaa   aaa  aaa    aaaaa     aaaaaa   aaa       aaaaaa
+${AnsiColor.GREEN}    aaaaaaaaaa               aaa   aaa aaa    aaa      aaa       aaaaaa
+${AnsiColor.GREEN}   aaaaaaaaaaaa      aa      aaa  aa     aa   aaa       aaaaaaaa    aaa
+${AnsiColor.GREEN}   aa        aa      aa                       aaa        aaaaaa     aaa
+${AnsiColor.BLUE}   aaaaaaaaaaaa      aaaaaaaaaaa              aaa                   aaa
+${AnsiColor.BLUE}    aaaaaaaaaa       aaaaaaaaaaa              aaa                   aaa
+${AnsiColor.BLUE}=========================================================================
+:: Spring Boot Version - ${spring-boot.version} ::
+${AnsiColor.BLUE}=========================================================================

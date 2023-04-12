@@ -10,6 +10,8 @@
 - username : study
 - password : study
 
+### 테스트 방법
+
 ## 참고자료
 
 - .gitignore 파일을 생성해주는 사이트
