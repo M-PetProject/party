@@ -4,7 +4,9 @@
 <mapper namespace="com.study.party.comm.CommTestDao">
 
     <select id="getTest" resultType="map">
-        select '1' as txt
+        select 'text1' as text_1
+             , 'text2' as text_2
+             , 'text3' as text_3
     </select>
 
 </mapper>

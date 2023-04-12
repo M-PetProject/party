@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                [%d{yyyy-MM-dd HH:mm:ss:SSS}][${PID}][%thread] %logger{0} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!--로그 파일 저장 위치-->
+<!--    <property name="LOG_FILE" value="/home/ec2-user/mkyu/prc/logs/prc.log"/>-->
+
+<!--    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <prudent>true</prudent>-->
+<!--        <file>${LOG_FILE}</file>-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>-->
+<!--                [%d{yyyy-MM-dd HH:mm:ss:SSS}][${PID}][%thread] %logger{0} - %msg%n-->
+<!--            </pattern>-->
+<!--        </encoder>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}</fileNamePattern>-->
+<!--            <maxHistory>10</maxHistory>-->
+<!--            <totalSizeCap>10GB</totalSizeCap>-->
+<!--        </rollingPolicy>-->
+<!--    </appender>-->
+
+    <!--로그 파일 저장 위치-->
+<!--    <property name="STEP_LOG_FILE" value="/home/ec2-user/mkyu//prc/logs/step.log"/>-->
+
+<!--    <appender name="STEP_ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <prudent>true</prudent>-->
+<!--        <file>${STEP_LOG_FILE}</file>-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>-->
+<!--                [%d{yyyy-MM-dd HH:mm:ss:SSS}][${PID}][%thread] %logger{0} - %msg%n-->
+<!--            </pattern>-->
+<!--        </encoder>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>${STEP_LOG_FILE}.%d{yyyy-MM-dd}</fileNamePattern>-->
+<!--            <maxHistory>10</maxHistory>-->
+<!--            <totalSizeCap>10GB</totalSizeCap>-->
+<!--        </rollingPolicy>-->
+<!--    </appender>-->
+
+    <logger name="com.study.party" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="jdbc.sqlonly" level="INFO"/>
+    <logger name="jdbc.sqltiming" level="OFF"/>
+    <logger name="jdbc.audit" level="OFF"/>
+    <logger name="jdbc.resultset" level="OFF"/>
+    <logger name="jdbc.resultsettable" level="INFO"/>
+    <logger name="jdbc.connection" level="OFF"/>
+
+    <root level="warn">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

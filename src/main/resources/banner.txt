@@ -15,3 +15,5 @@ ${AnsiColor.BLUE}    aaaaaaaaaa       aaaaaaaaaaa              aaa              
 ${AnsiColor.BLUE}=========================================================================
 :: Spring Boot Version - ${spring-boot.version} ::
 ${AnsiColor.BLUE}=========================================================================
+
+${AnsiColor.DEFAULT}
