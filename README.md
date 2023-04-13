@@ -15,7 +15,7 @@
   - password : study
 
 - AWS 디비를 사용할 경우
-  - Notion Spring 세팅 방법 참고
+  - Notion [Back-End Spring Boot] 설정 방법
 
 ---
 
