@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.member.MemberDao">
+
+    <select id="getMembers" parameterType="MemberVo" resultType="MemberVo">
+        select /* MemberDao.getMembers */
+               member_idx      as member_idx
+             , member_id       as member_id
+             , member_password as member_password
+             , member_name     as member_name
+          from member_info
+         where 1=1
+        <if test='memberId != null and memberId !="" '>
+           and member_id   like concat('%',#{memberId},'%')
+        </if>
+        <if test='memberName != null and memberName !="" '>
+           and member_name like concat('%',#{memberName},'%')
+        </if>
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getMembersTotCnt" parameterType="MemberVo" resultType="int">
+        select /* MemberDao.getMembersTotCnt */
+               count(*) as tot_cnt
+          from member_info
+         where 1=1
+        <if test='memberId != null and memberId !="" '>
+           and member_id   like concat('%',#{memberId},'%')
+        </if>
+        <if test='memberName != null and memberName !="" '>
+           and member_name like concat('%',#{memberName},'%')
+        </if>
+    </select>
+
+    <select id="getMember" parameterType="MemberVo" resultType="MemberVo">
+        select /* MemberDao.getMember */
+               member_idx      as member_idx
+             , member_id       as member_id
+             , member_password as member_password
+             , member_name     as member_name
+          from member_info
+         where member_idx = #{memberIdx}
+    </select>
+
+    <select id="getMemberByMemberId" parameterType="MemberVo" resultType="MemberVo">
+        select /* MemberDao.getMemberByMemberId */
+               member_idx      as member_idx
+             , member_id       as member_id
+             , member_password as member_password
+             , member_name     as member_name
+          from member_info
+         where member_id = #{memberId}
+    </select>
+
+    <insert id="createMember" parameterType="MemberVo">
+        insert /* MemberDao.createMember */
+          into member_info (
+               member_id
+             , member_password
+             , member_name
+        ) values (
+               #{memberId}
+             , #{memberPassword}
+             , #{memberName}
+        )
+    </insert>
+
+    <update id="updateMember" parameterType="MemberVo">
+        update /* MemberDao.updateMember */
+               member_info
+           set member_name = #{memberName}
+         where member_idx  = #{memberIdx}
+    </update>
+
+    <delete id="deleteMember" parameterType="MemberVo">
+        delete /* MemberDao.deleteMember */
+          from member_info
+         where member_idx  = #{memberIdx}
+    </delete>
+
+</mapper>
