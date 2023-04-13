@@ -13,6 +13,8 @@ spring:
       max-lifetime: 100000
       connection-timeout: 10000
       validation-timeout: 10000
+  config:
+    import: classpath:custom_config.yml
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

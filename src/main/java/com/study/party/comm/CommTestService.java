@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -13,7 +14,7 @@ public class CommTestService {
 
     private final CommTestDao commTestDao;
 
-    public Map getTest() {
+    public List<Map> getTest() {
         return commTestDao.getTest();
     }
 
