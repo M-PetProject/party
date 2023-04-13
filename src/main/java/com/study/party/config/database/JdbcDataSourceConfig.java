@@ -39,6 +39,7 @@ public class JdbcDataSourceConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.study.party.**.vo");
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/static/mappers/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }

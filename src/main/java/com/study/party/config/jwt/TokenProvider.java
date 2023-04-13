@@ -1,6 +1,6 @@
 package com.study.party.config.jwt;
 
-import com.study.party.comm.vo.VoToken;
+import com.study.party.comm.vo.TokenVo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -39,7 +39,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public VoToken generateEntityToken(Authentication authentication) {
+    public TokenVo generateEntityToken(Authentication authentication) {
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -64,7 +64,7 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        return VoToken.builder()
+        return TokenVo.builder()
                       .grantType(BEARER_TYPE)
                       .accessToken(accessToken)
                       .accessTokenExpiresIn(accessTokenExpiresIn.getTime())

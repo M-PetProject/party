@@ -36,8 +36,10 @@
 - 삭제 : delete업무명
 
 ### Field Naming Rule
-- VO 는 _ 을 사용한다
-- 예시 : 회원_번호 => user_no
+- Camel Case 를 사용하여 작성한다
+- 예시 : 
+  - Table : 회원_번호 => user_no
+  - Vo    : userNo
 
 ---
 

@@ -1,12 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.study.party.comm.CommTestDao">
+<mapper namespace="com.study.party.comm.test.CommTestDao">
 
-    <select id="getTest" resultType="map">
-        select test_1 as test_1
+    <select id="getTests" parameterType="CommTestVo" resultType="CommTestVo">
+        select /* CommTestDao.getTests */
+               idx    as idx
+             , test_1 as test_1
              , test_2 as test_2
           from test
+         where 1=1
+        <if test='test1 != null and test1 != ""'>
+           and test_1 like concat('%', #{test1}, '%')
+        </if>
+        <if test='test2 != null and test2 != ""'>
+           and test_2 like concat('%', #{test2}, '%')
+        </if>
+        limit #{limit} offset #{offset}
     </select>
+
+    <select id="getTestsTotCnt" parameterType="CommTestVo" resultType="int">
+        select /* CommTestDao.getTestsTotCnt */
+               count(*) as tot_cnt
+          from test
+         where 1=1
+        <if test='test1 != null and test1 != ""'>
+           and test_1 like concat('%', #{test1}, '%')
+        </if>
+        <if test='test2 != null and test2 != ""'>
+           and test_2 like concat('%', #{test2}, '%')
+        </if>
+    </select>
+
+    <select id="getTest" parameterType="CommTestVo" resultType="CommTestVo">
+        select /* CommTestDao.getTest */
+               idx    as idx
+             , test_1 as test_1
+             , test_2 as test_2
+          from test
+         where idx = #{idx}
+    </select>
+
+    <insert id="createTest" parameterType="CommTestVo">
+        insert /* CommTestDao.createTest */
+          into test (
+               test_1
+             , test_2
+        ) values (
+               #{test1}
+             , #{test2}
+        )
+    </insert>
+
+    <update id="updateTest" parameterType="CommTestVo">
+        update /* CommTestDao.updateTest */
+               test
+           set test_1 = #{test1}
+             , test_2 = #{test2}
+         where idx = #{idx}
+    </update>
+
+    <delete id="deleteTest" parameterType="CommTestVo">
+        delete /* CommTestDao.deleteTest */
+               from test
+         where idx = #{idx}
+    </delete>
 
 </mapper>
