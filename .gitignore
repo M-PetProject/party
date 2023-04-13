@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,intellij,jetbrains,eclipse,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,intellij,jetbrains,eclipse,gradle
 
+src/main/resources/custom_config.yml
+
 ### Eclipse ###
 .metadata
 bin/
