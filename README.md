@@ -83,7 +83,7 @@ CommResponseVo.builder()
 CommResponseVo.builder()
               .body(결과 Data)
               .build()
-              .Unauthorized();
+              .unauthorized();
 
 // 404 : 서버는 요청받은 리소스를 찾을 수 없습니다. 
 //       브라우저에서는 알려지지 않은 URL을 의미합니다. 
