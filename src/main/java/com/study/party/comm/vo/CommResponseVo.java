@@ -26,6 +26,11 @@ public class CommResponseVo {
                              .header("res_tm", getFullTime())
                              .body(body);
     }
+    public ResponseEntity Unauthorized() {
+        return ResponseEntity.status(401)
+                .header("res_tm", getFullTime())
+                .body(body);
+    }
     public ResponseEntity notFound() {
         return ResponseEntity.status(404)
                              .header("res_tm", getFullTime())
