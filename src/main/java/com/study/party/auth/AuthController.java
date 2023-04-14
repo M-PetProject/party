@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.study.party.comm.util.StringUtil.isEmptyObj;
+
 @RestController
 @RequestMapping("auth")
 @RequiredArgsConstructor
@@ -28,6 +30,9 @@ public class AuthController {
         HttpServletRequest request,
         @Parameter(name="signupReqVo", required=true, description="회원가입을 위한 사용자 ID, 비밀번호, 이름") @RequestBody SignupReqVo signupReqVo
     ) {
+        if ( isEmptyObj(signupReqVo.getMemberId()) || isEmptyObj(signupReqVo.getMemberName()) || isEmptyObj(signupReqVo.getMemberPassword()) ) {
+            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        }
         return authService.signup(signupReqVo);
     }
 
@@ -37,6 +42,9 @@ public class AuthController {
         HttpServletRequest request,
         @Parameter(name="loginReqVo", required=true, description="로그인을 위한 사용자 ID, 비밀번호") @RequestBody LoginReqVo loginReqVo
     ) {
+        if ( isEmptyObj(loginReqVo.getMemberId()) || isEmptyObj(loginReqVo.getMemberPassword()) ) {
+            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        }
         return authService.login(loginReqVo);
     }
 }
