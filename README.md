@@ -27,6 +27,8 @@
 
 ### 업무 단위로 package 생성
 
+- controller, service, dao 단위로 package 를 구성하지 않고
+- 업무 단위로 package 를 구성
 - 예시:) 멤버 관련 업무는 com.study.party.member
 
 ```
