@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.comm.code.CommCodeDao">
+
+    <select id="getCommGrpCodes" parameterType="CommGrpCodeVo" resultType="CommGrpCodeVo">
+        select /* CommCodeDao.getCommGrpCodes */
+               grp_cd      as grp_cd
+             , grp_cd_nm   as grp_cd_nm
+             , grp_cd_desc as grp_cd_desc
+             , use_yn      as use_yn
+          from cm_grp_cd
+         where 1=1
+        <if test=' grpCd != null and grpCd != "" '>
+           and grp_cd      = #{grpCd}
+        </if>
+        <if test=' grpCdNm != null and grpCdNm != "" '>
+           and grp_cd_nm   = #{grpCdNm}
+        </if>
+        <if test=' grpCdDesc != null and grpCdDesc != "" '>
+           and grp_cd_desc = #{grpCdDesc}
+        </if>
+        <if test=' useYn != null and useYn != "" '>
+           and use_yn      = #{useYn}
+        </if>
+    </select>
+
+    <select id="getCommGrpCode" parameterType="CommGrpCodeVo" resultType="CommGrpCodeVo">
+        select /* CommCodeDao.getCommGrpCodes */
+               grp_cd      as grp_cd
+             , grp_cd_nm   as grp_cd_nm
+             , grp_cd_desc as grp_cd_desc
+             , use_yn      as use_yn
+          from cm_grp_cd
+         where grp_cd      = #{grpCd}
+    </select>
+
+    <insert id="createCommGrpCode" parameterType="CommGrpCodeVo">
+        insert /* CommCodeDao.createCommGrpCode */
+          into cm_grp_cd (
+               grp_cd
+             , grp_cd_nm
+             , grp_cd_desc
+             , use_yn
+          ) values (
+               #{grpCd}
+             , #{grpCdNm}
+             , #{grpCdDesc}
+             , #{useYn}
+        )
+    </insert>
+
+    <update id="updateCommGrpCode" parameterType="CommGrpCodeVo">
+        update /* CommCodeDao.updateCommGrpCode */
+               cm_grp_cd
+           set upd_dtm     = now()
+             , grp_cd_nm   = #{grpCdNm}
+             , grp_cd_desc = #{grpCdDesc}
+             , use_yn      = #{useYn}
+         where grp_cd      = #{grpCd}
+    </update>
+
+    <delete id="deleteCommGrpCode" parameterType="CommGrpCodeVo">
+        delete /* CommCodeDao.deleteCommGrpCode */
+          from cm_grp_cd
+         where grp_cd      = #{grpCd}
+    </delete>
+
+    <select id="getCommCodes" parameterType="CommCodeVo" resultType="CommCodeVo">
+        select /* CommCodeDao.getCommCodes */
+               grp_cd  as grp_cd
+             , cd      as cd
+             , cm_nm   as cm_nm
+             , cd_desc as cd_desc
+             , cd_val  as cd_val
+             , use_yn  as use_yn
+          from cm_cd
+         where 1=1
+        <if test=' grpCd != null and grpCd != "" '>
+           and grp_cd  = #{grpCd}
+        </if>
+        <if test=' cd != null and cd != "" '>
+           and cd      = #{cd}
+        </if>
+        <if test=' cmNm != null and cmNm != "" '>
+           and cm_nm   = #{cmNm}
+        </if>
+        <if test=' cdDesc != null and cdDesc != "" '>
+           and cd_desc = #{cdDesc}
+        </if>
+        <if test=' cdVal != null and cdVal != "" '>
+           and cd_val  = #{cdVal}
+        </if>
+        <if test=' useYn != null and useYn != "" '>
+           and use_yn  = #{useYn}
+        </if>
+    </select>
+
+    <select id="getCommCode" parameterType="CommCodeVo" resultType="CommCodeVo">
+        select /* CommCodeDao.getCommCodes */
+               grp_cd  as grp_cd
+             , cd      as cd
+             , cm_nm   as cm_nm
+             , cd_desc as cd_desc
+             , cd_val  as cd_val
+             , use_yn  as use_yn
+          from cm_cd
+         where grp_cd  = #{grpCd}
+           and cd      = #{cd}
+    </select>
+
+    <insert id="createCommCode" parameterType="CommCodeVo">
+        insert /* CommCodeDao.createCommCode */
+          into cm_cd (
+               grp_cd
+             , cd
+             , cm_nm
+             , cd_desc
+             , cd_val
+             , use_yn
+        ) values (
+               #{grpCd}
+             , #{cd}
+             , #{cmNm}
+             , #{cdDesc}
+             , #{cdVal}
+             , #{useYn}
+        )
+    </insert>
+
+    <update id="updateCommCode" parameterType="CommCodeVo">
+        update /* CommCodeDao.updateCommCode */
+               cm_cd
+           set upd_dtm  = now()
+             , cm_nm    = #{cmNm}
+             , cd_desc  = #{cdDesc}
+             , cd_val   = #{cdVal}
+             , use_yn   = #{useYn}
+         where grp_cd  = #{grpCd}
+           and cd      = #{cd}
+    </update>
+
+    <delete id="deleteCommCode" parameterType="CommCodeVo">
+        delete /* CommCodeDao.deleteCommCode */
+          from cm_cd
+        where grp_cd  = #{grpCd}
+          and cd      = #{cd}
+    </delete>
+
+</mapper>

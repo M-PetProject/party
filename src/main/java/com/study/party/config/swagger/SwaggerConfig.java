@@ -23,16 +23,15 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.study.party"))
-                .paths(PathSelectors.any())
-                .build()
-                .groupName("all")
-                .useDefaultResponseMessages(false)
-                .apiInfo(apiInfo());
+        return new Docket(DocumentationType.OAS_30).securityContexts(Arrays.asList(securityContext()))
+                                                   .securitySchemes(Arrays.asList(apiKey()))
+                                                   .select()
+                                                   .apis(RequestHandlerSelectors.basePackage("com.study.party"))
+                                                   .paths(PathSelectors.any())
+                                                   .build()
+                                                   .groupName("all")
+                                                   .useDefaultResponseMessages(false)
+                                                   .apiInfo(apiInfo());
     }
 
 

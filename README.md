@@ -21,16 +21,85 @@
 
 ## 개발 가이드
 
+---
+
+## Package 생성 규칙
+
+### 업무 단위로 package 생성
+
+- 예시:) 멤버 관련 업무는 com.study.party.member
+
+```
+com.study.party
+  member
+    MemberController
+    MemberService
+    MemberDao (MyBatis 의 경우 package 내 Dao 를 생성합니다)
+    vo
+      MemberVo
+  jpa 
+    entity
+      MemberEntity (JPA 의 경우 entity 의 경로를 asterisk(*)으로 줄 수 없는 번거로움이 있기 때문에 하나로 뭉쳐놨습니다)
+    repositoy
+      MemberRepository (JPA 의 경우 repository 의 경로를 asterisk(*)으로 줄 수 없는 번거로움이 있기 때문에 하나로 뭉쳐놨습니다)
+```
+
+---
+
+## Rest API URL Naming Rule
+
+- URL 에 자원에 대한 행위를 표시하지 않는다
+  - GET    : 조회
+    - 예시:) 회원 목록 조회 
+      - GET : /get/member/list (X)
+      - GET : /members         (O)
+    - 예시:) 회원 단건 조회
+      - GET : /get/member (X)
+      - GET : /member/{member_id} or /member?member_id=abcde (O)
+  - POST   : 생성 
+    - 예시:) 회원 정보 생성
+      - POST : /create/member (X)
+      - POST : /member        (O)
+  - PUT    : 수정
+    - 예시:) 회원 정보 수정
+      - PUT : /update/member (X)
+      - PUT : /member        (O)
+  - DELETE : 삭제
+    - 예시:) 회원 정보 삭제
+      - DELETE : /delete/member (X)
+      - DELETE : /member/{member_id} or /member?member_id=abcde (O)
+- URL 마지막 문자로 / 를 포함하지 않는다
+  - 예시:) GET : /member/{member_id}/ (X)
+  - 예시:) GET : /member/{member_id}  (O)
+- URL 경로에는 소문자로 작성한다
+  - 예시:) GET : /grpCds  (X)
+  - 예시:) GET : /grp-cds (O)
+- 밑줄(_)은 사용하지 않고 하이픈(-)을 사용한다
+  - 예시:) GET : /grp_cds (X)
+  - 예시:) GET : /grp-cds (O)
+- 리소스 간의 관계는 / 로 표현한다
+  - 특정 사용자가 좋아요를 표시한 목록을 조회하는 API의 경우
+    - 예시:) GET : /member-likes/{member_id} (X)
+    - 예시:) GET : /member/{member_id}/likes (O)
+
+---
+
+## Naming Rule
+
 ### Class Naming Rule
 - Camel Case 를 사용하여 작성한다
 - Controller => 업무명Controller (예시: CommCodeController)
 - Service => 업무명Service (예시: CommCodeService)
 - DAO => 업무명Dao (예시: CommCodeDAO)
+- Vo => 업무명Vo (예시: CommCodeVo)
 - Repository(JPA) => 업무명Repository (예시: CommCodeRepository)
+- Entity(JPA) => 업무명Entity (예시: CommCodeEntity)
 
 ### Method Naming Rule
 - Camel Case 를 사용하여 작성한다
-- 조회 : get업무명 (예시 : getMember)
+- 조회 : 
+  - 목록 조회 :get업무명복수형 (예시 : getMembers)
+  - 단건 조회 :get업무명단수형 (예시 : getMember)
 - 생성 : create없무명 (예시 : createMember)
 - 수정 : update업무명 (예시 : updateMember)
 - 삭제 : delete업무명 (예시 : deleteMember)
@@ -112,6 +181,7 @@ CommResponseVo.builder()
   - Junit   : src/test/java/com/study/party 아래 class 생성 후 사용
 - Controller
   - Swagger : http://localhost:8080/swagger-ui/index.html
+    - Authorize : Bearer+" "+토큰값(예시:)Bearer 토큰값)
 
 ---
 
@@ -119,3 +189,5 @@ CommResponseVo.builder()
 
 - .gitignore 파일을 생성해주는 사이트
   - https://www.toptal.com/developers/gitignore/
+- Rest API 
+  - https://benggri.tistory.com/124
