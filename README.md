@@ -92,7 +92,7 @@ com.study.party
 - Camel Case 를 사용하여 작성한다
 - Controller => 업무명Controller (예시: CommCodeController)
 - Service => 업무명Service (예시: CommCodeService)
-- DAO => 업무명Dao (예시: CommCodeDAO)
+- DAO => 업무명Dao (예시: CommCodeDao)
 - Vo => 업무명Vo (예시: CommCodeVo)
 - Repository(JPA) => 업무명Repository (예시: CommCodeRepository)
 - Entity(JPA) => 업무명Entity (예시: CommCodeEntity)

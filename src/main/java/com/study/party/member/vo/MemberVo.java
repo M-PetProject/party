@@ -1,6 +1,7 @@
 package com.study.party.member.vo;
 
 import com.study.party.comm.vo.CommPaginationReqVo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +11,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "멤버 VO")
 public class MemberVo extends CommPaginationReqVo {
 
+    @Schema(description="회원 table PK idx", example="1")
     private String memberIdx;
+    @Schema(description="회원 table 컬럼 member_id", example="string")
     private String memberId;
+    @Schema(description="회원 table 컬럼 member_password", example="string")
     private String memberPassword;
+    @Schema(description="회원 table 컬럼 member_name", example="string")
     private String memberName;
 
 }

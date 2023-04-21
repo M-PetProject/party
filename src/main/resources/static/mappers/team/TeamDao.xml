@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.team.TeamDao">
+
+    <select id="getTeams" parameterType="TeamVo" resultType="TeamVo">
+        select /* TeamDao.getTeams */
+               team_idx                                      as team_idx
+             , team_nm                                       as team_nm
+             , team_desc                                     as team_desc
+             , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
+             , join_code                                     as join_code
+          from team
+         where 1=1
+        <if test=' teamIdx != null and teamIdx != "" '>
+           and team_idx = #{teamIdx}
+        </if>
+        <if test=' teamNm != null and teamNm != "" '>
+           and team_nm  = #{teamNm}
+        </if>
+    </select>
+
+    <select id="getTeam" parameterType="TeamVo" resultType="TeamVo">
+        select /* TeamDao.getTeam */
+               team_idx                                      as team_idx
+             , team_nm                                       as team_nm
+             , team_desc                                     as team_desc
+             , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
+             , join_code                                     as join_code
+          from team
+         where team_idx = #{teamIdx}
+    </select>
+
+    <select id="getTeamByJoinCode" parameterType="TeamVo" resultType="TeamVo">
+        select /* TeamDao.getTeamByJoinCode */
+               team_idx                                      as team_idx
+             , team_nm                                       as team_nm
+             , team_desc                                     as team_desc
+             , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
+             , join_code                                     as join_code
+          from team
+         where join_code = #{joinCode}
+    </select>
+
+    <insert id="createTeam" parameterType="TeamVo" >
+        insert /* TeamDao.createTeam */
+          into team (
+               team_nm
+             , team_desc
+             , join_code
+        ) values (
+               #{teamNm}
+             , #{teamDesc}
+             , #{joinCode}
+        )
+    </insert>
+
+    <update id="updateTeam" parameterType="TeamVo" >
+        update /* TeamDao.updateTeam */
+               team
+           set team_nm   = #{teamNm}
+             , team_desc = #{teamDesc}
+             , join_code = #{joinCode}
+         where team_idx = #{teamIdx}
+    </update>
+
+    <delete id="deleteTeam" parameterType="TeamVo" >
+        delete /* TeamDao.deleteTeam */
+          from team
+         where team_idx = #{teamIdx}
+    </delete>
+
+</mapper>
