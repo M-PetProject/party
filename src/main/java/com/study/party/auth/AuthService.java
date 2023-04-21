@@ -56,6 +56,7 @@ public class AuthService {
         TokenVo tokenVo = tokenProvider.generateEntityToken(authentication);
         return CommResponseVo.builder()
                              .body(LoginResVo.builder()
+                                             .memberIdx(dbMember.getMemberIdx())
                                              .memberId(loginReqVo.getMemberId())
                                              .memberName(dbMember.getMemberName())
                                              .accessToken(tokenVo.getAccessToken())

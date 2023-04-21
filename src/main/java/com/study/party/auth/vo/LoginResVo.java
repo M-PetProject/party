@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Schema(description = "회원 로그인 응답 VO")
 public class LoginResVo {
+    private long memberIdx;
     private String memberId;
     private String memberName;
     private String accessToken;
