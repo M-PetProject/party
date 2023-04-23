@@ -53,7 +53,7 @@ public class AuthService {
             return CommResponseVo.builder().body("로그인 정보가 일치하지 않습니다").build().badRequest();
         }
         MemberVo dbMember = memberService.getMemberByMemberId(loginReqVo.toMember());
-        TokenVo tokenVo = tokenProvider.generateEntityToken(authentication);
+        TokenVo tokenVo = tokenProvider.generateEntityToken(authentication, dbMember);
         return CommResponseVo.builder()
                              .body(LoginResVo.builder()
                                              .memberIdx(dbMember.getMemberIdx())

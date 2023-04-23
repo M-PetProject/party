@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TokenVo {
 
+    private long memberIdx;
     private String grantType;
     private String accessToken;
     private String refreshToken;

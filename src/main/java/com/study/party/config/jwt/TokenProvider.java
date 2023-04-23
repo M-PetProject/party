@@ -1,6 +1,8 @@
 package com.study.party.config.jwt;
 
+import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.TokenVo;
+import com.study.party.member.vo.MemberVo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,6 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static com.study.party.comm.util.StringUtil.nvl;
 import static com.study.party.config.jwt.secret.JwtSecret.getKey;
 
 @Slf4j
@@ -39,20 +42,19 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenVo generateEntityToken(Authentication authentication) {
-        // 권한들 가져오기
-        String authorities = authentication.getAuthorities()
-                                           .stream()
-                                           .map(GrantedAuthority::getAuthority)
-                                           .collect(Collectors.joining(","));
-
+    public TokenVo generateEntityToken(Authentication authentication, MemberVo memberVo) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(memberVo.getMemberIdx()));
+        claims.put("member_idx"  , memberVo.getMemberIdx());
+        claims.put("member_id"   , memberVo.getMemberId() );
+        claims.put("member_name" , memberVo.getMemberName() );
         long now = (new Date()).getTime();
 
+        System.out.println("authentication.getName() :: "+authentication.getName());
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                                  .setSubject(authentication.getName())       // payload "sub": "name"
-                                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                                 .setClaims(claims)
                                  .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
                                  .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
                                  .compact();
@@ -60,12 +62,13 @@ public class TokenProvider {
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                                   .setSubject(authentication.getName())       // payload "sub": "name"
-                                  .claim(AUTHORITIES_KEY, authorities)
+                                  .setClaims(claims)
                                   .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                                   .signWith(key, SignatureAlgorithm.HS512)
                                   .compact();
 
         return TokenVo.builder()
+                      .memberIdx(memberVo.getMemberIdx())
                       .grantType(BEARER_TYPE)
                       .accessToken(accessToken)
                       .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
@@ -76,20 +79,21 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
-
-        if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
-
-        // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                                                                   .map(SimpleGrantedAuthority::new)
-                                                                   .collect(Collectors.toList());
+        System.out.println("claims :: "+claims.toString());
+        System.out.println("member_idx :: " + claims.get("member_idx") );
+        System.out.println("member_id :: " + claims.get("member_id") );
 
         // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+//        UserDetails principal = new User(claims.getSubject(), "", Arrays.asList());
+        CustomUserDetailsVo principal = new CustomUserDetailsVo(
+                Long.parseLong(nvl(claims.get("member_idx"), "0")),
+                nvl(claims.get("member_id"), " "),
+                nvl(claims.get("member_name"), " "),
+                " ",
+                Arrays.asList()
+        );
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", Arrays.asList());
     }
 
     public boolean validateToken(String token) {

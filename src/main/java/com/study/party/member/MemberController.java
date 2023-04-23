@@ -1,6 +1,7 @@
 package com.study.party.member;
 
 
+import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.code.vo.CommGrpCodeVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.member.vo.MemberVo;
@@ -21,6 +22,25 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @ApiResponses({
+            @ApiResponse(responseCode="200", description="OK"),
+            @ApiResponse(responseCode="400", description="BAD Request"),
+            @ApiResponse(responseCode="404", description="NOT FOUND"),
+            @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
+    })
+    @Operation(summary = "로그인 회원 정보 조회 API", description = "로그인 사용자의 Token 값 기반으로 테이블 member_info 의 데이터 1건의 정보를 조회합니다")
+    @GetMapping("/member")
+    public ResponseEntity getMember(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        System.out.println("customUserDetailsVo.getMemberIdx() :: "+customUserDetailsVo.getMemberIdx());
+        return CommResponseVo.builder()
+                             .body(memberService.getMemberByMemberId(MemberVo.builder().memberId(customUserDetailsVo.getMemberId()).build()))
+                             .build()
+                             .ok();
+    }
 
     @ApiResponses({
             @ApiResponse(responseCode="200", description="OK"),

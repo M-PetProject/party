@@ -1,5 +1,6 @@
 package com.study.party.auth;
 
+import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberService memberService;
 
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+//    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+    public CustomUserDetailsVo loadUserByUsername(String memberId) throws UsernameNotFoundException {
         MemberVo dbMember = memberService.getMemberByMemberId(MemberVo.builder().memberId(memberId).build());
         if ( isEmptyObj(dbMember) ) {
             throw new UsernameNotFoundException("존재하지 않는 회원입니다.");
@@ -34,11 +36,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         return createUserDetails(dbMember);
     }
 
-    private UserDetails createUserDetails(MemberVo dbMember) {
+//    private UserDetails createUserDetails(MemberVo dbMember) {
+    private CustomUserDetailsVo createUserDetails(MemberVo dbMember) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(dbMember.getMemberId());
-        return new User(
-                dbMember.getMemberName(), dbMember.getMemberPassword(), Collections.singleton(grantedAuthority)
+        return new CustomUserDetailsVo(
+                dbMember.getMemberIdx(),
+                dbMember.getMemberId(),
+                dbMember.getMemberName(),
+                dbMember.getMemberPassword(),
+                Collections.singleton(grantedAuthority)
         );
+//        return new User(
+//                dbMember.getMemberId(), dbMember.getMemberPassword(), Collections.singleton(grantedAuthority)
+//        );
     }
 
 }
