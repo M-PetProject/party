@@ -21,11 +21,12 @@ public interface MemberDao {
 
     List<MemberAllergyVo> getMemberAllergyVos(MemberAllergyVo memberAllergyVo);
     int createMemberAllergyVo(MemberAllergyVo memberAllergyVo);
-
+    int deleteMemberAllergyVo(MemberAllergyVo memberAllergyVo);
     List<MemberHateFoodVo> getMemberHateFoodVos(MemberHateFoodVo memberHateFoodVo);
     int createMemberHateFoodVo(MemberHateFoodVo memberHateFoodVo);
-
+    int deleteMemberHateFoodVo(MemberHateFoodVo memberHateFoodVo);
     List<MemberLikeFoodVo> getMemberLikeFoodVos(MemberLikeFoodVo memberLikeFoodVo);
     int createMemberLikeFoodVo(MemberLikeFoodVo memberLikeFoodVo);
+    int deleteMemberLikeFoodVo(MemberLikeFoodVo memberLikeFoodVo);
 
 }

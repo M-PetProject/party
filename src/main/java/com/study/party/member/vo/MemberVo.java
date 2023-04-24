@@ -1,5 +1,6 @@
 package com.study.party.member.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.party.comm.vo.CommPaginationReqVo;
 import com.study.party.team_member.vo.TeamMemberVo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ public class MemberVo extends CommPaginationReqVo {
     private long memberIdx;
     @Schema(description="회원 table 컬럼 member_id", example="string")
     private String memberId;
+    @JsonIgnore
     @Schema(description="회원 table 컬럼 member_password", example="string")
     private String memberPassword;
     @Schema(description="회원 table 컬럼 member_name", example="string")

@@ -144,4 +144,23 @@
              , #{foodIdx}
         )
     </insert>
+
+    <delete id="deleteMemberAllergyVo" parameterType="MemberAllergyVo">
+        delete /* MemberDao.deleteMemberAllergyVo */
+          from member_allergy
+         where member_idx = #{memberIdx}
+    </delete>
+
+    <delete id="deleteMemberHateFoodVo" parameterType="MemberHateFoodVo">
+        delete /* MemberDao.deleteMemberHateFoodVo */
+          from member_hate_food
+         where member_idx = #{memberIdx}
+    </delete>
+
+    <delete id="deleteMemberLikeFoodVo" parameterType="MemberLikeFoodVo">
+        delete /* MemberDao.deleteMemberLikeFoodVo */
+          from member_like_food
+         where member_idx = #{memberIdx}
+    </delete>
+
 </mapper>

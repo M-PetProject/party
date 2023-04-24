@@ -6,6 +6,7 @@ import com.study.party.member.vo.MemberHateFoodVo;
 import com.study.party.member.vo.MemberLikeFoodVo;
 import com.study.party.member.vo.MemberVo;
 import com.study.party.team_member.TeamMemberService;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,20 @@ public class MemberService {
     @Transactional
     public int createMember(MemberVo memberVo) {
         memberDao.createMember(memberVo);
+        createMemberEtc(memberVo);
+        return 1;
+    }
+
+    public int updateMember(MemberVo memberVo) {
+        memberDao.updateMember(memberVo);
+        memberDao.deleteMemberAllergyVo(memberVo.toAllergyVo());
+        memberDao.deleteMemberHateFoodVo(memberVo.toHateFoodVo());
+        memberDao.deleteMemberLikeFoodVo(memberVo.toLikeFoodVo());
+        createMemberEtc(memberVo);
+        return 1;
+    }
+
+    public int createMemberEtc(MemberVo memberVo) {
         for (MemberAllergyVo memberAllergyVo : memberVo.getMemberAllergyVos() ) {
             memberAllergyVo.setMemberIdx(memberVo.getMemberIdx());
             memberDao.createMemberAllergyVo(memberAllergyVo);
@@ -69,10 +84,6 @@ public class MemberService {
             memberDao.createMemberLikeFoodVo(memberLikeFoodVo);
         }
         return 1;
-    }
-
-    public int updateMember(MemberVo memberVo) {
-        return memberDao.updateMember(memberVo);
     }
 
     public int deleteMember(MemberVo memberVo) {

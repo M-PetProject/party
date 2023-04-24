@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +28,23 @@ public class MemberController {
         System.out.println("customUserDetailsVo.getMemberIdx() :: "+customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
                              .body(memberService.getMember(MemberVo.builder().memberIdx(customUserDetailsVo.getMemberIdx()).build()))
+                             .build()
+                             .ok();
+    }
+
+    @Operation(summary = "로그인 회원 정보 수정 API", description = "로그인 사용자의 Token 값 기반으로 변경 정보를 파라미터로 전달 받아 테이블 member_info 의 데이터 1건의 정보를 수정합니다")
+    @PutMapping("/member")
+    public ResponseEntity<MemberVo> getMember(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @RequestBody MemberVo memberVo
+    ) {
+        if ( isEmptyObj(memberVo.getMemberId()) || isEmptyObj(memberVo.getMemberName()) ) {
+            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        }
+        memberVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        return CommResponseVo.builder()
+                             .body(memberService.updateMember(memberVo))
                              .build()
                              .ok();
     }
