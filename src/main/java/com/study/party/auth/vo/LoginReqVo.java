@@ -15,7 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @Schema(description = "회원 로그인 요청 VO")
 public class LoginReqVo {
 
+    @Schema(description="회원 로그인 시 요청 회원 ID", required=true)
     private String memberId;
+    @Schema(description="회원 로그인 시 요청 회원 비밀번호", required=true)
     private String memberPassword;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
