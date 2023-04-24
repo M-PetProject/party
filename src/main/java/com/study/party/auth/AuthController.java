@@ -25,7 +25,7 @@ public class AuthController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원 ID 기반 정보 조회 API", description = "테이블 member_info 의 유니크 키인 member_id 를 파라미터로 전달받아 멤버 정보를 조회합니다")
+    @Operation(summary = "회원 가입 시 ID 중보체크를 위한 회원 ID 기반 정보 조회 API", description = "테이블 member_info 의 유니크 키인 member_id 를 패스로 전달받아 멤버 정보를 조회합니다")
     @GetMapping("/member/{member_id}")
     public ResponseEntity<MemberVo> getMemberByMemberId(
         HttpServletRequest request,
@@ -60,4 +60,5 @@ public class AuthController {
         }
         return authService.login(loginReqVo);
     }
+
 }
