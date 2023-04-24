@@ -6,6 +6,7 @@ import com.study.party.comm.code.vo.CommGrpCodeVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +35,7 @@ public class MemberController {
     ) {
         System.out.println("customUserDetailsVo.getMemberIdx() :: "+customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
-                             .body(memberService.getMemberByMemberId(MemberVo.builder().memberId(customUserDetailsVo.getMemberId()).build()))
+                             .body(memberService.getMember(MemberVo.builder().memberIdx(customUserDetailsVo.getMemberIdx()).build()))
                              .build()
                              .ok();
     }

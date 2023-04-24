@@ -1,5 +1,6 @@
 package com.study.party.config.swagger;
 
+import com.study.party.auth.vo.CustomUserDetailsVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class SwaggerConfig {
                                                    .globalResponses(HttpMethod.POST, defaultResponses)
                                                    .globalResponses(HttpMethod.PUT, defaultResponses)
                                                    .globalResponses(HttpMethod.DELETE, defaultResponses)
+                                                   .ignoredParameterTypes(CustomUserDetailsVo.class)
                                                    .select()
                                                    .apis(RequestHandlerSelectors.basePackage("com.study.party"))
                                                    .paths(PathSelectors.any())
