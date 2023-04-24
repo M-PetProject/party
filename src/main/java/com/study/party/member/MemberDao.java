@@ -1,5 +1,8 @@
 package com.study.party.member;
 
+import com.study.party.member.vo.MemberAllergyVo;
+import com.study.party.member.vo.MemberHateFoodVo;
+import com.study.party.member.vo.MemberLikeFoodVo;
 import com.study.party.member.vo.MemberVo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +19,7 @@ public interface MemberDao {
     int updateMember(MemberVo memberVo);
     int deleteMember(MemberVo memberVo);
 
+    List<MemberAllergyVo> getMemberAllergyVos(MemberAllergyVo memberAllergyVo);
+    List<MemberHateFoodVo> getMemberHateFoodVos(MemberHateFoodVo memberHateFoodVo);
+    List<MemberLikeFoodVo> getMemberLikeFoodVos(MemberLikeFoodVo memberLikeFoodVo);
 }

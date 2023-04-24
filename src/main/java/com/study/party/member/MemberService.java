@@ -1,6 +1,9 @@
 package com.study.party.member;
 
 import com.study.party.comm.vo.CommPaginationResVo;
+import com.study.party.member.vo.MemberAllergyVo;
+import com.study.party.member.vo.MemberHateFoodVo;
+import com.study.party.member.vo.MemberLikeFoodVo;
 import com.study.party.member.vo.MemberVo;
 import com.study.party.team_member.TeamMemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +32,22 @@ public class MemberService {
 
     public MemberVo getMember(MemberVo memberVo) {
         MemberVo result = memberDao.getMember(memberVo);
-        result.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(result.getMemberIdx()));
+        getMemberInfoEtc(result);
         return result;
     }
 
     public MemberVo getMemberByMemberId(MemberVo memberVo) {
         MemberVo result = memberDao.getMemberByMemberId(memberVo);
-        result.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(result.getMemberIdx()));
+        getMemberInfoEtc(result);
         return result;
+    }
+
+    private MemberVo getMemberInfoEtc(MemberVo memberVo) {
+        memberVo.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(memberVo.getMemberIdx()));
+        memberVo.setMemberAllergyVos(memberDao.getMemberAllergyVos(memberVo.toAllergyVo()));
+        memberVo.setMemberHateFoodVos(memberDao.getMemberHateFoodVos(memberVo.toHateFoodVo()));
+        memberVo.setMemberLikeFoodVos(memberDao.getMemberLikeFoodVos(memberVo.toLikeFoodVo()));
+        return memberVo;
     }
 
     public int createMember(MemberVo memberVo) {

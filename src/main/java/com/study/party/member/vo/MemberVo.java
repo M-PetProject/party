@@ -33,7 +33,18 @@ public class MemberVo extends CommPaginationReqVo {
     @Schema(description="회원 좋아하는 음식 목록")
     private List<MemberLikeFoodVo> memberLikeFoodVos;
 
-
     @Schema(description="회원 소속 팀 목록")
     private List<TeamMemberVo> teamMemberVos;
+
+    public MemberAllergyVo toAllergyVo() {
+        return MemberAllergyVo.builder().memberIdx(this.memberIdx).build();
+    }
+    public MemberHateFoodVo toHateFoodVo() {
+        return MemberHateFoodVo.builder().memberIdx(this.memberIdx).build();
+    }
+    public MemberLikeFoodVo toLikeFoodVo() {
+        return MemberLikeFoodVo.builder().memberIdx(this.memberIdx).build();
+    }
+
+
 }

@@ -79,4 +79,37 @@
          where member_idx  = #{memberIdx}
     </delete>
 
+    <select id="getMemberAllergyVos" parameterType="MemberAllergyVo" resultType="MemberAllergyVo">
+        select /* MemberDao.getMemberAllergyVos */
+               m.member_allergy_idx as member_allergy_idx
+             , m.member_idx         as member_idx
+             , m.allergy_idx        as allergy_idx
+             , d1.allergy_nm        as allergy_nm
+          from            member_allergy  m
+               inner join cm_allergy     d1 on m.allergy_idx = d1.allergy_idx
+         where m.member_idx = #{memberIdx}
+    </select>
+
+    <select id="getMemberHateFoodVos" parameterType="MemberHateFoodVo" resultType="MemberHateFoodVo">
+        select /* MemberDao.getMemberHateFoodVos */
+               m.member_hate_food_idx as member_hate_food_idx
+             , m.member_idx           as member_idx
+             , m.food_idx             as food_idx
+             , d1.food_nm             as food_nm
+          from            member_hate_food  m
+               inner join cm_food          d1 on m.food_idx = d1.food_idx
+         where m.member_idx = #{memberIdx}
+    </select>
+
+    <select id="getMemberLikeFoodVos" parameterType="MemberLikeFoodVo" resultType="MemberLikeFoodVo">
+        select /* MemberDao.getMemberLikeFoodVos */
+               m.member_like_food_idx as member_like_food_idx
+             , m.member_idx           as member_idx
+             , m.food_idx             as food_idx
+             , d1.food_nm             as food_nm
+          from            member_like_food  m
+               inner join cm_food          d1 on m.food_idx = d1.food_idx
+         where m.member_idx = #{memberIdx}
+    </select>
+
 </mapper>
