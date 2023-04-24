@@ -9,6 +9,7 @@ import com.study.party.team_member.TeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,8 +51,24 @@ public class MemberService {
         return memberVo;
     }
 
+    @Transactional
     public int createMember(MemberVo memberVo) {
-        return memberDao.createMember(memberVo);
+        memberDao.createMember(memberVo);
+        for (MemberAllergyVo memberAllergyVo : memberVo.getMemberAllergyVos() ) {
+            memberAllergyVo.setMemberIdx(memberVo.getMemberIdx());
+            memberDao.createMemberAllergyVo(memberAllergyVo);
+        }
+
+        for (MemberHateFoodVo memberHateFoodVo : memberVo.getMemberHateFoodVos() ) {
+            memberHateFoodVo.setMemberIdx(memberVo.getMemberIdx());
+            memberDao.createMemberHateFoodVo(memberHateFoodVo);
+        }
+
+        for (MemberLikeFoodVo memberLikeFoodVo : memberVo.getMemberLikeFoodVos()) {
+            memberLikeFoodVo.setMemberIdx(memberVo.getMemberIdx());
+            memberDao.createMemberLikeFoodVo(memberLikeFoodVo);
+        }
+        return 1;
     }
 
     public int updateMember(MemberVo memberVo) {

@@ -1,4 +1,4 @@
-package com.study.party.jpa.entity.grpcd;
+package com.study.party.jpa.entity.cm_grpcd;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

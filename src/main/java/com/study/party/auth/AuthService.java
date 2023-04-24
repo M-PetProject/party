@@ -36,8 +36,8 @@ public class AuthService {
             return CommResponseVo.builder().body("이미 가입되어 있는 사용자입니다").build().badRequest();
         }
 
-        System.out.println("memberVoReq :: "+memberVoReq);
         if ( memberService.createMember(memberVoReq) > 0 ) {
+
             return CommResponseVo.builder().body("가입 완료되었습니다").build().ok();
         } else {
             return CommResponseVo.builder().body("가입에 실패하였습니다 잠시후 다시 시도해주세요").build().internalServerError();

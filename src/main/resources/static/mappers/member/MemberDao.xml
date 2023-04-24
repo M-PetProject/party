@@ -53,7 +53,7 @@
          where member_id = #{memberId}
     </select>
 
-    <insert id="createMember" parameterType="MemberVo">
+    <insert id="createMember" parameterType="MemberVo" useGeneratedKeys="true" keyProperty="memberIdx">
         insert /* MemberDao.createMember */
           into member_info (
                member_id
@@ -112,4 +112,36 @@
          where m.member_idx = #{memberIdx}
     </select>
 
+    <insert id="createMemberAllergyVo" parameterType="MemberAllergyVo">
+        insert /* MemberDao.createMemberAllergyVo */
+          into member_allergy (
+               member_idx
+             , allergy_idx
+        ) values (
+               #{memberIdx}
+             , #{allergyIdx}
+        )
+    </insert>
+
+    <insert id="createMemberHateFoodVo" parameterType="MemberHateFoodVo">
+        insert /* MemberDao.createMemberHateFoodVo */
+          into member_hate_food (
+               member_idx
+             , food_idx
+        ) values (
+               #{memberIdx}
+             , #{foodIdx}
+        )
+    </insert>
+
+    <insert id="createMemberLikeFoodVo" parameterType="MemberLikeFoodVo">
+        insert /* MemberDao.createMemberLikeFoodVo */
+          into member_like_food (
+               member_idx
+             , food_idx
+        ) values (
+               #{memberIdx}
+             , #{foodIdx}
+        )
+    </insert>
 </mapper>

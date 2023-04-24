@@ -2,8 +2,8 @@ package com.study.party.comm.code;
 
 import com.study.party.comm.code.vo.CommCodeVo;
 import com.study.party.comm.code.vo.CommGrpCodeVo;
-import com.study.party.jpa.entity.cd.CmCdEntity;
-import com.study.party.jpa.repository.CmCdRepository;
+import com.study.party.jpa.entity.cm_cd.CmCdEntity;
+import com.study.party.jpa.repository.cm_cd.CmCdRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

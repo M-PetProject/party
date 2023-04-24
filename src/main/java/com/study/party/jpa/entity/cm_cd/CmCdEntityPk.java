@@ -1,4 +1,4 @@
-package com.study.party.jpa.entity.cd;
+package com.study.party.jpa.entity.cm_cd;
 
 import lombok.Data;
 

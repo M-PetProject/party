@@ -20,6 +20,12 @@ public interface MemberDao {
     int deleteMember(MemberVo memberVo);
 
     List<MemberAllergyVo> getMemberAllergyVos(MemberAllergyVo memberAllergyVo);
+    int createMemberAllergyVo(MemberAllergyVo memberAllergyVo);
+
     List<MemberHateFoodVo> getMemberHateFoodVos(MemberHateFoodVo memberHateFoodVo);
+    int createMemberHateFoodVo(MemberHateFoodVo memberHateFoodVo);
+
     List<MemberLikeFoodVo> getMemberLikeFoodVos(MemberLikeFoodVo memberLikeFoodVo);
+    int createMemberLikeFoodVo(MemberLikeFoodVo memberLikeFoodVo);
+
 }
