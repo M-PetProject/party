@@ -1,6 +1,7 @@
 package com.study.party.team;
 
 import com.study.party.team.vo.TeamVo;
+import com.study.party.team_member.TeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import static com.study.party.comm.util.StringUtil.nvl;
 public class TeamService {
 
     private final TeamDao teamDao;
+
+    private final TeamMemberService teamMemberService;
 
     public List<TeamVo> getTeams(TeamVo teamVo) {
         return teamDao.getTeams(teamVo);
@@ -33,6 +36,12 @@ public class TeamService {
         teamDao.createTeam(teamVo);
         teamVo.setJoinCode(lPadding(nvl(teamVo.getTeamIdx(), "0"), "0", 4));
         teamDao.updateTeam(teamVo);
+        teamMemberService.createTeamMember(teamVo.toTeamMemberVo());
+        return 1;
+    }
+
+    public int joinTeam(TeamVo teamVo) {
+        teamMemberService.createTeamMember(teamVo.toTeamMemberVo());
         return 1;
     }
 

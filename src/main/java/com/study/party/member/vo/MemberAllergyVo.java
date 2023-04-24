@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "멤버 알러지 VO")
-public class MemberAllergy {
+public class MemberAllergyVo {
     @Schema(description="회원 알러지 table PK 알러지 IDX", example="1")
     private long memberAllergyIdx;
     @Schema(description="회원 알러지 table 회원 idx", example="1")

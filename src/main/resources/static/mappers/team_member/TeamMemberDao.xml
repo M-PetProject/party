@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.team_member.TeamMemberDao">
+
+    <sql id="sql_selectTeamMember">
+        select m.team_idx     as team_idx
+             , d1.team_nm     as team_nm
+             , m.member_idx   as member_idx
+             , d2.member_id   as member_id
+             , d2.member_name as member_name
+             , m.member_type  as member_type
+          from           team_member m
+               left join team        d1 on m.team_idx   = d1.team_idx
+               left join member_info d2 on m.member_idx = d2.member_idx
+    </sql>
+
+    <select id="getMembersByTeamIdx" parameterType="TeamMemberVo" resultType="TeamMemberVo">
+        /* TeamMemberDao.getMembersByTeamIdx */
+        <include refid="sql_selectTeamMember"></include>
+         where 1=1
+           and m.team_idx   = #{teamIdx}
+    </select>
+
+    <select id="getTeamsByMemberIdx" parameterType="TeamMemberVo" resultType="TeamMemberVo">
+        /* TeamMemberDao.getTeamsByMemberIdx */
+        <include refid="sql_selectTeamMember"></include>
+         where 1=1
+           and m.member_idx = #{memberIdx}
+    </select>
+
+    <select id="getTeamMember" parameterType="TeamMemberVo" resultType="TeamMemberVo">
+        /* TeamMemberDao.getTeamMember */
+        <include refid="sql_selectTeamMember"></include>
+         where 1=1
+           and m.team_idx   = #{teamIdx}
+           and m.member_idx = #{memberIdx}
+    </select>
+
+    <insert id="createTeamMember" parameterType="TeamMemberVo">
+        insert /* TeamMemberDao.createTeamMember */
+          into team_member (
+               team_idx
+             , member_idx
+             , member_type
+        ) values (
+               #{teamIdx}
+             , #{memberIdx}
+             , #{memberType}
+        )
+    </insert>
+
+    <update id="updateTeamMember" parameterType="TeamMemberVo">
+        update /* TeamMemberDao.updateTeamMember */
+               team_member
+           set member_type = #{memberType}
+         where team_idx    = #{teamIdx}
+           and member_idx  = #{memberIdx}
+    </update>
+
+    <delete id="deleteTeamMember" parameterType="TeamMemberVo">
+        delete /* TeamMemberDao.deleteTeamMember */
+          from team_member
+         where team_idx    = #{teamIdx}
+           and member_idx  = #{memberIdx}
+    </delete>
+
+
+</mapper>

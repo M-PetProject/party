@@ -42,7 +42,7 @@
          where join_code = #{joinCode}
     </select>
 
-    <insert id="createTeam" parameterType="TeamVo" >
+    <insert id="createTeam" parameterType="TeamVo" useGeneratedKeys="true" keyProperty="teamIdx">
         insert /* TeamDao.createTeam */
           into team (
                team_nm

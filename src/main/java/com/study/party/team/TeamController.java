@@ -1,10 +1,12 @@
 package com.study.party.team;
 
+import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.team.vo.TeamVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,12 +58,30 @@ public class TeamController {
     @PostMapping("team")
     public ResponseEntity createTeam(
         HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody TeamVo teamVo
     ) {
         if ( isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) ) {
             return CommResponseVo.builder().body("팀 이름과 팀 설명은 필수입력값입니다").build().badRequest();
         }
+        teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        teamVo.setMemberType("MASTER");
         return CommResponseVo.builder().body(teamService.createTeam(teamVo)).build().ok();
+    }
+
+    @Operation(summary = "팀 참가 API", description = "테이블 team 에 데이터 1건을 생성합니다")
+    @PostMapping("team/join")
+    public ResponseEntity joinTeam(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @RequestBody TeamVo teamVo
+    ) {
+        if ( isEmptyObj(teamVo.getTeamIdx()) ) {
+            return CommResponseVo.builder().body("팀 IDX는 필수입력값입니다").build().badRequest();
+        }
+        teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        teamVo.setMemberType("MEMBER");
+        return CommResponseVo.builder().body(teamService.joinTeam(teamVo)).build().ok();
     }
 
     @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")

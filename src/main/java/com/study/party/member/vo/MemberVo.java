@@ -1,6 +1,7 @@
 package com.study.party.member.vo;
 
 import com.study.party.comm.vo.CommPaginationReqVo;
+import com.study.party.team_member.vo.TeamMemberVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,9 +27,13 @@ public class MemberVo extends CommPaginationReqVo {
     private String memberName;
 
     @Schema(description="회원 알러지 목록")
-    private List<MemberAllergy> memberAllergies;
+    private List<MemberAllergyVo> memberAllergyVos;
     @Schema(description="회원 싫어하는 음식 목록")
-    private List<MemberHateFood> memberHateFoods;
+    private List<MemberHateFoodVo> memberHateFoodVos;
     @Schema(description="회원 좋아하는 음식 목록")
-    private List<MemberLikeFood> memberLikeFoods;
+    private List<MemberLikeFoodVo> memberLikeFoodVos;
+
+
+    @Schema(description="회원 소속 팀 목록")
+    private List<TeamMemberVo> teamMemberVos;
 }

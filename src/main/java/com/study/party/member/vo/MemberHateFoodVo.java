@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "멤버 싫어하는 음식 VO")
-public class MemberHateFood {
+public class MemberHateFoodVo {
 
     @Schema(description="회원 싫어하는 음식 table PK idx", example="1")
     private long memberHateFoodIdx;
