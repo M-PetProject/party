@@ -235,3 +235,6 @@ CommResponseVo.builder()
   - https://www.toptal.com/developers/gitignore/
 - Rest API 
   - https://benggri.tistory.com/124
+- @AuthenticationPrincipal 관련 자료
+  - https://velog.io/@jyleedev/AuthenticationPrincipal-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%A0%95%EB%B3%B4-%EB%B0%9B%EC%95%84%EC%98%A4%EA%B8%B0
+  - https://dev-gyus.github.io/spring/2021/03/09/Spring-ConfigurationProperties0.html
