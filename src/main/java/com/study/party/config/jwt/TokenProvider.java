@@ -49,7 +49,6 @@ public class TokenProvider {
         claims.put("member_name" , memberVo.getMemberName() );
         long now = (new Date()).getTime();
 
-        System.out.println("authentication.getName() :: "+authentication.getName());
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
@@ -79,17 +78,14 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
-        System.out.println("claims :: "+claims.toString());
-        System.out.println("member_idx :: " + claims.get("member_idx") );
-        System.out.println("member_id :: " + claims.get("member_id") );
 
         // UserDetails 객체를 만들어서 Authentication 리턴
 //        UserDetails principal = new User(claims.getSubject(), "", Arrays.asList());
         CustomUserDetailsVo principal = new CustomUserDetailsVo(
                 Long.parseLong(nvl(claims.get("member_idx"), "0")),
-                nvl(claims.get("member_id"), " "),
-                nvl(claims.get("member_name"), " "),
-                " ",
+                nvl(claims.get("member_id"), ""),
+                nvl(claims.get("member_name"), ""),
+                "",
                 Arrays.asList()
         );
 
