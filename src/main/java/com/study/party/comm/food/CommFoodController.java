@@ -20,11 +20,11 @@ public class CommFoodController {
 
     @Operation(summary = "음식 목록 정보 조회 API", description = "사용자가 좋아하는/싫어하는 음식 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다")
     @GetMapping("food/{food_nm}")
-    public ResponseEntity<List<CmFoodEntity>> getCmFood(
+    public ResponseEntity<List<CmFoodEntity>> getCmFoods(
         HttpServletRequest request,
         @PathVariable("food_nm") String food_nm
     ) {
-        return CommResponseVo.builder().body(commFoodService.getCmFood(food_nm)).build().ok();
+        return CommResponseVo.builder().body(commFoodService.getCmFoods(food_nm)).build().ok();
     }
 
     @Operation(summary = "음식 목록 정보 조회 API", description = "사용자가 좋아하는/싫어하는 음식 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다")

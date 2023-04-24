@@ -20,7 +20,7 @@ public class CommFoodService {
     private final CmFoodRepository cmFoodRepository;
 
     @Transactional
-    public List<CmFoodEntity> getCmFood(String foodNm) {
+    public List<CmFoodEntity> getCmFoods(String foodNm) {
         List<CmFoodEntity> result = cmFoodRepository.findByFoodNmLikeOrderByFoodIdxDesc("%"+foodNm+"%");
         if (isEmptyObj(result)) {
             CmFoodEntity cmFoodEntity = CmFoodEntity.builder().foodNm(foodNm).build();
