@@ -61,6 +61,10 @@ public class AuthService {
                                              .memberName(dbMember.getMemberName())
                                              .accessToken(tokenVo.getAccessToken())
                                              .refreshToken(tokenVo.getRefreshToken())
+                                             .memberAllergyVos(dbMember.getMemberAllergyVos())
+                                             .memberHateFoodVos(dbMember.getMemberHateFoodVos())
+                                             .memberLikeFoodVos(dbMember.getMemberLikeFoodVos())
+                                             .teamMemberVos(dbMember.getTeamMemberVos())
                                              .build())
                              .build()
                              .ok();
