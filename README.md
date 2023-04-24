@@ -48,6 +48,49 @@ com.study.party
 
 ---
 
+## 로그인 사용자 정보 받아오기
+
+- 현재 Spring Security 를 사용하고 있습니다
+- Spring Security 에서는 인증된 사용자 정보를 세션에 담아놓고 세션이 유지되는 동안 사용자 객체를 DB로 접근하지 않고 바로 사용할 수 있도록 합니다
+- TokenProvider 에서 해당 로직은 처리하고 있습니다
+
+```java
+// TokenProvider.generateEntityToken 메서드를 확인합니다
+// JWT 를 생성할 때 Claims 에 필요한 정보를 넣습니다 
+Claims claims = Jwts.claims().setSubject(String.valueOf(memberVo.getMemberIdx()));
+claims.put("member_idx"  , memberVo.getMemberIdx());
+claims.put("member_id"   , memberVo.getMemberId() );
+claims.put("member_name" , memberVo.getMemberName() );
+
+// TokenProvider.getAuthentication 메서드를 확인합니다
+// JWT 를 읽어올 때 사용자 정보가 담긴 CustomUserDetailsVo 를 만들어줍니다
+CustomUserDetailsVo principal = new CustomUserDetailsVo(
+    nvl(claims.get("member_name"), ""),
+    "",
+    Arrays.asList()
+);
+principal.setMemberIdx(Long.parseLong(nvl(claims.get("member_idx"), "0")));
+principal.setMemberId(nvl(claims.get("member_id"), ""));
+principal.setMemberName(nvl(claims.get("member_name"), ""));
+```
+
+- 실제 사용할 때는 Controller 에서 @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo 를 선언하여 사용합니다
+
+```java
+public class MemberController {
+    ...
+    @GetMapping("/member")
+    public ResponseEntity getMember(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+      System.out.println("customUserDetailsVo.getMemberIdx() :: "+customUserDetailsVo.getMemberIdx());
+    ...
+}
+```
+
+---
+
 ## Rest API URL Naming Rule
 
 - URL 에 자원에 대한 행위를 표시하지 않는다
@@ -150,7 +193,7 @@ CommResponseVo.builder()
 
 // 401 : 비록 HTTP 표준에서는 '미승인(unauthorized)'를 명확히 하고 있지만, 
 //       의미상 이 응답은 '비인증(unauthenticated)'를 의미합니다. 
-//       클라이언트는 요청한 응답을 받기 위해서는 반드시 스스로를 인증해야 합니다.
+//       클라이언트는 요청한 응답을 받기 위해서는 반드시 스스로를 인증해야 합니다.``
 CommResponseVo.builder()
               .body(결과 Data)
               .build()
@@ -173,7 +216,6 @@ CommResponseVo.builder()
               .build()
               .internalServerError();
 ```
-
 
 ---
 
