@@ -1,5 +1,6 @@
 package com.study.party.member.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Schema(description = "멤버 알러지 VO")
 public class MemberAllergyVo {
+
+    @JsonIgnore
     @Schema(description="회원 알러지 table PK 알러지 IDX", example="1")
     private long memberAllergyIdx;
     @Schema(description="회원 알러지 table 회원 idx", example="1")
@@ -20,4 +23,5 @@ public class MemberAllergyVo {
     private long allergyIdx;
     @Schema(description="회원 알러지 table 알러지 이름", example="알러지")
     private String allergyNm;
+
 }
