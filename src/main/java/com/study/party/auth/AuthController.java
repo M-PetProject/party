@@ -8,8 +8,6 @@ import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +28,8 @@ public class AuthController {
     @Operation(summary = "회원 ID 기반 정보 조회 API", description = "테이블 member_info 의 유니크 키인 member_id 를 파라미터로 전달받아 멤버 정보를 조회합니다")
     @GetMapping("/member/{member_id}")
     public ResponseEntity<MemberVo> getMemberByMemberId(
-            HttpServletRequest request,
-            @PathVariable("member_id") String member_id
+        HttpServletRequest request,
+        @PathVariable("member_id") String member_id
     ) {
         return CommResponseVo.builder()
                              .body(memberService.getMemberByMemberId(MemberVo.builder().memberId(member_id).build()))

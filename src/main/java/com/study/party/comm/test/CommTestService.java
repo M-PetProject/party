@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -13,7 +16,7 @@ public class CommTestService {
 
     private final CommTestDao commTestDao;
 
-    public CommPaginationResVo getTests(CommTestVo commTestVo) {
+    public CommPaginationResVo<List<CommTestVo>> getTests(CommTestVo commTestVo) {
         return CommPaginationResVo.builder()
                                   .totalItems(commTestDao.getTestsTotCnt(commTestVo))
                                   .data(commTestDao.getTests(commTestVo))

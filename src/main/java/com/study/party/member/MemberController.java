@@ -2,17 +2,10 @@ package com.study.party.member;
 
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
-import com.study.party.comm.code.vo.CommGrpCodeVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

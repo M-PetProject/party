@@ -13,7 +13,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommPaginationResVo {
+public class CommPaginationResVo <T> {
 
     /* 기본 파라미터 정보 */
     protected int pageNo;
@@ -28,7 +28,7 @@ public class CommPaginationResVo {
     private int endPage;
     private List<Integer> pages;
     private int maxPages;
-    private Object data;
+    private T data;
     /* 페이지네이션 결과 정보 */
 
     public CommPaginationResVo pagination() {

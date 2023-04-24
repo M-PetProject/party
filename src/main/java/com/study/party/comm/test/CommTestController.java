@@ -1,16 +1,17 @@
 package com.study.party.comm.test;
 
 import com.study.party.comm.test.vo.CommTestVo;
+import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
@@ -22,7 +23,7 @@ public class CommTestController {
 
     @Operation(summary = "테스트 목록 조회 메서드", description = "테이블 test 의 목록 정보를 가지고 옵니다")
     @GetMapping("/comm/tests")
-    public ResponseEntity getTests(
+    public ResponseEntity<CommPaginationResVo<List<CommTestVo>>> getTests(
         HttpServletRequest request,
         @Parameter(name="test1" , required=false, description="table test column"   ) @RequestParam(name="test1" , required=false) String test1,
         @Parameter(name="test2" , required=false, description="table test column"   ) @RequestParam(name="test2" , required=false) String test2,
@@ -42,7 +43,7 @@ public class CommTestController {
 
     @Operation(summary = "테스트 상세 조회 메서드", description = "테이블 test 의 pk 인 idx 를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/comm/test")
-    public ResponseEntity getTest(
+    public ResponseEntity<CommTestVo> getTest(
         HttpServletRequest request,
         @RequestParam(name="idx", required=false, defaultValue="0") long idx
     ) {

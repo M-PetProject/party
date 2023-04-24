@@ -5,17 +5,11 @@ import com.study.party.comm.code.vo.CommCodeVo;
 import com.study.party.comm.code.vo.CommGrpCodeVo;
 import com.study.party.comm.vo.CommResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
