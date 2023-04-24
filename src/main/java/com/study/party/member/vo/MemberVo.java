@@ -13,7 +13,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "멤버 VO")
+@Schema(description="멤버 VO")
 public class MemberVo extends CommPaginationReqVo {
 
     @Schema(description="회원 table PK idx", example="1")

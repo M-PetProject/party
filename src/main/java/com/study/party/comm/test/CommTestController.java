@@ -20,12 +20,6 @@ public class CommTestController {
 
     private final CommTestService commTestService;
 
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "테스트 목록 조회 메서드", description = "테이블 test 의 목록 정보를 가지고 옵니다")
     @GetMapping("/comm/tests")
     public ResponseEntity getTests(
@@ -46,13 +40,6 @@ public class CommTestController {
                              .ok();
     }
 
-
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "테스트 상세 조회 메서드", description = "테이블 test 의 pk 인 idx 를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/comm/test")
     public ResponseEntity getTest(
@@ -67,13 +54,6 @@ public class CommTestController {
                              .ok();
     }
 
-
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "테스트 생성 메서드", description = "테이블 test에 데이터 1건을 생성합니다")
     @PostMapping("/comm/test")
     public ResponseEntity createTest(
@@ -88,13 +68,6 @@ public class CommTestController {
                              .ok();
     }
 
-
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "테스트 수정 메서드", description = "테이블 test에 데이터 1건을 수정합니다")
     @PutMapping("/comm/test")
     public ResponseEntity updateTest(
@@ -109,13 +82,6 @@ public class CommTestController {
                              .ok();
     }
 
-
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "테스트 삭제 메서드", description = "테이블 test 의 pk 인 idx 를 파라미터로 전달 받아 데이터 1건을 삭제합니다")
     @DeleteMapping("/comm/test")
     public ResponseEntity deleteTest(

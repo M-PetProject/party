@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
 @RestController
@@ -19,31 +21,18 @@ public class TeamController {
 
     private final TeamService teamService;
 
-
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 목록 조회 API", description = "테이블 team에 등록된 목록 정보를 조회합니다")
     @GetMapping("/teams")
-    public ResponseEntity getTeams(
+    public ResponseEntity<List<TeamVo>> getTeams(
         HttpServletRequest request,
         @RequestParam(name="team_nm", required=false, defaultValue="") String team_nm
     ) {
         return CommResponseVo.builder().body(teamService.getTeams(TeamVo.builder().teamNm(team_nm).build())).build().ok();
     }
 
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/team/{team_idx}")
-    public ResponseEntity getTeam(
+    public ResponseEntity<TeamVo> getTeam(
         HttpServletRequest request,
         @PathVariable(name="team_idx") long team_idx
     ) {
@@ -52,15 +41,9 @@ public class TeamController {
         return CommResponseVo.builder().body(teamService.getTeam(TeamVo.builder().teamIdx(team_idx).build())).build().ok();
     }
 
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/team/join-code/{join_code}")
-    public ResponseEntity getTeamByJoinCode(
+    public ResponseEntity<TeamVo> getTeamByJoinCode(
         HttpServletRequest request,
         @PathVariable(name="join_code") String join_code
     ) {
@@ -72,12 +55,6 @@ public class TeamController {
         return CommResponseVo.builder().body(result).build().ok();
     }
 
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 생성 API", description = "테이블 team 에 데이터 1건을 생성합니다")
     @PostMapping("team")
     public ResponseEntity createTeam(
@@ -90,12 +67,6 @@ public class TeamController {
         return CommResponseVo.builder().body(teamService.createTeam(teamVo)).build().ok();
     }
 
-    @ApiResponses({
-        @ApiResponse(responseCode="200", description="OK"),
-        @ApiResponse(responseCode="400", description="BAD Request"),
-        @ApiResponse(responseCode="404", description="NOT FOUND"),
-        @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
     @PutMapping("team")
     public ResponseEntity updateTeam(
@@ -108,13 +79,6 @@ public class TeamController {
         return CommResponseVo.builder().body(teamService.updateTeam(teamVo)).build().ok();
     }
 
-
-    @ApiResponses({
-            @ApiResponse(responseCode="200", description="OK"),
-            @ApiResponse(responseCode="400", description="BAD Request"),
-            @ApiResponse(responseCode="404", description="NOT FOUND"),
-            @ApiResponse(responseCode="500", description="INTERNAL SERVER ERROR"),
-    })
     @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
     @DeleteMapping("team/{team_idx}")
     public ResponseEntity deleteTeam(
