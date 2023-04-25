@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.notice.NoticeCommentDao">
+
+    <select id="getNoticeComments" parameterType="NoticeCommentVo" resultType="NoticeCommentVo">
+        select /* NoticeCommentDao.getNoticeComments */
+               m.notice_comment_idx as notice_comment_idx
+             , m.notice_idx         as notice_idx
+             , m.member_idx         as member_idx
+             , m.title              as title
+             , m.content            as content
+             , m.use_yn             as use_yn
+             , d1.view_count        as view_count
+             , d1.like_count        as like_count
+             , d1.unlike_count      as unlike_count
+          from            notice_comment       m
+               inner join notice_comment_info d1 on m.notice_comment_idx = d1.notice_comment_idx
+         where m.notice_idx = #{noticeIdx}
+         order by m.notice_comment_idx desc
+         limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getNoticeCommentsTotCnt" parameterType="NoticeCommentVo" resultType="int">
+        select /* NoticeCommentDao.getNoticeCommentsTotCnt */
+               count(*) as tot_cnt
+          from            notice_comment       m
+               inner join notice_comment_info d1 on m.notice_comment_idx = d1.notice_comment_idx
+         where m.notice_idx = #{noticeIdx}
+    </select>
+
+    <select id="getNoticeComment" parameterType="NoticeCommentVo" resultType="NoticeCommentVo">
+        select /* NoticeCommentDao.getNoticeComment */
+               m.notice_comment_idx as notice_comment_idx
+             , m.notice_idx         as notice_idx
+             , m.member_idx         as member_idx
+             , m.title              as title
+             , m.content            as content
+             , m.use_yn             as use_yn
+             , d1.view_count        as view_count
+             , d1.like_count        as like_count
+             , d1.unlike_count      as unlike_count
+          from            notice_comment       m
+               inner join notice_comment_info d1 on m.notice_comment_idx = d1.notice_comment_idx
+         where m.notice_comment_idx = #{noticeCommentIdx}
+    </select>
+
+    <insert id="createNoticeComment" parameterType="NoticeCommentVo" useGeneratedKeys="true" keyProperty="noticeCommentIdx">
+        insert /* NoticeCommentDao.createNoticeComment */
+          into notice_comment (
+               notice_idx
+             , member_idx
+             , title
+             , content
+             , use_yn
+        ) values (
+               #{noticeIdx}
+             , #{memberIdx}
+             , #{title}
+             , #{content}
+             , #{useYn}
+        )
+    </insert>
+
+    <insert id="createNoticeCommentInfo" parameterType="NoticeCommentVo">
+        insert /* NoticeCommentDao.createNoticeComment */
+          into notice_comment_info (
+               notice_idx
+             , view_count
+             , like_count
+             , unlike_count
+        ) values (
+               #{noticeIdx}
+             , 0
+             , 0
+             , 0
+        )
+    </insert>
+
+    <update id="updateNoticeComment" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeComment */
+               notice_comment
+           set title   = #{title}
+             , content = #{content}
+             , use_yn  = #{useYn}
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
+    <update id="updateNoticeCommentInfoLike" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeCommentInfoLike */
+               notice_comment_info
+           set like_count = like_count + 1
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
+    <update id="updateNoticeCommentInfoLikeCancel" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeCommentInfoLikeCancel */
+               notice_comment_info
+           set like_count = like_count - 1
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
+    <update id="updateNoticeCommentInfoUnlike" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeCommentInfoUnlike */
+               notice_comment_info
+           set unlike_count = unlike_count + 1
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
+    <update id="updateNoticeCommentInfoUnlikeCancel" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeCommentInfoUnlikeCancel */
+               notice_comment_info
+           set unlike_count = unlike_count - 1
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
+    <delete id="deleteNoticeComment" parameterType="NoticeCommentVo">
+        delete /* NoticeCommentDao.deleteNoticeComment */
+          from notice_comment
+         where notice_comment_idx = #{noticeCommentIdx}
+    </delete>
+
+    <delete id="deleteNoticeCommentInfo" parameterType="NoticeCommentVo">
+        delete /* NoticeCommentDao.deleteNoticeCommentInfo */
+          from notice_comment_info
+         where notice_comment_idx = #{noticeCommentIdx}
+    </delete>
+
+</mapper>

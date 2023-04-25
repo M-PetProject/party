@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.notice.NoticeDao">
+
+    <select id="getNotices" parameterType="NoticeVo" resultType="NoticeVo">
+        select /* NoticeDao.getNotices */
+               m.notice_idx      as notice_idx
+             , m.team_idx        as team_idx
+             , m.member_idx      as member_idx
+             , m.title           as title
+             , m.notice_dt_start as notice_dt_start
+             , m.notice_dt_end   as notice_dt_end
+             , m.use_yn          as use_yn
+             , d1.view_count     as view_count
+             , d1.like_count     as like_count
+             , d1.unlike_count   as unlike_count
+          from            notice m
+               inner join notice_info d1 on m.notice_idx = d1.notice_idx
+         where 1=1
+           and use_yn = 'Y'
+           and date_format(current_timestamp(), '%Y%m%d%H%i%s') between notice_dt_start and notice_dt_end
+        <if test=' teamIdx != null and teamIdx != "" '>
+           and team_idx = #{teamIdx}
+        </if>
+        <if test=' title != null and title != "" '>
+           and title = #{title}
+        </if>
+         order by notice_idx desc
+         limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getNoticesTotCnt" parameterType="NoticeVo" resultType="int">
+        select /* NoticeDao.getNoticesTotCnt */
+               count(*) as tot_cnt
+          from            notice m
+               inner join notice_info d1 on m.notice_idx = d1.notice_idx
+         where 1=1
+           and use_yn = 'Y'
+           and date_format(current_timestamp(), '%Y%m%d%H%i%s') between notice_dt_start and notice_dt_end
+        <if test=' teamIdx != null and teamIdx != "" '>
+           and team_idx = #{teamIdx}
+        </if>
+        <if test=' title != null and title != "" '>
+           and title = #{title}
+        </if>
+    </select>
+
+    <select id="getNotice" parameterType="NoticeVo" resultType="NoticeVo">
+        select /* NoticeDao.getNotice */
+               m.notice_idx      as notice_idx
+             , m.team_idx        as team_idx
+             , m.member_idx      as member_idx
+             , m.title           as title
+             , m.content         as content
+             , m.notice_dt_start as notice_dt_start
+             , m.notice_dt_end   as notice_dt_end
+             , m.use_yn          as use_yn
+             , d1.view_count     as view_count
+             , d1.like_count     as like_count
+             , d1.unlike_count   as unlike_count
+          from            notice m
+               inner join notice_info d1 on m.notice_idx = d1.notice_idx
+         where m.notice_idx = #{noticeIdx}
+    </select>
+
+    <insert id="createNotice" parameterType="NoticeVo" useGeneratedKeys="true" keyProperty="noticeIdx">
+        insert /* NoticeDao.createNotice */
+          into notice (
+               team_idx
+             , member_idx
+             , title
+             , content
+             , notice_dt_start
+             , notice_dt_end
+             , use_yn
+        ) values (
+               #{teamIdx}
+             , #{memberIdx}
+             , #{title}
+             , #{content}
+             , #{noticeDtStart}
+             , #{noticeDtEnd}
+             , #{useYn}
+        )
+    </insert>
+
+    <insert id="createNoticeInfo" parameterType="NoticeVo">
+        insert /* NoticeDao.createNoticeInfo */
+          into notice_info (
+               notice_idx
+             , view_count
+             , like_count
+             , unlike_count
+        ) values (
+               #{noticeIdx}
+             , 0
+             , 0
+             , 0
+        )
+    </insert>
+
+    <update id="updateNotice" parameterType="NoticeVo">
+        update /* NoticeDao.updateNotice */
+               notice
+           set team_idx        = #{teamIdx}
+             , member_idx      = #{memberIdx}
+             , title           = #{title}
+             , content         = #{content}
+             , notice_dt_start = #{noticeDtStart}
+             , notice_dt_end   = #{noticeDtEnd}
+             , use_yn          = #{useYn}
+         where notice_idx      = #{noticeIdx}
+    </update>
+
+    <update id="updateNoticeInfoViewCount" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeInfoViewCount */
+               notice_info
+           set view_count      = view_count + 1
+         where notice_idx      = #{noticeIdx}
+    </update>
+
+    <update id="updateNoticeInfoLike" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeInfoLike */
+               notice_info
+           set like_count = like_count + 1
+         where notice_idx = #{noticeIdx}
+    </update>
+
+    <update id="updateNoticeInfoLikeCancel" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeInfoLikeCancel */
+               notice_info
+           set like_count = like_count - 1
+         where notice_idx = #{noticeIdx}
+    </update>
+
+    <update id="updateNoticeInfoUnlike" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeInfoUnlike */
+               notice_info
+           set unlike_count = unlike_count + 1
+         where notice_idx = #{noticeIdx}
+    </update>
+
+    <update id="updateNoticeInfoUnlikeCancel" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeInfoUnlikeCancel */
+               notice_info
+           set unlike_count = unlike_count - 1
+         where notice_idx   = #{noticeIdx}
+    </update>
+
+    <delete id="deleteNotice" parameterType="NoticeVo">
+        delete /* NoticeDao.deleteNotice */
+          from notice
+         where notice_idx = #{noticeIdx}
+    </delete>
+
+    <delete id="deleteNoticeInfo" parameterType="NoticeVo">
+        delete /* NoticeDao.deleteNoticeInfo */
+          from notice_info
+         where notice_idx = #{noticeIdx}
+    </delete>
+
+</mapper>

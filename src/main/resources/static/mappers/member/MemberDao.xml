@@ -17,6 +17,7 @@
         <if test='memberName != null and memberName !="" '>
            and member_name like concat('%',#{memberName},'%')
         </if>
+        order by member_idx
         limit #{limit} offset #{offset}
     </select>
 
