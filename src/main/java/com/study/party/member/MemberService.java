@@ -42,6 +42,10 @@ public class MemberService {
         return result;
     }
 
+    public MemberVo checkMember(MemberVo memberVo) {
+        return memberDao.getMemberByMemberId(memberVo);
+    }
+
     private MemberVo getMemberInfoEtc(MemberVo memberVo) {
         memberVo.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(memberVo.getMemberIdx()));
         memberVo.setMemberAllergyVos(memberDao.getMemberAllergyVos(memberVo.toAllergyVo()));
@@ -67,19 +71,25 @@ public class MemberService {
     }
 
     public int createMemberEtc(MemberVo memberVo) {
-        for (MemberAllergyVo memberAllergyVo : memberVo.getMemberAllergyVos() ) {
-            memberAllergyVo.setMemberIdx(memberVo.getMemberIdx());
-            memberDao.createMemberAllergyVo(memberAllergyVo);
+        if(memberVo.getMemberAllergyVos() != null) {
+            for (MemberAllergyVo memberAllergyVo : memberVo.getMemberAllergyVos() ) {
+                memberAllergyVo.setMemberIdx(memberVo.getMemberIdx());
+                memberDao.createMemberAllergyVo(memberAllergyVo);
+            }
         }
 
-        for (MemberHateFoodVo memberHateFoodVo : memberVo.getMemberHateFoodVos() ) {
-            memberHateFoodVo.setMemberIdx(memberVo.getMemberIdx());
-            memberDao.createMemberHateFoodVo(memberHateFoodVo);
+        if(memberVo.getMemberHateFoodVos() != null) {
+            for (MemberHateFoodVo memberHateFoodVo : memberVo.getMemberHateFoodVos()) {
+                memberHateFoodVo.setMemberIdx(memberVo.getMemberIdx());
+                memberDao.createMemberHateFoodVo(memberHateFoodVo);
+            }
         }
 
-        for (MemberLikeFoodVo memberLikeFoodVo : memberVo.getMemberLikeFoodVos()) {
-            memberLikeFoodVo.setMemberIdx(memberVo.getMemberIdx());
-            memberDao.createMemberLikeFoodVo(memberLikeFoodVo);
+        if(memberVo.getMemberLikeFoodVos() != null) {
+            for (MemberLikeFoodVo memberLikeFoodVo : memberVo.getMemberLikeFoodVos()) {
+                memberLikeFoodVo.setMemberIdx(memberVo.getMemberIdx());
+                memberDao.createMemberLikeFoodVo(memberLikeFoodVo);
+            }
         }
         return 1;
     }
