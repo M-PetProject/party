@@ -1,5 +1,6 @@
 package com.study.party.jpa.entity.cm_grpcd;
 
+import com.study.party.jpa.entity.comm.DefaultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Table(name = "cm_grp_cd")
 @Entity
-public class CmGrpCdEntity {
+public class CmGrpCdEntity extends DefaultEntity {
 
     private static final long serialVersionUID = 929086865875164181L;
 

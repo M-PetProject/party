@@ -6,13 +6,10 @@ import com.study.party.member.vo.MemberHateFoodVo;
 import com.study.party.member.vo.MemberLikeFoodVo;
 import com.study.party.member.vo.MemberVo;
 import com.study.party.team_member.TeamMemberService;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -20,6 +17,7 @@ import java.util.List;
 public class MemberService {
 
     private final TeamMemberService teamMemberService;
+
     private final MemberDao memberDao;
 
     public CommPaginationResVo getMembers(MemberVo memberVo) {
