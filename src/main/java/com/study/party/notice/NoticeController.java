@@ -67,7 +67,7 @@ public class NoticeController {
                              .ok();
     }
 
-    @Operation(summary = "로그인 회원 정보 조회 API", description = "로그인 사용자의 Token 값 기반으로 테이블 member_info 의 데이터 1건의 정보를 조회합니다")
+    @Operation(summary = "공지사항 정보 생성 API", description = "로그인 사용자의 정보와 공지사항 데이터를 전달받아 공지사항 테이블에 1건의 정보를 생성합니다")
     @PostMapping("notice")
     public ResponseEntity<NoticeVo> createNotice(
         HttpServletRequest request,
