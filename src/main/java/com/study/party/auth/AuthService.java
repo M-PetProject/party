@@ -31,7 +31,7 @@ public class AuthService {
 
     public ResponseEntity signup(SignupReqVo signupReqVo) {
         MemberVo memberVoReq = signupReqVo.toMember(passwordEncoder);
-        MemberVo checkMemberIdResult = memberService.getMemberByMemberId(memberVoReq);
+        MemberVo checkMemberIdResult = memberService.checkMember(memberVoReq);
         if ( !isEmptyObj(checkMemberIdResult) ) {
             return CommResponseVo.builder().body("이미 가입되어 있는 사용자입니다").build().badRequest();
         }
