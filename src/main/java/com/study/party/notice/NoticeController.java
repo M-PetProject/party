@@ -25,23 +25,23 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @Operation(summary = "공지사항 목록 정보 조회 API", description = "공지사항 목록 정보를 조회합니다")
-    @GetMapping("notices")
+    @GetMapping("notices/{team_idx}")
     public ResponseEntity<CommPaginationResVo<List<NoticeVo>>> getNotices(
         HttpServletRequest request,
-        @Parameter(name="team_idx" , required=false, description="공지사항 테이블 컬럼 team_idx") @RequestParam(name="team_idx" , required=false) Long team_idx,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") Long team_idx,
         @Parameter(name="title" , required=false, description="공지사항 테이블 제목") @RequestParam(name="title" , required=false) String title,
         @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
         @Parameter(name="limit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit" , required=false, defaultValue="5") int limit
     ) {
         return CommResponseVo.builder()
-                             .body(noticeService.getNotices(NoticeVo.builder()
-                                                                    .title(title)
-                                                                    .teamIdx(team_idx)
-                                                                    .pageNo(pageNo)
-                                                                    .limit(limit)
-                                                                    .build()))
+                             .resultVo(noticeService.getNotices(NoticeVo.builder()
+                                                                        .title(title)
+                                                                        .teamIdx(team_idx)
+                                                                        .pageNo(pageNo)
+                                                                        .limit(limit)
+                                                                        .build()))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "공지사항 상세 조회 API", description = "공지사항 테이블의 PK인 notice_idx를 패스로 전달받아 데이터 1건의 정보를 조회합니다")
@@ -53,18 +53,14 @@ public class NoticeController {
         @Parameter(name="commentPageNo", required=false, description="현재 페이지 번호") @RequestParam(name="commentPageNo", required=false, defaultValue="1") int commentPageNo,
         @Parameter(name="commentLimit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="commentLimit" , required=false, defaultValue="5") int commentLimit
     ) {
-        NoticeDetailVo result = noticeService.getNotice(NoticeDetailVo.builder()
-                                                                      .noticeIdx(notice_idx)
-                                                                      .pageNo(commentPageNo)
-                                                                      .limit(commentLimit)
-                                                                      .build(), customUserDetailsVo);
-
-        if ( isEmptyObj(result) ) return CommResponseVo.builder().body("존재하지 않는 공지사항입니다").build().badRequest();
-
         return CommResponseVo.builder()
-                             .body(result)
+                             .resultVo(noticeService.getNotice(NoticeDetailVo.builder()
+                                                                             .noticeIdx(notice_idx)
+                                                                             .pageNo(commentPageNo)
+                                                                             .limit(commentLimit)
+                                                                             .build(), customUserDetailsVo))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "공지사항 정보 생성 API", description = "로그인 사용자의 정보와 공지사항 데이터를 전달받아 공지사항 테이블에 1건의 정보를 생성합니다")
@@ -76,9 +72,27 @@ public class NoticeController {
     ) {
         if ( isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
         noticeVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+
         return CommResponseVo.builder()
-                             .body(noticeService.createNotice(noticeVo))
+                             .resultVo(noticeService.createNotice(noticeVo))
                              .build()
-                             .ok();
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 정보 수정 API", description = "로그인 사용자의 정보와 공지사항 데이터를 전달받아 공지사항 테이블에 1건의 정보를 수정합니다")
+    @PutMapping("notice")
+    public ResponseEntity<NoticeVo> updateNotice(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @RequestBody NoticeVo noticeVo
+    ) {
+        if ( noticeVo.getNoticeIdx() < 1 || isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        noticeVo.setNoticeDtStart(isEmptyObj(noticeVo.getNoticeDtStart()) ? "20000101000000" : noticeVo.getNoticeDtStart());
+        noticeVo.setNoticeDtEnd(  isEmptyObj(noticeVo.getNoticeDtEnd())   ? "99991231235959" : noticeVo.getNoticeDtEnd()  );
+        noticeVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.updateNotice(noticeVo))
+                             .build()
+                             .toResponseEntity();
     }
 }

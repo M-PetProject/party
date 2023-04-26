@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.http.ResponseEntity;
 
 import static com.study.party.comm.util.DateUtil.getFullTime;
+import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
 @Data
 @SuperBuilder
@@ -15,6 +16,19 @@ import static com.study.party.comm.util.DateUtil.getFullTime;
 public class CommResponseVo {
 
     Object body;
+
+    CommResultVo resultVo;
+
+    public ResponseEntity toResponseEntity() {
+        if ( isEmptyObj(resultVo) ) {
+            return ResponseEntity.status(200)
+                                 .header("res_tm", getFullTime())
+                                 .body(body);
+        }
+        return ResponseEntity.status(resultVo.getCode())
+                             .header("res_tm", getFullTime())
+                             .body( isEmptyObj(resultVo.getData()) ? resultVo.getMsg() : resultVo.getData() );
+    }
 
     /**
      * 200 : 정상

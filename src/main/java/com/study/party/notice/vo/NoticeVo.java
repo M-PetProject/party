@@ -53,6 +53,7 @@ public class NoticeVo extends CommPaginationReqVo {
                              .teamIdx(this.teamIdx)
                              .memberIdx(this.memberIdx)
                              .title(this.title)
+                             .content(this.content)
                              .noticeDtStart(this.noticeDtStart)
                              .noticeDtEnd(this.noticeDtEnd)
                              .useYn(this.useYn)

@@ -103,9 +103,7 @@
     <update id="updateNotice" parameterType="NoticeVo">
         update /* NoticeDao.updateNotice */
                notice
-           set team_idx        = #{teamIdx}
-             , member_idx      = #{memberIdx}
-             , title           = #{title}
+           set title           = #{title}
              , content         = #{content}
              , notice_dt_start = #{noticeDtStart}
              , notice_dt_end   = #{noticeDtEnd}
