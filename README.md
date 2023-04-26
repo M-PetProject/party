@@ -188,6 +188,8 @@ public class MemberController {
 
 ### 사용 예제(Controller)
 
+- com.study.party.comm.test.CommTestController 를 참고해주세요
+
 ---
 
 - Controller 에서 직접 CommResponseVo를 생성할 경우
@@ -256,9 +258,11 @@ CommResponseVo.builder()
 
 ### 사용 예제(Service)
 
+- com.study.party.comm.test.CommTestService 를 참고해주세요
+
 ---
 
-- CommResultVo 사용 권장
+- CommResultVo 사용을 권장합니다
 
 ```java
 

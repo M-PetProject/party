@@ -58,6 +58,14 @@ public class CommTestService {
     }
 
     public CommResultVo updateTest(CommTestVo commTestVo) {
+        CommTestVo result = commTestDao.getTest(commTestVo);
+        if ( isEmptyObj(result) ) {
+            return CommResultVo.builder()
+                               .code(400)
+                               .msg("존재하지 않는 게시글입니다")
+                               .build();
+        }
+
         if ( commTestDao.updateTest(commTestVo) < 1 ) {
             return CommResultVo.builder()
                                .code(500)
@@ -71,6 +79,14 @@ public class CommTestService {
     }
 
     public CommResultVo deleteTest(CommTestVo commTestVo) {
+        CommTestVo result = commTestDao.getTest(commTestVo);
+        if ( isEmptyObj(result) ) {
+            return CommResultVo.builder()
+                               .code(400)
+                               .msg("존재하지 않는 게시글입니다")
+                               .build();
+        }
+
         if ( commTestDao.deleteTest(commTestVo) < 1 ) {
             return CommResultVo.builder()
                                .code(500)
