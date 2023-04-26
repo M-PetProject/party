@@ -3,6 +3,8 @@ package com.study.party.comm.test;
 import com.study.party.comm.test.vo.CommTestVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
+import com.study.party.exception.BadRequestException;
+import com.study.party.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,23 +36,14 @@ public class CommTestService {
 
     public CommResultVo getTest(CommTestVo commTestVo) {
         CommTestVo result = commTestDao.getTest(commTestVo);
-        if ( isEmptyObj(result) ) {
-            return CommResultVo.builder()
-                               .code(400)
-                               .msg("존재하지 않는 게시글입니다")
-                               .build();
-        }
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 게시글입니다");
+
         return CommResultVo.builder().code(200).data(result).build();
     }
 
     public CommResultVo createTest(CommTestVo commTestVo) {
-        if ( commTestDao.createTest(commTestVo) < 1 ) {
-            return CommResultVo.builder()
-                               .code(500)
-                               .msg("게시글 등록에 실패했습니다")
-                               .build();
+        if ( commTestDao.createTest(commTestVo) < 1 ) throw new InternalServerErrorException("게시글 등록에 실패했습니다");
 
-        }
         return CommResultVo.builder()
                            .code(200)
                            .msg("게시글 등록되었습니다")
@@ -59,19 +52,9 @@ public class CommTestService {
 
     public CommResultVo updateTest(CommTestVo commTestVo) {
         CommTestVo result = commTestDao.getTest(commTestVo);
-        if ( isEmptyObj(result) ) {
-            return CommResultVo.builder()
-                               .code(400)
-                               .msg("존재하지 않는 게시글입니다")
-                               .build();
-        }
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 게시글입니다");
+        if ( commTestDao.updateTest(commTestVo) < 1 ) throw new InternalServerErrorException("게시글 수정에 실패했습니다");
 
-        if ( commTestDao.updateTest(commTestVo) < 1 ) {
-            return CommResultVo.builder()
-                               .code(500)
-                               .msg("게시글 수정에 실패했습니다")
-                               .build();
-        }
         return CommResultVo.builder()
                            .code(200)
                            .msg("게시글 수정되었습니다")
@@ -80,19 +63,9 @@ public class CommTestService {
 
     public CommResultVo deleteTest(CommTestVo commTestVo) {
         CommTestVo result = commTestDao.getTest(commTestVo);
-        if ( isEmptyObj(result) ) {
-            return CommResultVo.builder()
-                               .code(400)
-                               .msg("존재하지 않는 게시글입니다")
-                               .build();
-        }
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 게시글입니다");
+        if ( commTestDao.deleteTest(commTestVo) < 1 ) throw new InternalServerErrorException("게시글 삭제에 실패했습니다");
 
-        if ( commTestDao.deleteTest(commTestVo) < 1 ) {
-            return CommResultVo.builder()
-                               .code(500)
-                               .msg("게시글 삭제에 실패했습니다")
-                               .build();
-        }
         return CommResultVo.builder()
                            .code(200)
                            .msg("게시글 삭제되었습니다")

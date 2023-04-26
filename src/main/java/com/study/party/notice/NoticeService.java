@@ -3,6 +3,9 @@ package com.study.party.notice;
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
+import com.study.party.exception.BadRequestException;
+import com.study.party.exception.InternalServerErrorException;
+import com.study.party.exception.UnauthorizedException;
 import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeHistoryVo;
 import com.study.party.notice.vo.NoticeVo;
@@ -35,8 +38,9 @@ public class NoticeService {
     public CommResultVo getNotice(NoticeDetailVo noticeDetailVo, CustomUserDetailsVo customUserDetailsVo) {
         NoticeVo notice = noticeDao.getNotice(noticeDetailVo.toNoticeVo());
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
+
         if ( notice.getMemberIdx() != customUserDetailsVo.getMemberIdx() ) {
             notice.setViewCount(notice.getViewCount()+1);
             noticeDao.updateNoticeInfoViewCount(notice);
@@ -56,12 +60,12 @@ public class NoticeService {
 
     public CommResultVo createNotice(NoticeVo noticeVo) {
         if ( noticeDao.createNotice(noticeVo) < 0 ) {
-            return CommResultVo.builder().code(500).msg("공지사항 작성에 실패하였습니다").build();
+            throw new InternalServerErrorException("공지사항 작성에 실패하였습니다");
         }
 
         if ( noticeDao.createNoticeInfo(noticeVo) < 0 ) {
             noticeDao.deleteNotice(noticeVo);
-            return CommResultVo.builder().code(500).msg("공지사항 작성에 실패하였습니다").build();
+            throw new InternalServerErrorException("공지사항 작성에 실패하였습니다");
         }
         return CommResultVo.builder().code(200).msg("작성 하였습니다").build();
     }
@@ -70,11 +74,11 @@ public class NoticeService {
     public CommResultVo updateNotice(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
 
         if ( notice.getMemberIdx() != noticeVo.getMemberIdx() ) {
-            return CommResultVo.builder().code(401).msg("수정은 작성자만 가능합니다").build();
+            throw new UnauthorizedException("수정은 작성자만 가능합니다");
         }
 
         noticeDao.updateNotice(noticeVo);
@@ -85,13 +89,13 @@ public class NoticeService {
     public CommResultVo noticeLike(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
 
         // 이미 좋아요를 한 경우
         NoticeHistoryVo likeHistory = noticeHistoryDao.getLikeHistory(noticeVo.toNoticeHistoryVo());
         if (!isEmptyObj(likeHistory)) {
-            return CommResultVo.builder().code(400).msg("이미 좋아요 하셨습니다").build();
+            throw new BadRequestException("이미 좋아요 하셨습니다");
         }
 
         // 싫어요 이력이 있으면 싫어요 취소
@@ -102,7 +106,7 @@ public class NoticeService {
         }
 
         if ( noticeHistoryDao.createLikeHistory(noticeVo.toNoticeHistoryVo()) < 1 ) { // 좋아요 이력 생성
-            return CommResultVo.builder().code(500).msg("오류가 발생하였습니다").build();
+            throw new InternalServerErrorException("오류가 발생하였습니다");
         }
         noticeDao.updateNoticeInfoLike(notice); // 좋아요 건수 증가
         return CommResultVo.builder().code(200).msg("좋아요").build();
@@ -112,13 +116,13 @@ public class NoticeService {
     public CommResultVo noticeLikeCancel(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
 
         // 좋아요 이력 확인
         NoticeHistoryVo likeHistory = noticeHistoryDao.getLikeHistory(noticeVo.toNoticeHistoryVo());
         if (isEmptyObj(likeHistory)) { // 좋아요 이력이 없을 경우
-            return CommResultVo.builder().code(400).msg("좋아요 한 적이 없습니다").build();
+            throw new BadRequestException("좋아요 한 적이 없습니다");
         }
 
         noticeHistoryDao.deleteLikeHistory(noticeVo.toNoticeHistoryVo()); // 좋아요 이력 삭제
@@ -130,13 +134,13 @@ public class NoticeService {
     public CommResultVo noticeUnlike(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
 
         // 이미 싫어요를 한 경우
         NoticeHistoryVo unlikeHistory = noticeHistoryDao.getUnlikeHistory(noticeVo.toNoticeHistoryVo());
         if (!isEmptyObj(unlikeHistory)) {
-            return CommResultVo.builder().code(400).msg("이미 싫어요 하셨습니다").build();
+            throw new BadRequestException("이미 싫어요 하셨습니다");
         }
 
         // 좋아요 이력이 있으면 좋아요 취소
@@ -147,7 +151,7 @@ public class NoticeService {
         }
 
         if ( noticeHistoryDao.createUnlikeHistory(noticeVo.toNoticeHistoryVo()) < 1 ) { // 싫어요 이력 생성
-            return CommResultVo.builder().code(500).msg("오류가 발생하였습니다").build();
+            throw new InternalServerErrorException("오류가 발생하였습니다");
         }
         noticeDao.updateNoticeInfoUnlike(notice); // 싫어요 건수 증가
         return CommResultVo.builder().code(200).msg("싫어요").build();
@@ -157,13 +161,13 @@ public class NoticeService {
     public CommResultVo noticeUnlikeCancel(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+            throw new BadRequestException("존재하지 않는 공지사항입니다");
         }
 
         // 싫어요 이력 확인
         NoticeHistoryVo unlikeHistory = noticeHistoryDao.getUnlikeHistory(noticeVo.toNoticeHistoryVo());
         if (isEmptyObj(unlikeHistory)) { // 싫어요 이력이 없을 경우
-            return CommResultVo.builder().code(400).msg("싫어요 한 적이 없습니다").build();
+            throw new BadRequestException("싫어요 한 적이 없습니다");
         }
 
         noticeHistoryDao.deleteUnlikeHistory(noticeVo.toNoticeHistoryVo()); // 싫어요 이력 삭제

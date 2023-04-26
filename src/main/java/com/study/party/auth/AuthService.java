@@ -7,6 +7,8 @@ import com.study.party.auth.vo.SignupResVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.comm.vo.TokenVo;
 import com.study.party.config.jwt.TokenProvider;
+import com.study.party.exception.BadRequestException;
+import com.study.party.exception.InternalServerErrorException;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +35,13 @@ public class AuthService {
         MemberVo memberVoReq = signupReqVo.toMember(passwordEncoder);
         MemberVo checkMemberIdResult = memberService.checkMember(memberVoReq);
         if ( !isEmptyObj(checkMemberIdResult) ) {
-            return CommResponseVo.builder().body("이미 가입되어 있는 사용자입니다").build().badRequest();
+            throw new BadRequestException("이미 가입되어 있는 사용자입니다");
         }
 
         if ( memberService.createMember(memberVoReq) > 0 ) {
             return CommResponseVo.builder().body("가입 완료되었습니다").build().ok();
         } else {
-            return CommResponseVo.builder().body("가입에 실패하였습니다 잠시후 다시 시도해주세요").build().internalServerError();
+            throw new InternalServerErrorException("가입에 실패하였습니다 잠시후 다시 시도해주세요");
         }
     }
 
@@ -49,7 +51,7 @@ public class AuthService {
         try {
             authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         } catch (Exception e) {
-            return CommResponseVo.builder().body("로그인 정보가 일치하지 않습니다").build().badRequest();
+            throw new BadRequestException("로그인 정보가 일치하지 않습니다");
         }
         MemberVo dbMember = memberService.checkMember(loginReqVo.toMember());
         TokenVo tokenVo = tokenProvider.generateEntityToken(authentication, dbMember);

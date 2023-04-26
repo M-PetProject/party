@@ -1,6 +1,7 @@
 package com.study.party.auth;
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsVo loadUserByUsername(String memberId) throws UsernameNotFoundException {
         MemberVo dbMember = memberService.checkMember(MemberVo.builder().memberId(memberId).build());
         if ( isEmptyObj(dbMember) ) {
-            throw new UsernameNotFoundException("존재하지 않는 회원입니다.");
+            throw new BadRequestException("존재하지 않는 회원입니다");
         }
 
         return createUserDetails(dbMember);
