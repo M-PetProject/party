@@ -31,14 +31,14 @@ public class CommTestController {
         @Parameter(name="limit" , required=false, description="pagination parameter") @RequestParam(name="limit" , required=false, defaultValue="5") int limit
     ) {
         return CommResponseVo.builder()
-                             .body(commTestService.getTests(CommTestVo.builder()
-                                                                      .test1(test1)
-                                                                      .test2(test2)
-                                                                      .pageNo(pageNo)
-                                                                      .limit(limit)
-                                                                      .build()))
+                             .resultVo(commTestService.getTests(CommTestVo.builder()
+                                                                          .test1(test1)
+                                                                          .test2(test2)
+                                                                          .pageNo(pageNo)
+                                                                          .limit(limit)
+                                                                          .build()))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "테스트 상세 조회 메서드", description = "테이블 test 의 pk 인 idx 를 파라미터로 전달 받아 데이터 1건을 조회합니다")
@@ -50,9 +50,9 @@ public class CommTestController {
         if ( idx < 1 ) return CommResponseVo.builder().body("idx 는 필수 값 입니다").build().badRequest();
 
         return CommResponseVo.builder()
-                             .body(commTestService.getTest(CommTestVo.builder().idx(idx).build()))
+                             .resultVo(commTestService.getTest(CommTestVo.builder().idx(idx).build()))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "테스트 생성 메서드", description = "테이블 test에 데이터 1건을 생성합니다")
@@ -64,9 +64,9 @@ public class CommTestController {
         if ( isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) return CommResponseVo.builder().body("필수 입력 값을 확인해주세요").build().badRequest();
 
         return CommResponseVo.builder()
-                             .body(commTestService.createTest(commTestVo))
+                             .resultVo(commTestService.createTest(commTestVo))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "테스트 수정 메서드", description = "테이블 test에 데이터 1건을 수정합니다")
@@ -78,9 +78,9 @@ public class CommTestController {
         if ( commTestVo.getIdx() == 0 || isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) return CommResponseVo.builder().body("필수 입력 값을 확인해주세요").build().badRequest();
 
         return CommResponseVo.builder()
-                             .body(commTestService.updateTest(commTestVo))
+                             .resultVo(commTestService.updateTest(commTestVo))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
     @Operation(summary = "테스트 삭제 메서드", description = "테이블 test 의 pk 인 idx 를 파라미터로 전달 받아 데이터 1건을 삭제합니다")
@@ -92,9 +92,9 @@ public class CommTestController {
         if ( idx < 1 ) return CommResponseVo.builder().body("idx 는 필수 값 입니다").build().badRequest();
 
         return CommResponseVo.builder()
-                             .body(commTestService.deleteTest(CommTestVo.builder().idx(idx).build()))
+                             .resultVo(commTestService.deleteTest(CommTestVo.builder().idx(idx).build()))
                              .build()
-                             .ok();
+                             .toResponseEntity();
     }
 
 }

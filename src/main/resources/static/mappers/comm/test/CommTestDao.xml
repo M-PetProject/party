@@ -16,7 +16,8 @@
         <if test='test2 != null and test2 != ""'>
            and test_2 like concat('%', #{test2}, '%')
         </if>
-        limit #{limit} offset #{offset}
+         order by idx desc
+         limit #{limit} offset #{offset}
     </select>
 
     <select id="getTestsTotCnt" parameterType="CommTestVo" resultType="int">

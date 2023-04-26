@@ -23,20 +23,23 @@ public class MemberService {
 
     private final MemberDao memberDao;
 
-    public CommPaginationResVo getMembers(MemberVo memberVo) {
-        return CommPaginationResVo.builder()
-                                  .totalItems(memberDao.getMembersTotCnt(memberVo))
-                                  .data(memberDao.getMembers(memberVo))
-                                  .pageNo(memberVo.getPageNo())
-                                  .limit(memberVo.getLimit())
-                                  .build()
-                                  .pagination();
+    public CommResultVo getMembers(MemberVo memberVo) {
+        return CommResultVo.builder()
+                           .code(200)
+                           .data(CommPaginationResVo.builder()
+                                                    .totalItems(memberDao.getMembersTotCnt(memberVo))
+                                                    .data(memberDao.getMembers(memberVo))
+                                                    .pageNo(memberVo.getPageNo())
+                                                    .limit(memberVo.getLimit())
+                                                    .build()
+                                                    .pagination())
+                           .build();
     }
 
     public CommResultVo getMember(MemberVo memberVo) {
         MemberVo result = memberDao.getMember(memberVo);
         if ( isEmptyObj(result) ) {
-            return CommResultVo.builder().code(404).msg("존재하지 않는 회원입니다").build();
+            return CommResultVo.builder().code(400).msg("존재하지 않는 회원입니다").build();
         }
         getMemberInfoEtc(result);
 
@@ -46,22 +49,10 @@ public class MemberService {
     public CommResultVo getMemberByMemberId(MemberVo memberVo) {
         MemberVo result = memberDao.getMemberByMemberId(memberVo);
         if ( isEmptyObj(result) ) {
-            return CommResultVo.builder().code(404).msg("존재하지 않는 회원입니다").build();
+            return CommResultVo.builder().code(400).msg("존재하지 않는 회원입니다").build();
         }
         getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
-    }
-
-    public MemberVo checkMember(MemberVo memberVo) {
-        return memberDao.getMemberByMemberId(memberVo);
-    }
-
-    private MemberVo getMemberInfoEtc(MemberVo memberVo) {
-        memberVo.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(memberVo.getMemberIdx()));
-        memberVo.setMemberAllergyVos(memberDao.getMemberAllergyVos(memberVo.toAllergyVo()));
-        memberVo.setMemberHateFoodVos(memberDao.getMemberHateFoodVos(memberVo.toHateFoodVo()));
-        memberVo.setMemberLikeFoodVos(memberDao.getMemberLikeFoodVos(memberVo.toLikeFoodVo()));
-        return memberVo;
     }
 
     @Transactional
@@ -80,7 +71,28 @@ public class MemberService {
         return CommResultVo.builder().code(200).msg("수정완료되었습니다").build();
     }
 
-    public int createMemberEtc(MemberVo memberVo) {
+    public int deleteMember(MemberVo memberVo) {
+        return memberDao.deleteMember(memberVo);
+    }
+
+    /**
+     * 회원 ID 기반 가입 여부 확인
+     * @param memberVo
+     * @return
+     */
+    public MemberVo checkMember(MemberVo memberVo) {
+        return memberDao.getMemberByMemberId(memberVo);
+    }
+
+    private MemberVo getMemberInfoEtc(MemberVo memberVo) {
+        memberVo.setTeamMemberVos(teamMemberService.getTeamsByMemberIdx(memberVo.getMemberIdx()));
+        memberVo.setMemberAllergyVos(memberDao.getMemberAllergyVos(memberVo.toAllergyVo()));
+        memberVo.setMemberHateFoodVos(memberDao.getMemberHateFoodVos(memberVo.toHateFoodVo()));
+        memberVo.setMemberLikeFoodVos(memberDao.getMemberLikeFoodVos(memberVo.toLikeFoodVo()));
+        return memberVo;
+    }
+
+    private int createMemberEtc(MemberVo memberVo) {
         if(memberVo.getMemberAllergyVos() != null) {
             for (MemberAllergyVo memberAllergyVo : memberVo.getMemberAllergyVos() ) {
                 memberAllergyVo.setMemberIdx(memberVo.getMemberIdx());
@@ -102,10 +114,6 @@ public class MemberService {
             }
         }
         return 1;
-    }
-
-    public int deleteMember(MemberVo memberVo) {
-        return memberDao.deleteMember(memberVo);
     }
 
 }

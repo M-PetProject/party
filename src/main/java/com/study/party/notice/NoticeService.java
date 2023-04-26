@@ -21,11 +21,7 @@ public class NoticeService {
 
     private final NoticeCommentDao noticeCommentDao;
 
-//    public CommPaginationResVo getNotices(NoticeVo noticeVo) {
     public CommResultVo getNotices(NoticeVo noticeVo) {
-        if ( noticeVo.getTeamIdx() < 1 ) {
-            return CommResultVo.builder().code(400).msg("필수입력값을 확인하세요").build();
-        }
         return CommResultVo.builder().code(200).data(CommPaginationResVo.builder()
                                                                         .totalItems(noticeDao.getNoticesTotCnt(noticeVo))
                                                                         .data(noticeDao.getNotices(noticeVo))
@@ -38,7 +34,7 @@ public class NoticeService {
     public CommResultVo getNotice(NoticeDetailVo noticeDetailVo, CustomUserDetailsVo customUserDetailsVo) {
         NoticeVo notice = noticeDao.getNotice(noticeDetailVo.toNoticeVo());
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(404).msg("존재하지 않는 공지사항입니다").build();
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
         }
         if ( notice.getMemberIdx() != customUserDetailsVo.getMemberIdx() ) {
             notice.setViewCount(notice.getViewCount()+1);
@@ -73,7 +69,7 @@ public class NoticeService {
     public CommResultVo updateNotice(NoticeVo noticeVo) {
         NoticeVo notice = noticeDao.getNotice(noticeVo);
         if (isEmptyObj(notice)) {
-            return CommResultVo.builder().code(404).msg("존재하지 않는 공지사항입니다").build();
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
         }
 
         if ( notice.getMemberIdx() != noticeVo.getMemberIdx() ) {

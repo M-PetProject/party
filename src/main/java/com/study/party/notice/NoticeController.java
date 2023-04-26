@@ -33,6 +33,7 @@ public class NoticeController {
         @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
         @Parameter(name="limit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit" , required=false, defaultValue="5") int limit
     ) {
+        if ( isEmptyObj(team_idx) || team_idx < 1 ) return CommResponseVo.builder().body("올바르지 않은 정보가 전달되었습니다").build().badRequest();
         return CommResponseVo.builder()
                              .resultVo(noticeService.getNotices(NoticeVo.builder()
                                                                         .title(title)
@@ -53,6 +54,8 @@ public class NoticeController {
         @Parameter(name="commentPageNo", required=false, description="현재 페이지 번호") @RequestParam(name="commentPageNo", required=false, defaultValue="1") int commentPageNo,
         @Parameter(name="commentLimit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="commentLimit" , required=false, defaultValue="5") int commentLimit
     ) {
+        if ( notice_idx < 1 ) return CommResponseVo.builder().body("올바르지 않은 정보가 전달되었습니다").build().badRequest();
+
         return CommResponseVo.builder()
                              .resultVo(noticeService.getNotice(NoticeDetailVo.builder()
                                                                              .noticeIdx(notice_idx)
