@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
 //    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
     public CustomUserDetailsVo loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        MemberVo dbMember = memberService.getMemberByMemberId(MemberVo.builder().memberId(memberId).build());
+        MemberVo dbMember = memberService.checkMember(MemberVo.builder().memberId(memberId).build());
         if ( isEmptyObj(dbMember) ) {
             throw new UsernameNotFoundException("존재하지 않는 회원입니다.");
         }

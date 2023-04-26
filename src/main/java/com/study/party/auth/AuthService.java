@@ -37,7 +37,6 @@ public class AuthService {
         }
 
         if ( memberService.createMember(memberVoReq) > 0 ) {
-
             return CommResponseVo.builder().body("가입 완료되었습니다").build().ok();
         } else {
             return CommResponseVo.builder().body("가입에 실패하였습니다 잠시후 다시 시도해주세요").build().internalServerError();
@@ -52,7 +51,7 @@ public class AuthService {
         } catch (Exception e) {
             return CommResponseVo.builder().body("로그인 정보가 일치하지 않습니다").build().badRequest();
         }
-        MemberVo dbMember = memberService.getMemberByMemberId(loginReqVo.toMember());
+        MemberVo dbMember = memberService.checkMember(loginReqVo.toMember());
         TokenVo tokenVo = tokenProvider.generateEntityToken(authentication, dbMember);
         return CommResponseVo.builder()
                              .body(LoginResVo.builder()

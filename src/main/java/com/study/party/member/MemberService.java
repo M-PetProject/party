@@ -1,6 +1,7 @@
 package com.study.party.member;
 
 import com.study.party.comm.vo.CommPaginationResVo;
+import com.study.party.comm.vo.CommResultVo;
 import com.study.party.member.vo.MemberAllergyVo;
 import com.study.party.member.vo.MemberHateFoodVo;
 import com.study.party.member.vo.MemberLikeFoodVo;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
 @Slf4j
 @Service
@@ -30,16 +33,23 @@ public class MemberService {
                                   .pagination();
     }
 
-    public MemberVo getMember(MemberVo memberVo) {
+    public CommResultVo getMember(MemberVo memberVo) {
         MemberVo result = memberDao.getMember(memberVo);
+        if ( isEmptyObj(result) ) {
+            return CommResultVo.builder().code(404).msg("존재하지 않는 회원입니다").build();
+        }
         getMemberInfoEtc(result);
-        return result;
+
+        return CommResultVo.builder().code(200).data(result).build();
     }
 
-    public MemberVo getMemberByMemberId(MemberVo memberVo) {
+    public CommResultVo getMemberByMemberId(MemberVo memberVo) {
         MemberVo result = memberDao.getMemberByMemberId(memberVo);
+        if ( isEmptyObj(result) ) {
+            return CommResultVo.builder().code(404).msg("존재하지 않는 회원입니다").build();
+        }
         getMemberInfoEtc(result);
-        return result;
+        return CommResultVo.builder().code(200).data(result).build();
     }
 
     public MemberVo checkMember(MemberVo memberVo) {
@@ -61,13 +71,13 @@ public class MemberService {
         return 1;
     }
 
-    public int updateMember(MemberVo memberVo) {
+    public CommResultVo updateMember(MemberVo memberVo) {
         memberDao.updateMember(memberVo);
         memberDao.deleteMemberAllergyVo(memberVo.toAllergyVo());
         memberDao.deleteMemberHateFoodVo(memberVo.toHateFoodVo());
         memberDao.deleteMemberLikeFoodVo(memberVo.toLikeFoodVo());
         createMemberEtc(memberVo);
-        return 1;
+        return CommResultVo.builder().code(200).msg("수정완료되었습니다").build();
     }
 
     public int createMemberEtc(MemberVo memberVo) {
