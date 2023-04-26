@@ -25,6 +25,8 @@
 
 ## Package 생성 규칙
 
+---
+
 ### 업무 단위로 package 생성
 
 - controller, service, dao 단위로 package 를 구성하지 않고
@@ -49,6 +51,8 @@ com.study.party
 ---
 
 ## 로그인 사용자 정보 받아오기
+
+---
 
 - 현재 Spring Security 를 사용하고 있습니다
 - Spring Security 에서는 인증된 사용자 정보를 세션에 담아놓고 세션이 유지되는 동안 사용자 객체를 DB로 접근하지 않고 바로 사용할 수 있도록 합니다
@@ -131,6 +135,8 @@ public class MemberController {
 
 ## Naming Rule
 
+---
+
 ### Class Naming Rule
 - Camel Case 를 사용하여 작성한다
 - Controller => 업무명Controller (예시: CommCodeController)
@@ -159,6 +165,8 @@ public class MemberController {
 
 ## 결과 응답에 대해서는 HTTP Status Code 를 사용합니다
 
+---
+
 - 아래 정의된 코드만 사용합니다
 
 ### 성공 응답
@@ -172,7 +180,15 @@ public class MemberController {
 ### 서버 에러
 - 500 : 서버 에러
 
+---
+
+## 소스 코드 작성 가이드
+
+---
+
 ### 사용 예제(Controller)
+
+---
 
 - Controller 에서 직접 CommResponseVo를 생성할 경우
 - Controller 에서 필수 입력 파라미터에 대한 DB 조회 없는 유효성 검사를 진행할 경우(null 체크, length 체크, ... 등)  
@@ -236,7 +252,11 @@ CommResponseVo.builder()
               .toResponseEntity();
 ```
 
+---
+
 ### 사용 예제(Service)
+
+---
 
 - CommResultVo 사용 권장
 
@@ -279,10 +299,23 @@ return CommResultVo.builder()
 
 ---
 
-### 테스트 방법
+## 테스트 방법
+
+---
+
+### Junit
+
+---
 
 - Service
   - Junit   : src/test/java/com/study/party 아래 class 생성 후 사용
+
+---
+
+### Swagger
+
+---
+
 - Controller
   - Swagger : http://localhost:8080/swagger-ui/index.html
     - Authorize : Bearer+" "+토큰값(예시:)Bearer 토큰값)
