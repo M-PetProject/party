@@ -3,13 +3,12 @@ package com.study.party.notice;
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
-import com.study.party.notice.vo.NoticeCommentVo;
 import com.study.party.notice.vo.NoticeDetailVo;
+import com.study.party.notice.vo.NoticeHistoryVo;
 import com.study.party.notice.vo.NoticeVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
@@ -18,6 +17,8 @@ import static com.study.party.comm.util.StringUtil.isEmptyObj;
 public class NoticeService {
 
     private final NoticeDao noticeDao;
+
+    private final NoticeHistoryDao noticeHistoryDao;
 
     private final NoticeCommentDao noticeCommentDao;
 
@@ -79,4 +80,95 @@ public class NoticeService {
         noticeDao.updateNotice(noticeVo);
         return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
     }
+
+    @Transactional
+    public CommResultVo noticeLike(NoticeVo noticeVo) {
+        NoticeVo notice = noticeDao.getNotice(noticeVo);
+        if (isEmptyObj(notice)) {
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+        }
+
+        // 이미 좋아요를 한 경우
+        NoticeHistoryVo likeHistory = noticeHistoryDao.getLikeHistory(noticeVo.toNoticeHistoryVo());
+        if (!isEmptyObj(likeHistory)) {
+            return CommResultVo.builder().code(400).msg("이미 좋아요 하셨습니다").build();
+        }
+
+        // 싫어요 이력이 있으면 싫어요 취소
+        NoticeHistoryVo unlikeHistory = noticeHistoryDao.getUnlikeHistory(noticeVo.toNoticeHistoryVo());
+        if (!isEmptyObj(unlikeHistory)) {
+            noticeHistoryDao.deleteUnlikeHistory(noticeVo.toNoticeHistoryVo()); // 싫어요 이력 삭제
+            noticeDao.updateNoticeInfoUnlikeCancel(noticeVo); // 싫어요 건수 감소
+        }
+
+        if ( noticeHistoryDao.createLikeHistory(noticeVo.toNoticeHistoryVo()) < 1 ) { // 좋아요 이력 생성
+            return CommResultVo.builder().code(500).msg("오류가 발생하였습니다").build();
+        }
+        noticeDao.updateNoticeInfoLike(notice); // 좋아요 건수 증가
+        return CommResultVo.builder().code(200).msg("좋아요").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeLikeCancel(NoticeVo noticeVo) {
+        NoticeVo notice = noticeDao.getNotice(noticeVo);
+        if (isEmptyObj(notice)) {
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+        }
+
+        // 좋아요 이력 확인
+        NoticeHistoryVo likeHistory = noticeHistoryDao.getLikeHistory(noticeVo.toNoticeHistoryVo());
+        if (isEmptyObj(likeHistory)) { // 좋아요 이력이 없을 경우
+            return CommResultVo.builder().code(400).msg("좋아요 한 적이 없습니다").build();
+        }
+
+        noticeHistoryDao.deleteLikeHistory(noticeVo.toNoticeHistoryVo()); // 좋아요 이력 삭제
+        noticeDao.updateNoticeInfoLikeCancel(notice); // 좋아요 건수 감소
+        return CommResultVo.builder().code(200).msg("좋아요 취소").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeUnlike(NoticeVo noticeVo) {
+        NoticeVo notice = noticeDao.getNotice(noticeVo);
+        if (isEmptyObj(notice)) {
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+        }
+
+        // 이미 싫어요를 한 경우
+        NoticeHistoryVo unlikeHistory = noticeHistoryDao.getUnlikeHistory(noticeVo.toNoticeHistoryVo());
+        if (!isEmptyObj(unlikeHistory)) {
+            return CommResultVo.builder().code(400).msg("이미 싫어요 하셨습니다").build();
+        }
+
+        // 좋아요 이력이 있으면 좋아요 취소
+        NoticeHistoryVo likeHistory = noticeHistoryDao.getLikeHistory(noticeVo.toNoticeHistoryVo());
+        if (!isEmptyObj(likeHistory)) {
+            noticeHistoryDao.deleteLikeHistory(noticeVo.toNoticeHistoryVo()); // 좋아요 이력 삭제
+            noticeDao.updateNoticeInfoLikeCancel(noticeVo); // 좋아요 건수 감소
+        }
+
+        if ( noticeHistoryDao.createUnlikeHistory(noticeVo.toNoticeHistoryVo()) < 1 ) { // 싫어요 이력 생성
+            return CommResultVo.builder().code(500).msg("오류가 발생하였습니다").build();
+        }
+        noticeDao.updateNoticeInfoUnlike(notice); // 싫어요 건수 증가
+        return CommResultVo.builder().code(200).msg("싫어요").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeUnlikeCancel(NoticeVo noticeVo) {
+        NoticeVo notice = noticeDao.getNotice(noticeVo);
+        if (isEmptyObj(notice)) {
+            return CommResultVo.builder().code(400).msg("존재하지 않는 공지사항입니다").build();
+        }
+
+        // 싫어요 이력 확인
+        NoticeHistoryVo unlikeHistory = noticeHistoryDao.getUnlikeHistory(noticeVo.toNoticeHistoryVo());
+        if (isEmptyObj(unlikeHistory)) { // 싫어요 이력이 없을 경우
+            return CommResultVo.builder().code(400).msg("싫어요 한 적이 없습니다").build();
+        }
+
+        noticeHistoryDao.deleteUnlikeHistory(noticeVo.toNoticeHistoryVo()); // 싫어요 이력 삭제
+        noticeDao.updateNoticeInfoUnlikeCancel(notice); // 싫어요 건수 감소
+        return CommResultVo.builder().code(200).msg("싫어요 취소").build();
+    }
+
 }

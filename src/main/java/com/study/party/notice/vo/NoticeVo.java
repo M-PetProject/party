@@ -62,4 +62,11 @@ public class NoticeVo extends CommPaginationReqVo {
                              .unlikeCount(this.unlikeCount)
                              .build();
     }
+
+    public NoticeHistoryVo toNoticeHistoryVo() {
+        return NoticeHistoryVo.builder()
+                              .noticeIdx(this.noticeIdx)
+                              .memberIdx(this.memberIdx)
+                              .build();
+    }
 }

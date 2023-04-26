@@ -98,4 +98,77 @@ public class NoticeController {
                              .build()
                              .toResponseEntity();
     }
+
+    @Operation(summary = "공지사항 좋아요 API", description = "로그인 사용자의 정보와 공지사항 IDX 를 전달받아 공지사항 좋아요 건수를 1 증가시킵니다")
+    @PostMapping("notice/{notice_idx}/like")
+    public ResponseEntity<String> noticeLike(
+        HttpServletRequest request,
+        @PathVariable(name="notice_idx") long notice_idx,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.noticeLike(NoticeVo.builder()
+                                                                        .noticeIdx(notice_idx)
+                                                                        .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                        .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 좋아요 취소 API", description = "로그인 사용자의 정보와 공지사항 IDX 를 전달받아 공지사항 좋아요 건수를 1 감소시킵니다")
+    @DeleteMapping("notice/{notice_idx}/like")
+    public ResponseEntity<String> noticeLikeCancel(
+        HttpServletRequest request,
+        @PathVariable(name="notice_idx") long notice_idx,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.noticeLikeCancel(NoticeVo.builder()
+                                                                              .noticeIdx(notice_idx)
+                                                                              .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                              .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 싫어요 API", description = "로그인 사용자의 정보와 공지사항 IDX 를 전달받아 공지사항 싫어요 건수를 1 증가시킵니다")
+    @PostMapping("notice/{notice_idx}/unlike")
+    public ResponseEntity<String> noticeUnlike(
+        HttpServletRequest request,
+        @PathVariable(name="notice_idx") long notice_idx,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.noticeUnlike(NoticeVo.builder()
+                                                                          .noticeIdx(notice_idx)
+                                                                          .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                          .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 싫어요 취소 API", description = "로그인 사용자의 정보와 공지사항 IDX 를 전달받아 공지사항 싫어요 건수를 1 감소시킵니다")
+    @DeleteMapping("notice/{notice_idx}/unlike")
+    public ResponseEntity<String> noticeUnlikeCancel(
+        HttpServletRequest request,
+        @PathVariable(name="notice_idx") long notice_idx,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.noticeUnlikeCancel(NoticeVo.builder()
+                                                                                .noticeIdx(notice_idx)
+                                                                                .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
 }

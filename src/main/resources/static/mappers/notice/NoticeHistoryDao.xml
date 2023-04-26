@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.notice.NoticeHistoryDao">
+
+    <select id="getLikeHistories" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
+        select /* NoticeHistoryDao.getLikeHistories */
+          from
+    </select>
+
+    <select id="getLikeHistory" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
+        select /* NoticeHistoryDao.getLikeHistory */
+               notice_idx as notice_idx
+             , member_idx as member_idx
+          from notice_info_like_history
+         where 1=1
+        <if test=' noticeIdx != null and noticeIdx != "" and noticeIdx != 0 '>
+           and notice_idx = #{noticeIdx}
+        </if>
+        <if test=' memberIdx != null and memberIdx != "" and memberIdx != 0 '>
+           and member_idx = #{memberIdx}
+        </if>
+    </select>
+
+    <insert id="createLikeHistory" parameterType="NoticeHistoryVo">
+        insert /* NoticeHistoryDao.createLikeHistory */
+          into notice_info_like_history (
+               notice_idx
+             , member_idx
+        ) values (
+               #{noticeIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <delete id="deleteLikeHistory" parameterType="NoticeHistoryVo">
+        delete /* NoticeHistoryDao.deleteLikeHistory */
+          from notice_info_like_history
+         where notice_idx = #{noticeIdx}
+           and member_idx = #{memberIdx}
+    </delete>
+
+    <select id="getUnlikeHistories" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
+        select /* NoticeHistoryDao.getUnlikeHistories */
+               notice_idx as notice_idx
+             , member_idx as member_idx
+          from notice_info_unlike_history
+        <if test=' noticeIdx != null and noticeIdx != "" and noticeIdx != 0 '>
+           and notice_idx = #{noticeIdx}
+        </if>
+        <if test=' memberIdx != null and memberIdx != "" and memberIdx != 0 '>
+           and member_idx = #{memberIdx}
+        </if>
+    </select>
+
+    <select id="getUnlikeHistory" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
+        select /* NoticeHistoryDao.getUnlikeHistory */
+               notice_idx as notice_idx
+             , member_idx as member_idx
+          from notice_info_unlike_history
+         where notice_idx = #{noticeIdx}
+           and member_idx = #{memberIdx}
+    </select>
+
+    <insert id="createUnlikeHistory" parameterType="NoticeHistoryVo">
+        insert /* NoticeHistoryDao.createUnlikeHistory */
+          into notice_info_unlike_history (
+               notice_idx
+             , member_idx
+        ) values (
+               #{noticeIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <delete id="deleteUnlikeHistory" parameterType="NoticeHistoryVo">
+        delete /* NoticeHistoryDao.deleteUnlikeHistory */
+          from notice_info_unlike_history
+         where notice_idx = #{noticeIdx}
+           and member_idx = #{memberIdx}
+    </delete>
+
+
+</mapper>
