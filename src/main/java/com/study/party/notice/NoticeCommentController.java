@@ -35,6 +35,14 @@ public class NoticeCommentController {
         @Parameter(name="limit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit" , required=false, defaultValue="5") int limit
     ) {
         if(notice_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
-        return CommResponseVo.builder().build().toResponseEntity();
+
+        return CommResponseVo.builder()
+                             .body(noticeCommentService.getNoticeComments(NoticeCommentVo.builder()
+                                                                                         .noticeIdx(notice_idx)
+                                                                                         .pageNo(pageNo)
+                                                                                         .limit(limit)
+                                                                                         .build()))
+                             .build()
+                             .toResponseEntity();
     }
 }

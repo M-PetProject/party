@@ -41,4 +41,9 @@ public class NoticeCommentVo extends CommPaginationReqVo {
     @Schema(description="공지사항 댓글_정보 테이블 컬럼 싫어요 수", defaultValue="1")
     private long unlikeCount;
 
+
+    public NoticeVo toNoticeVo() {
+        return NoticeVo.builder().noticeIdx(getNoticeIdx()).build();
+    }
+
 }
