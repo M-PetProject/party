@@ -2,6 +2,7 @@ package com.study.party.member;
 
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.member.vo.MemberAllergyVo;
 import com.study.party.member.vo.MemberHateFoodVo;
 import com.study.party.member.vo.MemberLikeFoodVo;
@@ -38,19 +39,16 @@ public class MemberService {
 
     public CommResultVo getMember(MemberVo memberVo) {
         MemberVo result = memberDao.getMember(memberVo);
-        if ( isEmptyObj(result) ) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 회원입니다").build();
-        }
-        getMemberInfoEtc(result);
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
 
+        getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
     }
 
     public CommResultVo getMemberByMemberId(MemberVo memberVo) {
         MemberVo result = memberDao.getMemberByMemberId(memberVo);
-        if ( isEmptyObj(result) ) {
-            return CommResultVo.builder().code(400).msg("존재하지 않는 회원입니다").build();
-        }
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
+
         getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
     }

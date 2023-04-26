@@ -2,6 +2,7 @@ package com.study.party.member;
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,9 +40,8 @@ public class MemberController {
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody MemberVo memberVo
     ) {
-        if ( isEmptyObj(memberVo.getMemberId()) || isEmptyObj(memberVo.getMemberName()) ) {
-            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
-        }
+        if ( isEmptyObj(memberVo.getMemberId()) || isEmptyObj(memberVo.getMemberName()) ) throw new BadRequestException("필수입력값을 확인하세요");
+
         memberVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
                              .resultVo(memberService.updateMember(memberVo))

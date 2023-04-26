@@ -3,6 +3,7 @@ package com.study.party.comm.test;
 import com.study.party.comm.test.vo.CommTestVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class CommTestController {
         HttpServletRequest request,
         @RequestParam(name="idx", required=false, defaultValue="0") long idx
     ) {
-        if ( idx < 1 ) return CommResponseVo.builder().body("idx 는 필수 값 입니다").build().badRequest();
+        if ( idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(commTestService.getTest(CommTestVo.builder().idx(idx).build()))
@@ -61,7 +62,7 @@ public class CommTestController {
         HttpServletRequest request,
         @RequestBody CommTestVo commTestVo
     ) {
-        if ( isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) return CommResponseVo.builder().body("필수 입력 값을 확인해주세요").build().badRequest();
+        if ( isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(commTestService.createTest(commTestVo))
@@ -75,7 +76,7 @@ public class CommTestController {
         HttpServletRequest request,
         @RequestBody CommTestVo commTestVo
     ) {
-        if ( commTestVo.getIdx() == 0 || isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) return CommResponseVo.builder().body("필수 입력 값을 확인해주세요").build().badRequest();
+        if ( commTestVo.getIdx() == 0 || isEmptyObj(commTestVo.getTest1()) || isEmptyObj(commTestVo.getTest2()) ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(commTestService.updateTest(commTestVo))
@@ -89,7 +90,7 @@ public class CommTestController {
         HttpServletRequest request,
         @RequestParam(name="idx", required=false, defaultValue="0") long idx
     ) {
-        if ( idx < 1 ) return CommResponseVo.builder().body("idx 는 필수 값 입니다").build().badRequest();
+        if ( idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(commTestService.deleteTest(CommTestVo.builder().idx(idx).build()))

@@ -206,52 +206,39 @@ return CommResponseVo.builder()
 
 // 400 : 잘못된 문법으로 인하여 서버가 요청하여 이해할 수 없음을 의미합니다.
 // Parameter 입력값 오류 등 
-return CommResponseVo.builder()
-                     .body(결과 Data)
-                     .build()
-                     .badRequest();
+throw new BadRequestException("에러 내용을 작성해주세요");
 
 
 // 401 : 비록 HTTP 표준에서는 '미승인(unauthorized)'를 명확히 하고 있지만, 
 //       의미상 이 응답은 '비인증(unauthenticated)'를 의미합니다. 
 //       클라이언트는 요청한 응답을 받기 위해서는 반드시 스스로를 인증해야 합니다.``
-return CommResponseVo.builder()
-                     .body(결과 Data)
-                     .build()
-                     .unauthorized();
+throw new UnauthorizedException("에러 내용을 작성해주세요");
 
 // 404 : 서버는 요청받은 리소스를 찾을 수 없습니다. 
 //       브라우저에서는 알려지지 않은 URL을 의미합니다. 
 //       이것은 API에서 종점은 적절하지만 리소스 자체는 존재하지 않음을 의미할 수 있습니다. 
 //       서버들은 인증받지 않은 클라이언트로부터 리소스를 숨기기 위하여 이 응답을 403 대신에 전송할 수도 있습니다. 
 //       이 응답 코드는 웹에서 반복적으로 발생하기 때문에 가장 유명할지도 모릅니다.
-return CommResponseVo.builder()
-                     .body(결과 Data)
-                     .build()
-                     .notFound();
+throw new NotFoundException("에러 내용을 작성해주세요");
 
 // 500 : 웹 사이트 서버에 문제가 있음을 의미하지만 
 //       서버는 정확한 문제에 대해 더 구체적으로 설명할 수 없습니다.
-return CommResponseVo.builder()
-                     .body(결과 Data)
-                     .build()
-                     .internalServerError();
+throw new InternalServerErrorException("에러 내용을 작성해주세요");
+
 ```
 
 - CommResultVo 를 사용할 경우
 
 ```java
 // com.study.party.comm.vo.CommResponseVo 를 활용하여 Controller 에서 return
-
-
-CommResponseVo.builder()
-              .resultVo(CommResultVo.builder()
-                                    .code(200/400/401/404/500)
-                                    .data(결과 Data)
-                                    .msg("결과에 대한 메시지")
-                                    .build())
-              .build()
-              .toResponseEntity();
+return CommResponseVo.builder()
+                     .resultVo(CommResultVo.builder()
+                                           .code(200/400/401/404/500)
+                                           .data(결과 Data)
+                                           .msg("결과에 대한 메시지")
+                                           .build())
+                     .build()
+                     .toResponseEntity();
 ```
 
 ---
@@ -262,7 +249,15 @@ CommResponseVo.builder()
 
 ---
 
-- CommResultVo 사용을 권장합니다
+- 정상 처리의 경우 CommResultVo 사용을 권장합니다
+- 패키지 com.study.party.exception.advice 를 확인해주세요
+- ExceptionAdvice 에서 에러 처리를 담당하고 있습니다
+- 에러 목록 
+  - 400 : throw new BadRequestException("에러내용");
+  - 401 : throw new UnauthorizedException("에러내용");
+  - 404 : throw new BadRequestException("에러내용");
+  - 500 : throw new InternalServerErrorException("에러내용");
+  - 그외 : Exception 일 발생할 경우 500 으로 처리됩니다
 
 ```java
 
@@ -276,28 +271,16 @@ return CommResultVo.builder()
 // 400 : 파라미터 오류
 // Controller 파라미터 유효성 검사에서는 정상이었으나 로직이나 DB 에서 올바르지 않은 데이터가 전달된 경우
 // 예:) member_info 테이블에 member_idx 는 5까지만 생성되었는데 파라미터로 6이 전달된 경우
-return CommResultVo.builder()
-                   .code(400)
-                   .data(결과 Data)
-                   .msg("결과에 대한 메시지")
-                   .build();
+throw new BadRequestException("에러 내용을 작성해주세요");
 
 // 401 : 권한 없음
 // 리소스에 대한 등록, 수정, 삭제의 권한이 없는 경우
 // 예:) 공지사항 작성자만 수정이 가능한데 작성자가 아닌 다른 사용자가 수정을 요청한 경우
-return CommResultVo.builder()
-                   .code(401)
-                   .data(결과 Data)
-                   .msg("결과에 대한 메시지")
-                   .build();
+throw new UnauthorizedException("에러 내용을 작성해주세요");
 
 // 500 : 서버 에러
 // 로직, DB 처리 중 오류가 발생한 경우
-return CommResultVo.builder()
-                   .code(500)
-                   .data(결과 Data)
-                   .msg("결과에 대한 메시지")
-                   .build();
+throw new InternalServerErrorException("에러 내용을 작성해주세요");
 
 ```
 

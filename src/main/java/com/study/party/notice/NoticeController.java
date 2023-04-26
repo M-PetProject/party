@@ -4,6 +4,7 @@ package com.study.party.notice;
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,8 @@ public class NoticeController {
         @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
         @Parameter(name="limit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit" , required=false, defaultValue="5") int limit
     ) {
-        if ( isEmptyObj(team_idx) || team_idx < 1 ) return CommResponseVo.builder().body("올바르지 않은 정보가 전달되었습니다").build().badRequest();
+        if ( isEmptyObj(team_idx) || team_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
         return CommResponseVo.builder()
                              .resultVo(noticeService.getNotices(NoticeVo.builder()
                                                                         .title(title)
@@ -54,7 +56,7 @@ public class NoticeController {
         @Parameter(name="commentPageNo", required=false, description="현재 페이지 번호") @RequestParam(name="commentPageNo", required=false, defaultValue="1") int commentPageNo,
         @Parameter(name="commentLimit" , required=false, description="조회할 갯수 기본 5개") @RequestParam(name="commentLimit" , required=false, defaultValue="5") int commentLimit
     ) {
-        if ( notice_idx < 1 ) return CommResponseVo.builder().body("올바르지 않은 정보가 전달되었습니다").build().badRequest();
+        if ( notice_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         return CommResponseVo.builder()
                              .resultVo(noticeService.getNotice(NoticeDetailVo.builder()
@@ -73,9 +75,9 @@ public class NoticeController {
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody NoticeVo noticeVo
     ) {
-        if ( isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
-        noticeVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        if ( isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) throw new BadRequestException("필수입력값을 확인하세요");
 
+        noticeVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
                              .resultVo(noticeService.createNotice(noticeVo))
                              .build()
@@ -89,7 +91,8 @@ public class NoticeController {
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody NoticeVo noticeVo
     ) {
-        if ( noticeVo.getNoticeIdx() < 1 || isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        if ( noticeVo.getNoticeIdx() < 1 || isEmptyObj(noticeVo.getTitle()) || isEmptyObj(noticeVo.getContent()) ) throw new BadRequestException("필수입력값을 확인하세요");
+
         noticeVo.setNoticeDtStart(isEmptyObj(noticeVo.getNoticeDtStart()) ? "20000101000000" : noticeVo.getNoticeDtStart());
         noticeVo.setNoticeDtEnd(  isEmptyObj(noticeVo.getNoticeDtEnd())   ? "99991231235959" : noticeVo.getNoticeDtEnd()  );
         noticeVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
@@ -106,7 +109,7 @@ public class NoticeController {
         @PathVariable(name="notice_idx") long notice_idx,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
     ) {
-        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        if ( notice_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(noticeService.noticeLike(NoticeVo.builder()
@@ -124,7 +127,7 @@ public class NoticeController {
         @PathVariable(name="notice_idx") long notice_idx,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
     ) {
-        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        if ( notice_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(noticeService.noticeLikeCancel(NoticeVo.builder()
@@ -142,7 +145,7 @@ public class NoticeController {
         @PathVariable(name="notice_idx") long notice_idx,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
     ) {
-        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        if ( notice_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(noticeService.noticeUnlike(NoticeVo.builder()
@@ -160,7 +163,7 @@ public class NoticeController {
         @PathVariable(name="notice_idx") long notice_idx,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
     ) {
-        if ( notice_idx < 1 ) return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
+        if ( notice_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder()
                              .resultVo(noticeService.noticeUnlikeCancel(NoticeVo.builder()

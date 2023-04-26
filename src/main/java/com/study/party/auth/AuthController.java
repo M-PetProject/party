@@ -4,6 +4,7 @@ import com.study.party.auth.vo.LoginReqVo;
 import com.study.party.auth.vo.LoginResVo;
 import com.study.party.auth.vo.SignupReqVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,9 +44,7 @@ public class AuthController {
         HttpServletRequest request,
         @Parameter(name="signupReqVo", required=true, description="회원가입을 위한 사용자 ID, 비밀번호, 이름") @RequestBody SignupReqVo signupReqVo
     ) {
-        if ( isEmptyObj(signupReqVo.getMemberId()) || isEmptyObj(signupReqVo.getMemberName()) || isEmptyObj(signupReqVo.getMemberPassword()) ) {
-            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
-        }
+        if ( isEmptyObj(signupReqVo.getMemberId()) || isEmptyObj(signupReqVo.getMemberName()) || isEmptyObj(signupReqVo.getMemberPassword()) ) throw new BadRequestException("필수입력값을 확인하세요");
         return authService.signup(signupReqVo);
     }
 
@@ -55,9 +54,8 @@ public class AuthController {
         HttpServletRequest request,
         @Parameter(name="loginReqVo", required=true, description="로그인을 위한 사용자 ID, 비밀번호") @RequestBody LoginReqVo loginReqVo
     ) {
-        if ( isEmptyObj(loginReqVo.getMemberId()) || isEmptyObj(loginReqVo.getMemberPassword()) ) {
-            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
-        }
+        if ( isEmptyObj(loginReqVo.getMemberId()) || isEmptyObj(loginReqVo.getMemberPassword()) ) throw new BadRequestException("필수입력값을 확인하세요");
+
         return authService.login(loginReqVo);
     }
 

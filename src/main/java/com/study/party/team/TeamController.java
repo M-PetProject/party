@@ -2,6 +2,7 @@ package com.study.party.team;
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.exception.BadRequestException;
 import com.study.party.team.vo.TeamVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class TeamController {
         HttpServletRequest request,
         @PathVariable(name="team_idx") long team_idx
     ) {
-        if ( team_idx < 1 ) return CommResponseVo.builder().body("team_idx 는 필수 입력값입니다").build().badRequest();
+        if ( team_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder().body(teamService.getTeam(TeamVo.builder().teamIdx(team_idx).build())).build().ok();
     }
@@ -46,7 +47,7 @@ public class TeamController {
         HttpServletRequest request,
         @PathVariable(name="join_code") String join_code
     ) {
-        if (isEmptyObj(join_code) || join_code.length() < 4) return CommResponseVo.builder().body("참여코드를 확인하세요").build().badRequest();
+        if (isEmptyObj(join_code) || join_code.length() < 4) throw new BadRequestException("참여코드를 확인하세요");
 
         TeamVo result = teamService.getTeamByJoinCode(TeamVo.builder().joinCode(join_code).build());
         if (isEmptyObj(result)) return CommResponseVo.builder().body("참여코드를 확인하세요").build().badRequest();
@@ -61,9 +62,8 @@ public class TeamController {
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody TeamVo teamVo
     ) {
-        if ( isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) ) {
-            return CommResponseVo.builder().body("팀 이름과 팀 설명은 필수입력값입니다").build().badRequest();
-        }
+        if ( isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) ) throw new BadRequestException("필수입력값을 확인하세요");
+
         teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         teamVo.setMemberType("MASTER");
         return CommResponseVo.builder().body(teamService.createTeam(teamVo)).build().ok();
@@ -76,9 +76,8 @@ public class TeamController {
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody TeamVo teamVo
     ) {
-        if ( isEmptyObj(teamVo.getTeamIdx()) ) {
-            return CommResponseVo.builder().body("팀 IDX는 필수입력값입니다").build().badRequest();
-        }
+        if ( isEmptyObj(teamVo.getTeamIdx()) )  throw new BadRequestException("필수입력값을 확인하세요");
+
         teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         teamVo.setMemberType("MEMBER");
         return CommResponseVo.builder().body(teamService.joinTeam(teamVo)).build().ok();
@@ -90,9 +89,8 @@ public class TeamController {
         HttpServletRequest request,
         @RequestBody TeamVo teamVo
     ) {
-        if ( isEmptyObj(teamVo.getTeamIdx()) || teamVo.getTeamIdx() < 1 || isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) ) {
-            return CommResponseVo.builder().body("필수입력값을 확인하세요").build().badRequest();
-        }
+        if ( isEmptyObj(teamVo.getTeamIdx()) || teamVo.getTeamIdx() < 1 || isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) )  throw new BadRequestException("필수입력값을 확인하세요");
+
         return CommResponseVo.builder().body(teamService.updateTeam(teamVo)).build().ok();
     }
 
@@ -102,7 +100,7 @@ public class TeamController {
         HttpServletRequest request,
         @PathVariable(name="team_idx") long team_idx
     ) {
-        if ( team_idx < 1 ) return CommResponseVo.builder().body("team_idx 는 필수 입력값입니다").build().badRequest();
+        if ( team_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
 
         return CommResponseVo.builder().body(teamService.deleteTeam(TeamVo.builder().teamIdx(team_idx).build())).build().ok();
     }
