@@ -15,34 +15,34 @@ import lombok.experimental.SuperBuilder;
 @Schema(description="공지사항 댓글 VO")
 public class NoticeCommentVo extends CommPaginationReqVo {
 
-    @Schema(description="공지사항 댓글 테이블 PK IDX", defaultValue="1")
+    @Schema(description="공지사항 댓글 테이블 PK IDX", example="1")
     private long noticeCommentIdx;
 
     @JsonIgnore
     private long teamIdx;
 
-    @Schema(description="공지사항 댓글 테이블 컬럼 공지사항_IDX", defaultValue="1")
+    @Schema(description="공지사항 댓글 테이블 컬럼 공지사항_IDX", example="1")
     private long noticeIdx;
 
-    @Schema(description="공지사항 댓글 테이블 컬럼 멤버_IDX(작성자)", defaultValue="1")
+    @Schema(description="공지사항 댓글 테이블 컬럼 멤버_IDX(작성자)", example="1")
     private long memberIdx;
 
-    @Schema(description="공지사항 댓글 테이블 컬럼 제목", defaultValue="제목")
+    @Schema(description="공지사항 댓글 테이블 컬럼 제목", example="제목")
     private String title;
 
-    @Schema(description="공지사항 댓글 테이블 컬럼 내용", defaultValue="내용")
+    @Schema(description="공지사항 댓글 테이블 컬럼 내용", example="내용")
     private String content;
 
-    @Schema(description="공지사항 댓글 테이블 컬럼 사용여부", defaultValue="Y")
+    @Schema(description="공지사항 댓글 테이블 컬럼 사용여부", example="Y")
     private String useYn;
 
-    @Schema(description="공지사항 댓글_정보 테이블 컬럼 조회수", defaultValue="1")
+    @Schema(description="공지사항 댓글_정보 테이블 컬럼 조회수", example="1")
     private long viewCount;
 
-    @Schema(description="공지사항 댓글_정보 테이블 컬럼 좋아요 수", defaultValue="1")
+    @Schema(description="공지사항 댓글_정보 테이블 컬럼 좋아요 수", example="1")
     private long likeCount;
 
-    @Schema(description="공지사항 댓글_정보 테이블 컬럼 싫어요 수", defaultValue="1")
+    @Schema(description="공지사항 댓글_정보 테이블 컬럼 싫어요 수", example="1")
     private long unlikeCount;
 
 

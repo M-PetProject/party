@@ -50,7 +50,7 @@ public class NoticeCommentController {
 
     @Operation(summary = "공지사항 댓글 상세 정보 조회 API", description = "공지사항 댓글 상세 정보를 조회합니다")
     @GetMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}")
-    public ResponseEntity<NoticeCommentVo> getNoticeComments(
+    public ResponseEntity<NoticeCommentVo> getNoticeComment(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
@@ -90,6 +90,28 @@ public class NoticeCommentController {
         noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
                              .resultVo(noticeCommentService.createNoticeComment(noticeCommentVo))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 댓글 정보 생성 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 데이터를 1건 생성합니다")
+    @PutMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}")
+    public ResponseEntity<NoticeCommentVo> updateNoticeComment(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx,
+        @RequestBody NoticeCommentVo noticeCommentVo
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 || isEmptyObj(noticeCommentVo.getTitle()) || isEmptyObj(noticeCommentVo.getContent())) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        noticeCommentVo.setTeamIdx(team_idx);
+        noticeCommentVo.setNoticeIdx(notice_idx);
+        noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
+        noticeCommentVo.setNoticeCommentIdx(notice_comment_idx);
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.updateNoticeComment(noticeCommentVo))
                              .build()
                              .toResponseEntity();
     }

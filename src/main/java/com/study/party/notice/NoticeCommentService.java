@@ -73,6 +73,20 @@ public class NoticeCommentService {
         return CommResultVo.builder().code(200).msg("작성 하였습니다").build();
     }
 
+    @Transactional
+    public CommResultVo updateNoticeComment(NoticeCommentVo noticeCommentVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkNotice(noticeCommentVo.toNoticeVo());
+
+        NoticeCommentVo noticeComment = noticeCommentDao.getNoticeComment(noticeCommentVo);
+        if (isEmptyObj(noticeComment)) throw new BadRequestException("존재하지 않는 공지사항 댓글입니다");
+
+        if (noticeComment.getMemberIdx() != noticeCommentVo.getMemberIdx()) throw new UnauthorizedException("수정은 작성자만 가능합니다");
+
+        if ( noticeCommentDao.updateNoticeComment(noticeCommentVo) < 1 ) throw new InternalServerErrorException("공지사항 댓글 작성에 실패하였습니다");
+        return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
+    }
+
     private void checkTeamMember(TeamMemberVo teamMemberVo) {
         TeamMemberVo teamMember = teamMemberService.getTeamMember(teamMemberVo);
         if (isEmptyObj(teamMember)) throw new UnauthorizedException("참여하지 않은 팀의 공지사항입니다");

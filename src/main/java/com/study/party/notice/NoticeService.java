@@ -83,7 +83,7 @@ public class NoticeService {
 
         if ( notice.getMemberIdx() != noticeVo.getMemberIdx() ) throw new UnauthorizedException("수정은 작성자만 가능합니다");
 
-        noticeDao.updateNotice(noticeVo);
+        if (noticeDao.updateNotice(noticeVo) < 1) throw new InternalServerErrorException("공지사항 수정에 실패하였습니다");
         return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
     }
 
