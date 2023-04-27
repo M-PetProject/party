@@ -1,5 +1,6 @@
 package com.study.party.notice.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.party.comm.vo.CommPaginationReqVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,9 @@ public class NoticeCommentVo extends CommPaginationReqVo {
 
     @Schema(description="공지사항 댓글 테이블 PK IDX", defaultValue="1")
     private long noticeCommentIdx;
+
+    @JsonIgnore
+    private long teamIdx;
 
     @Schema(description="공지사항 댓글 테이블 컬럼 공지사항_IDX", defaultValue="1")
     private long noticeIdx;

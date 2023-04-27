@@ -65,12 +65,12 @@
     <insert id="createNoticeCommentInfo" parameterType="NoticeCommentVo">
         insert /* NoticeCommentDao.createNoticeComment */
           into notice_comment_info (
-               notice_idx
+               notice_comment_idx
              , view_count
              , like_count
              , unlike_count
         ) values (
-               #{noticeIdx}
+               #{noticeCommentIdx}
              , 0
              , 0
              , 0

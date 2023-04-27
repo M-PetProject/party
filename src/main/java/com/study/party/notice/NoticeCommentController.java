@@ -25,18 +25,22 @@ public class NoticeCommentController {
     private final NoticeCommentService noticeCommentService;
 
     @Operation(summary = "공지사항 댓글 목록 정보 조회 API", description = "공지사항 댓글 목록 정보를 조회합니다")
-    @GetMapping("notice/{notice_idx}/comments")
+    @GetMapping("notice/{team_idx}/{notice_idx}/comments")
     public ResponseEntity<CommPaginationResVo<List<NoticeCommentVo>>> getNoticeComments(
         HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
         @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
         @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
         @Parameter(name="limit", required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit", required=false, defaultValue="5") int limit
     ) {
-        if(notice_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+        if(team_idx < 1 || notice_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         return CommResponseVo.builder()
                              .body(noticeCommentService.getNoticeComments(NoticeCommentVo.builder()
+                                                                                         .teamIdx(team_idx)
                                                                                          .noticeIdx(notice_idx)
+                                                                                         .memberIdx(customUserDetailsVo.getMemberIdx())
                                                                                          .pageNo(pageNo)
                                                                                          .limit(limit)
                                                                                          .build()))
@@ -45,19 +49,21 @@ public class NoticeCommentController {
     }
 
     @Operation(summary = "공지사항 댓글 상세 정보 조회 API", description = "공지사항 댓글 상세 정보를 조회합니다")
-    @GetMapping("notice/{notice_idx}/comment/{notice_comment_idx}")
+    @GetMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}")
     public ResponseEntity<NoticeCommentVo> getNoticeComments(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
         @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
         @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx,
         @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
         @Parameter(name="limit", required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit", required=false, defaultValue="5") int limit
     ) {
-        if(notice_idx < 1 || notice_comment_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         return CommResponseVo.builder()
                              .body(noticeCommentService.getNoticeComment(NoticeCommentVo.builder()
+                                                                                        .teamIdx(team_idx)
                                                                                         .noticeIdx(notice_idx)
                                                                                         .noticeCommentIdx(notice_comment_idx)
                                                                                         .memberIdx(customUserDetailsVo.getMemberIdx())
@@ -69,15 +75,17 @@ public class NoticeCommentController {
     }
 
     @Operation(summary = "공지사항 댓글 정보 생성 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 데이터를 1건 생성합니다")
-    @PostMapping("notice/{notice_idx}/comment")
+    @PostMapping("notice/{team_idx}/{notice_idx}/comment")
     public ResponseEntity<NoticeCommentVo> createNoticeComment(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
         @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
         @RequestBody NoticeCommentVo noticeCommentVo
     ) {
-        if(notice_idx < 1 || isEmptyObj(noticeCommentVo.getTitle()) || isEmptyObj(noticeCommentVo.getContent())) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+        if(team_idx < 1 || notice_idx < 1 || isEmptyObj(noticeCommentVo.getTitle()) || isEmptyObj(noticeCommentVo.getContent())) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
+        noticeCommentVo.setTeamIdx(team_idx);
         noticeCommentVo.setNoticeIdx(notice_idx);
         noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
