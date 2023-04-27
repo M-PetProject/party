@@ -5,6 +5,7 @@ import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.exception.BadRequestException;
 import com.study.party.team.vo.TeamVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,14 +46,16 @@ public class TeamController {
     @GetMapping("/team/join-code/{join_code}")
     public ResponseEntity<TeamVo> getTeamByJoinCode(
         HttpServletRequest request,
-        @PathVariable(name="join_code") String join_code
+        @Parameter(name="team_idx" , required=true, description="팀 테이블 컬럼 join_code") @PathVariable(name="join_code") String join_code
     ) {
         if (isEmptyObj(join_code) || join_code.length() < 4) throw new BadRequestException("참여코드를 확인하세요");
 
-        TeamVo result = teamService.getTeamByJoinCode(TeamVo.builder().joinCode(join_code).build());
-        if (isEmptyObj(result)) return CommResponseVo.builder().body("참여코드를 확인하세요").build().badRequest();
-
-        return CommResponseVo.builder().body(result).build().ok();
+        return CommResponseVo.builder()
+                             .resultVo(teamService.getTeamByJoinCode(TeamVo.builder()
+                                                                           .joinCode(join_code)
+                                                                           .build()))
+                             .build()
+                             .toResponseEntity();
     }
 
     @Operation(summary = "팀 생성 API", description = "테이블 team 에 데이터 1건을 생성합니다")
@@ -66,21 +69,25 @@ public class TeamController {
 
         teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         teamVo.setMemberType("MASTER");
-        return CommResponseVo.builder().body(teamService.createTeam(teamVo)).build().ok();
+        return CommResponseVo.builder().resultVo(teamService.createTeam(teamVo)).build().toResponseEntity();
     }
 
     @Operation(summary = "팀 참가 API", description = "테이블 team 에 데이터 1건을 생성합니다")
-    @PostMapping("team/join")
+    @PostMapping("team/{team_idx}")
     public ResponseEntity joinTeam(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
-        @RequestBody TeamVo teamVo
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx
     ) {
-        if ( isEmptyObj(teamVo.getTeamIdx()) )  throw new BadRequestException("필수입력값을 확인하세요");
+        if ( team_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
 
-        teamVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
-        teamVo.setMemberType("MEMBER");
-        return CommResponseVo.builder().body(teamService.joinTeam(teamVo)).build().ok();
+        return CommResponseVo.builder()
+                             .resultVo(teamService.joinTeam(TeamVo.builder()
+                                                                  .teamIdx(team_idx)
+                                                                  .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                  .memberType("MEMBER").build()))
+                             .build()
+                             .toResponseEntity();
     }
 
     @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
@@ -91,7 +98,7 @@ public class TeamController {
     ) {
         if ( isEmptyObj(teamVo.getTeamIdx()) || teamVo.getTeamIdx() < 1 || isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) )  throw new BadRequestException("필수입력값을 확인하세요");
 
-        return CommResponseVo.builder().body(teamService.updateTeam(teamVo)).build().ok();
+        return CommResponseVo.builder().resultVo(teamService.updateTeam(teamVo)).build().toResponseEntity();
     }
 
     @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
@@ -102,7 +109,7 @@ public class TeamController {
     ) {
         if ( team_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
 
-        return CommResponseVo.builder().body(teamService.deleteTeam(TeamVo.builder().teamIdx(team_idx).build())).build().ok();
+        return CommResponseVo.builder().resultVo(teamService.deleteTeam(TeamVo.builder().teamIdx(team_idx).build())).build().toResponseEntity();
     }
 
 

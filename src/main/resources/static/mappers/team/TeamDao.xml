@@ -10,6 +10,7 @@
              , team_desc                                     as team_desc
              , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
              , join_code                                     as join_code
+             , member_amt                                    as member_amt
           from team
          where 1=1
         <if test=' teamIdx != null and teamIdx != "" '>
@@ -27,6 +28,7 @@
              , team_desc                                     as team_desc
              , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
              , join_code                                     as join_code
+             , member_amt                                    as member_amt
           from team
          where team_idx = #{teamIdx}
     </select>
@@ -38,6 +40,7 @@
              , team_desc                                     as team_desc
              , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
              , join_code                                     as join_code
+             , member_amt                                    as member_amt
           from team
          where join_code = #{joinCode}
     </select>
@@ -48,20 +51,23 @@
                team_nm
              , team_desc
              , join_code
+             , member_amt
         ) values (
                #{teamNm}
              , #{teamDesc}
              , #{joinCode}
+             , #{memberAmt}
         )
     </insert>
 
     <update id="updateTeam" parameterType="TeamVo" >
         update /* TeamDao.updateTeam */
                team
-           set team_nm   = #{teamNm}
-             , team_desc = #{teamDesc}
-             , join_code = #{joinCode}
-         where team_idx = #{teamIdx}
+           set team_nm    = #{teamNm}
+             , team_desc  = #{teamDesc}
+             , join_code  = #{joinCode}
+             , member_amt = #{memberAmt}
+         where team_idx   = #{teamIdx}
     </update>
 
     <delete id="deleteTeam" parameterType="TeamVo" >

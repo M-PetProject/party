@@ -21,7 +21,7 @@ public class TeamVo {
     @JsonIgnore
     private long memberIdx;
 
-    @JsonIgnore
+    @Schema(description="팀 table 컬럼 회원_유형", example="MASTER/MEMBER")
     private String memberType;
 
     @Schema(description="팀 table 컬럼 팀_이름", example="string")
@@ -35,6 +35,9 @@ public class TeamVo {
 
     @Schema(description="팀 table 컬럼 팀_참여_코드", example="0000")
     private String joinCode;
+
+    @Schema(description="팀 table 컬럼 팀_1명당_금액", example="0")
+    private long memberAmt;
 
     public TeamMemberVo toTeamMemberVo() {
         return TeamMemberVo.builder().teamIdx(this.teamIdx).memberIdx(this.memberIdx).memberType(this.memberType).build();
