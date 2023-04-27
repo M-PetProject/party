@@ -86,6 +86,13 @@
          where notice_comment_idx = #{noticeCommentIdx}
     </update>
 
+    <update id="updateNoticeCommentInfoViewCount" parameterType="NoticeCommentVo">
+        update /* NoticeCommentDao.updateNoticeCommentInfoViewCount */
+               notice_comment
+           set view_count         = view_count + 1
+         where notice_comment_idx = #{noticeCommentIdx}
+    </update>
+
     <update id="updateNoticeCommentInfoLike" parameterType="NoticeCommentVo">
         update /* NoticeCommentDao.updateNoticeCommentInfoLike */
                notice_comment_info

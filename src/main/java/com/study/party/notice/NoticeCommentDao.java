@@ -14,6 +14,7 @@ public interface NoticeCommentDao {
     int createNoticeComment(NoticeCommentVo noticeCommentVo);
     int createNoticeCommentInfo(NoticeCommentVo noticeCommentVo);
     int updateNoticeComment(NoticeCommentVo noticeCommentVo);
+    int updateNoticeCommentInfoViewCount(NoticeCommentVo noticeCommentVo);
     int updateNoticeCommentInfoLike(NoticeCommentVo noticeCommentVo);
     int updateNoticeCommentInfoLikeCancel(NoticeCommentVo noticeCommentVo);
     int updateNoticeCommentInfoUnlike(NoticeCommentVo noticeCommentVo);

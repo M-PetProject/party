@@ -41,7 +41,7 @@ public class MemberService {
         MemberVo result = memberDao.getMember(memberVo);
         if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
 
-        getMemberInfoEtc(result);
+        result = getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
     }
 
@@ -49,7 +49,7 @@ public class MemberService {
         MemberVo result = memberDao.getMemberByMemberId(memberVo);
         if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
 
-        getMemberInfoEtc(result);
+        result = getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
     }
 

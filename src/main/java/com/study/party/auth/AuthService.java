@@ -5,6 +5,7 @@ import com.study.party.auth.vo.LoginResVo;
 import com.study.party.auth.vo.SignupReqVo;
 import com.study.party.auth.vo.SignupResVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.comm.vo.CommResultVo;
 import com.study.party.comm.vo.TokenVo;
 import com.study.party.config.jwt.TokenProvider;
 import com.study.party.exception.BadRequestException;
@@ -53,7 +54,8 @@ public class AuthService {
         } catch (Exception e) {
             throw new BadRequestException("로그인 정보가 일치하지 않습니다");
         }
-        MemberVo dbMember = memberService.checkMember(loginReqVo.toMember());
+        CommResultVo<MemberVo> memberResult = memberService.getMemberByMemberId(loginReqVo.toMember());
+        MemberVo dbMember = memberResult.getData();
         TokenVo tokenVo = tokenProvider.generateEntityToken(authentication, dbMember);
         return CommResponseVo.builder()
                              .body(LoginResVo.builder()
