@@ -37,13 +37,13 @@ public class NoticeCommentController {
         if(team_idx < 1 || notice_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         return CommResponseVo.builder()
-                             .body(noticeCommentService.getNoticeComments(NoticeCommentVo.builder()
-                                                                                         .teamIdx(team_idx)
-                                                                                         .noticeIdx(notice_idx)
-                                                                                         .memberIdx(customUserDetailsVo.getMemberIdx())
-                                                                                         .pageNo(pageNo)
-                                                                                         .limit(limit)
-                                                                                         .build()))
+                             .resultVo(noticeCommentService.getNoticeComments(NoticeCommentVo.builder()
+                                                                                             .teamIdx(team_idx)
+                                                                                             .noticeIdx(notice_idx)
+                                                                                             .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                             .pageNo(pageNo)
+                                                                                             .limit(limit)
+                                                                                             .build()))
                              .build()
                              .toResponseEntity();
     }
@@ -62,14 +62,14 @@ public class NoticeCommentController {
         if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         return CommResponseVo.builder()
-                             .body(noticeCommentService.getNoticeComment(NoticeCommentVo.builder()
-                                                                                        .teamIdx(team_idx)
-                                                                                        .noticeIdx(notice_idx)
-                                                                                        .noticeCommentIdx(notice_comment_idx)
-                                                                                        .memberIdx(customUserDetailsVo.getMemberIdx())
-                                                                                        .pageNo(pageNo)
-                                                                                        .limit(limit)
-                                                                                        .build()))
+                             .resultVo(noticeCommentService.getNoticeComment(NoticeCommentVo.builder()
+                                                                                            .teamIdx(team_idx)
+                                                                                            .noticeIdx(notice_idx)
+                                                                                            .noticeCommentIdx(notice_comment_idx)
+                                                                                            .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                            .pageNo(pageNo)
+                                                                                            .limit(limit)
+                                                                                            .build()))
                              .build()
                              .toResponseEntity();
     }
@@ -89,7 +89,7 @@ public class NoticeCommentController {
         noticeCommentVo.setNoticeIdx(notice_idx);
         noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
-                             .body(noticeCommentService.createNoticeComment(noticeCommentVo))
+                             .resultVo(noticeCommentService.createNoticeComment(noticeCommentVo))
                              .build()
                              .toResponseEntity();
     }
