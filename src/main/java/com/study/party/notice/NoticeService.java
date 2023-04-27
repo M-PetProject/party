@@ -107,7 +107,7 @@ public class NoticeService {
         }
 
         if ( noticeHistoryDao.createLikeHistory(noticeVo.toNoticeHistoryVo()) < 1 ) throw new InternalServerErrorException("오류가 발생하였습니다"); // 좋아요 이력 생성
-        noticeDao.updateNoticeInfoLike(notice); // 좋아요 건수 증가
+        if ( noticeDao.updateNoticeInfoLike(notice) < 1 ) throw new InternalServerErrorException("오류가 발생하였습니다"); // 좋아요 건수 증가
         return CommResultVo.builder().code(200).msg("좋아요").build();
     }
 

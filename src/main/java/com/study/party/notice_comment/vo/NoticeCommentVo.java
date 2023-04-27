@@ -51,4 +51,10 @@ public class NoticeCommentVo extends CommPaginationReqVo {
         return NoticeVo.builder().noticeIdx(getNoticeIdx()).build();
     }
 
+    public NoticeCommentHistoryVo toNoticeCommentHistoryVo() {
+        return NoticeCommentHistoryVo.builder()
+                                     .noticeCommentIdx(this.noticeCommentIdx)
+                                     .memberIdx(this.memberIdx)
+                                     .build();
+    }
 }

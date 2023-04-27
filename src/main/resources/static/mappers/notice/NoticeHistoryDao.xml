@@ -3,23 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.party.notice.NoticeHistoryDao">
 
-    <select id="getLikeHistories" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
-        select /* NoticeHistoryDao.getLikeHistories */
-          from
-    </select>
-
     <select id="getLikeHistory" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
         select /* NoticeHistoryDao.getLikeHistory */
                notice_idx as notice_idx
              , member_idx as member_idx
           from notice_info_like_history
-         where 1=1
-        <if test=' noticeIdx != null and noticeIdx != "" and noticeIdx != 0 '>
-           and notice_idx = #{noticeIdx}
-        </if>
-        <if test=' memberIdx != null and memberIdx != "" and memberIdx != 0 '>
+         where notice_idx = #{noticeIdx}
            and member_idx = #{memberIdx}
-        </if>
     </select>
 
     <insert id="createLikeHistory" parameterType="NoticeHistoryVo">
@@ -39,19 +29,6 @@
          where notice_idx = #{noticeIdx}
            and member_idx = #{memberIdx}
     </delete>
-
-    <select id="getUnlikeHistories" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
-        select /* NoticeHistoryDao.getUnlikeHistories */
-               notice_idx as notice_idx
-             , member_idx as member_idx
-          from notice_info_unlike_history
-        <if test=' noticeIdx != null and noticeIdx != "" and noticeIdx != 0 '>
-           and notice_idx = #{noticeIdx}
-        </if>
-        <if test=' memberIdx != null and memberIdx != "" and memberIdx != 0 '>
-           and member_idx = #{memberIdx}
-        </if>
-    </select>
 
     <select id="getUnlikeHistory" parameterType="NoticeHistoryVo" resultType="NoticeHistoryVo">
         select /* NoticeHistoryDao.getUnlikeHistory */
@@ -79,6 +56,5 @@
          where notice_idx = #{noticeIdx}
            and member_idx = #{memberIdx}
     </delete>
-
 
 </mapper>
