@@ -8,6 +8,7 @@ import com.study.party.exception.UnauthorizedException;
 import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeHistoryVo;
 import com.study.party.notice.vo.NoticeVo;
+import com.study.party.notice_comment.NoticeCommentDao;
 import com.study.party.team_member.TeamMemberService;
 import com.study.party.team_member.vo.TeamMemberVo;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,11 @@
-package com.study.party.notice;
+package com.study.party.notice_comment;
 
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.exception.BadRequestException;
-import com.study.party.notice.vo.NoticeCommentVo;
+import com.study.party.notice_comment.vo.NoticeCommentVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;

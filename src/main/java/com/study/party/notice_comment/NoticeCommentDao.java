@@ -1,6 +1,6 @@
-package com.study.party.notice;
+package com.study.party.notice_comment;
 
-import com.study.party.notice.vo.NoticeCommentVo;
+import com.study.party.notice_comment.vo.NoticeCommentVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

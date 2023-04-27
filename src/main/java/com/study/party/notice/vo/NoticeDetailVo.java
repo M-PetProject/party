@@ -1,7 +1,7 @@
 package com.study.party.notice.vo;
 
-import com.study.party.comm.vo.CommPaginationReqVo;
 import com.study.party.comm.vo.CommPaginationResVo;
+import com.study.party.notice_comment.vo.NoticeCommentVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

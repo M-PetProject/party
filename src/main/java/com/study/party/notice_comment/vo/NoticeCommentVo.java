@@ -1,7 +1,8 @@
-package com.study.party.notice.vo;
+package com.study.party.notice_comment.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.party.comm.vo.CommPaginationReqVo;
+import com.study.party.notice.vo.NoticeVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
