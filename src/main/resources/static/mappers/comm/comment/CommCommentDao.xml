@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.party.comm.comment.CommCommentDao">
+
+    <select id="getComments" parameterType="CommCommentVo" resultType="CommCommentVo">
+        select /* CommCommentDao.getComments */
+               m.comment_idx                                                                   as comment_idx
+             , m.comment_cd                                                                    as comment_cd
+             , c1.cd_nm                                                                        as comment_cd_nm
+             , m.post_idx                                                                      as post_idx
+             , m.member_idx                                                                    as member_idx
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.title   )                                as title
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.content )                                as content
+             , m.parent_comment_idx                                                            as parent_comment_idx
+             , m.use_yn                                                                        as use_yn
+             , m.reg_date                                                                      as reg_date
+             , d1.view_count                                                                   as view_count
+             , d1.like_count                                                                   as like_count
+             , d1.unlike_count                                                                 as unlike_count
+             , (select count(*) from comment i_d where i_d.parent_comment_idx = m.comment_idx) as children_cnt
+             , if(isnull(d2.comment_idx), 'N', 'Y')                                            as like_yn
+             , if(isnull(d3.comment_idx), 'N', 'Y')                                            as unlike_yn
+          from            comment       m
+               inner join comment_info        d1 on m.comment_idx = d1.comment_idx
+               left  join comment_info_like   d2 on m.comment_idx = d2.comment_idx and d2.member_idx = #{memberIdx}
+               left  join comment_info_unlike d3 on m.comment_idx = d3.comment_idx and d3.member_idx = #{memberIdx}
+               left  join cm_cd               c1 on c1.grp_cd     = 'CMMT'         and m.comment_cd  = c1.cd
+         where 1=1
+           and m.parent_comment_idx = #{parentCommentIdx}
+        <if test=' commentCd != null and commentCd != "" '>
+           and m.comment_cd = #{commentCd}
+        </if>
+        <if test=' postIdx != null and postIdx != 0 '>
+           and m.post_idx = #{postIdx}
+        </if>
+        <if test=' memberIdx != null and memberIdx != 0 '>
+           and m.member_idx = #{memberIdx}
+        </if>
+        <if test=' title != null and title != "" '>
+           and m.title = #{title}
+        </if>
+        <if test=' content != null and content != "" '>
+           and m.content = #{content}
+        </if>
+         order by m.comment_idx desc
+         limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getCommentsTotCnt" parameterType="CommCommentVo" resultType="int">
+        select /* CommCommentDao.getCommentsTotCnt */
+               count(*) as tot_cnt
+          from            comment       m
+               inner join comment_info        d1 on m.comment_idx = d1.comment_idx
+               left  join comment_info_like   d2 on m.comment_idx = d2.comment_idx and d2.member_idx = #{memberIdx}
+               left  join comment_info_unlike d3 on m.comment_idx = d3.comment_idx and d3.member_idx = #{memberIdx}
+               left  join cm_cd               c1 on c1.grp_cd     = 'CMMT'         and m.comment_cd  = c1.cd
+         where 1=1
+           and m.parent_comment_idx = #{parentCommentIdx}
+        <if test=' commentCd != null and commentCd != "" '>
+           and m.comment_cd = #{commentCd}
+        </if>
+        <if test=' postIdx != null and postIdx != 0 '>
+           and m.post_idx = #{postIdx}
+        </if>
+        <if test=' memberIdx != null and memberIdx != 0 '>
+           and m.member_idx = #{memberIdx}
+        </if>
+        <if test=' title != null and title != "" '>
+           and m.title = #{title}
+        </if>
+        <if test=' content != null and content != "" '>
+           and m.content = #{content}
+        </if>
+    </select>
+
+    <select id="getComment" parameterType="CommCommentVo" resultType="CommCommentVo">
+        select /* CommCommentDao.getComment */
+               m.comment_idx                                                                   as comment_idx
+             , m.comment_cd                                                                    as comment_cd
+             , c1.cd_nm                                                                        as comment_cd_nm
+             , m.post_idx                                                                      as post_idx
+             , m.member_idx                                                                    as member_idx
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.title   )                                as title
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.content )                                as content
+             , m.parent_comment_idx                                                            as parent_comment_idx
+             , m.use_yn                                                                        as use_yn
+             , m.reg_date                                                                      as reg_date
+             , d1.view_count                                                                   as view_count
+             , d1.like_count                                                                   as like_count
+             , d1.unlike_count                                                                 as unlike_count
+             , (select count(*) from comment i_d where i_d.parent_comment_idx = m.comment_idx) as children_cnt
+             , if(isnull(d2.comment_idx), 'N', 'Y')                                            as like_yn
+             , if(isnull(d3.comment_idx), 'N', 'Y')                                            as unlike_yn
+          from            comment       m
+               inner join comment_info        d1 on m.comment_idx = d1.comment_idx
+               left  join comment_info_like   d2 on m.comment_idx = d2.comment_idx and d2.member_idx = #{memberIdx}
+               left  join comment_info_unlike d3 on m.comment_idx = d3.comment_idx and d3.member_idx = #{memberIdx}
+               left  join cm_cd               c1 on c1.grp_cd     = 'CMMT'         and m.comment_cd  = c1.cd
+         where m.comment_idx = #{commentIdx}
+    </select>
+
+    <update id="updatecommentInfoViewCount" parameterType="CommCommentVo">
+        update /* CommCommentDao.updatecommentInfoViewCount */
+               comment_info
+           set view_count  = view_count + 1
+         where comment_idx = #{commentIdx}
+    </update>
+
+    <update id="updatecommentInfoLike" parameterType="CommCommentVo">
+        update /* CommCommentDao.updatecommentInfoLike */
+               comment_info
+           set like_count  = like_count + 1
+         where comment_idx = #{commentIdx}
+    </update>
+
+    <update id="updatecommentInfoLikeCancel" parameterType="CommCommentVo">
+        update /* CommCommentDao.updatecommentInfoLikeCancel */
+               comment_info
+           set like_count  = like_count - 1
+         where comment_idx = #{commentIdx}
+    </update>
+
+    <update id="updatecommentInfoUnlike" parameterType="CommCommentVo">
+        update /* CommCommentDao.updatecommentInfoUnlike */
+               comment_info
+           set unlike_count = unlike_count + 1
+         where comment_idx  = #{commentIdx}
+    </update>
+
+    <update id="updatecommentInfoUnlikeCancel" parameterType="CommCommentVo">
+        update /* CommCommentDao.updatecommentInfoUnlikeCancel */
+               comment_info
+           set unlike_count = unlike_count - 1
+         where comment_idx  = #{commentIdx}
+    </update>
+
+    <select id="getCommentLike" parameterType="CommCommentEmotionVo" resultType="CommCommentEmotionVo">
+        select /* CommCommentDao.getCommentLike */
+               comment_idx as comment_idx
+             , member_idx  as member_idx
+          from comment_info_like
+         where comment_idx = #{commentIdx}
+           and member_idx  = #{memberIdx}
+    </select>
+
+    <select id="getCommentUnlike" parameterType="CommCommentEmotionVo" resultType="CommCommentEmotionVo">
+        select /* CommCommentDao.getCommentUnlike */
+               comment_idx as comment_idx
+             , member_idx  as member_idx
+          from comment_info_unlike
+         where comment_idx = #{commentIdx}
+           and member_idx  = #{memberIdx}
+    </select>
+
+    <insert id="createCommentLike" parameterType="CommCommentEmotionVo">
+        insert /* CommCommentDao.createCommentLike */
+          into comment_info_like (
+               comment_idx
+             , member_idx
+        ) values (
+               #{commentIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <insert id="createCommentUnlike" parameterType="CommCommentEmotionVo">
+        insert /* CommCommentDao.createCommentUnlike */
+          into comment_info_unlike (
+               comment_idx
+             , member_idx
+        ) values (
+               #{commentIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <delete id="deleteCommentLike" parameterType="CommCommentEmotionVo">
+        delete /* CommCommentDao.deleteCommentLike */
+          from comment_info_like
+         where comment_idx = #{commentIdx}
+           and member_idx  = #{memberIdx}
+    </delete>
+
+    <delete id="deleteCommentUnlike" parameterType="CommCommentEmotionVo">
+        delete /* CommCommentDao.deleteCommentUnlike */
+          from comment_info_unlike
+         where comment_idx = #{commentIdx}
+           and member_idx  = #{memberIdx}
+    </delete>
+
+</mapper>

@@ -31,11 +31,11 @@ public class CommPaginationResVo <T> {
     private T data;
     /* 페이지네이션 결과 정보 */
 
-    public CommPaginationResVo pagination() {
+    public <T> CommPaginationResVo pagination() {
         return pagination(5);
     }
 
-    public CommPaginationResVo pagination(int maxPages) {
+    public <T> CommPaginationResVo pagination(int maxPages) {
         this.maxPages = maxPages;
         if ( this.totalItems == 0 ) {
             this.pages = List.of();

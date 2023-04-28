@@ -1,4 +1,4 @@
-package com.study.party.comm;
+package com.study.party.comm.test;
 
 import com.study.party.comm.test.CommTestService;
 import com.study.party.comm.test.vo.CommTestVo;
