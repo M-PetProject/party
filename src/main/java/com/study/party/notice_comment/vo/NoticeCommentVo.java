@@ -29,25 +29,4 @@ public class NoticeCommentVo extends CommCommentVo {
         return NoticeVo.builder().noticeIdx(getNoticeIdx()).build();
     }
 
-    public static NoticeCommentVo fromCommCommentVo(CommCommentVo commCommentVo) {
-        return NoticeCommentVo.builder()
-                              .commentIdx(commCommentVo.getCommentIdx())
-                              .commentCd(commCommentVo.getCommentCd())
-                              .commentCdNm(commCommentVo.getCommentCdNm())
-                              .postIdx(commCommentVo.getPostIdx())
-                              .memberIdx(commCommentVo.getMemberIdx())
-                              .title(commCommentVo.getTitle())
-                              .content(commCommentVo.getContent())
-                              .parentCommentIdx(commCommentVo.getParentCommentIdx())
-                              .useYn(commCommentVo.getUseYn())
-                              .regDate(commCommentVo.getRegDate())
-                              .viewCount(commCommentVo.getViewCount())
-                              .likeCount(commCommentVo.getLikeCount())
-                              .unlikeCount(commCommentVo.getUnlikeCount())
-                              .childrenCnt(commCommentVo.getChildrenCnt())
-                              .likeYn(commCommentVo.getLikeYn())
-                              .unlikeYn(commCommentVo.getUnlikeYn())
-                              .noticeIdx(commCommentVo.getPostIdx())
-                              .build();
-    }
 }
