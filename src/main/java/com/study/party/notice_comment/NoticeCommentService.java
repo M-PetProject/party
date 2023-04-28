@@ -66,6 +66,15 @@ public class NoticeCommentService {
     }
 
     @Transactional
+    public CommResultVo updateNoticeCommentUseYn(NoticeCommentVo noticeCommentVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkNotice(noticeCommentVo.toNoticeVo());
+
+        commCommentService.updateCommentUseYn(noticeCommentVo);
+        return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
+    }
+
+    @Transactional
     public CommResultVo noticeCommentLike(NoticeCommentVo noticeCommentVo) {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
         checkNotice(noticeCommentVo.toNoticeVo());

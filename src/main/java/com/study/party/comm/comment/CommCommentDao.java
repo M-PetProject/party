@@ -16,8 +16,6 @@ public interface CommCommentDao {
     int createCommentInfo(CommCommentVo commCommentVo);
     int updateComment(CommCommentVo commCommentVo);
     int updateCommentUseYn(CommCommentVo commCommentVo);
-    int deleteCommentByOrgPost(CommCommentVo commCommentVo);
-    int deleteCommentInfoByOrgPost(CommCommentVo commCommentVo);
     int updateCommentInfoViewCount(CommCommentVo commCommentVo);
     int updateCommentInfoLike(CommCommentVo commCommentVo);
     int updateCommentInfoLikeCancel(CommCommentVo commCommentVo);

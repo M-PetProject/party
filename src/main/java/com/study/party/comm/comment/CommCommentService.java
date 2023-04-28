@@ -133,29 +133,12 @@ public class CommCommentService {
         if (commCommentVo.getCommentIdx() < 1 ||
             commCommentVo.getMemberIdx() < 1 ||
             isEmptyObj(commCommentVo.getUseYn()) ||
-            (!"Y".equals(commCommentVo.getUseYn()) && !"N".equals(commCommentVo.getContent()))
+            (!"Y".equals(commCommentVo.getUseYn()) && !"N".equals(commCommentVo.getUseYn()))
         ) throw new BadRequestException("필수입력값을 확인하세요");
 
         CommCommentVo comment = getComment(commCommentVo);
         if (comment.getMemberIdx() != commCommentVo.getMemberIdx()) throw new UnauthorizedException("댓글 수정은 작성자만 가능합니다");
         if (commCommentDao.updateCommentUseYn(commCommentVo) < 1) throw new InternalServerErrorException("댓글 수정 중 오류가 발생하였습니다");
-        return commCommentVo;
-    }
-
-    /**
-     * 댓글 삭제/복원 처리(사용여부 Y, N)
-     * @param commCommentVo <br>
-     *     comment_cd(comment_cd) : (필수입력값) 댓글_코드(G:CMMT) <br>
-     *     post_idx(postIdx) : (필수입력값) 원본 게시글_IDX(공지사항, 장소, 투표, 회식, ...) 1~ <br>
-     * @return
-     */
-    public CommCommentVo deleteCommentByOrgPost(CommCommentVo commCommentVo) {
-        if (isEmptyObj(commCommentVo.getCommentCd()) ||
-            commCommentVo.getPostIdx() < 1
-        ) throw new BadRequestException("필수입력값을 확인하세요");
-
-        commCommentDao.deleteCommentInfoByOrgPost(commCommentVo);
-        commCommentDao.deleteCommentByOrgPost(commCommentVo);
         return commCommentVo;
     }
 

@@ -153,22 +153,6 @@
          where comment_idx = #{commentIdx}
     </update>
 
-    <delete id="deleteCommentByOrgPost" parameterType="CommCommentVo">
-        delete /* CommCommentDao.deleteCommentByOrgPost */
-          from comment
-         where comment_cd = #{commentCd}
-           and post_idx   = #{postIdx}
-    </delete>
-
-    <delete id="deleteCommentInfoByOrgPost" parameterType="CommCommentVo">
-        delete /* CommCommentDao.deleteCommentByOrgPostInfo */
-          from comment_info
-         where comment_idx in (select comment_idx
-                                 from comment
-                                where comment_cd = #{commentCd}
-                                  and post_idx   = #{postIdx})
-    </delete>
-
     <update id="updateCommentInfoViewCount" parameterType="CommCommentVo">
         update /* CommCommentDao.updateCommentInfoViewCount */
                comment_info

@@ -117,6 +117,30 @@ public class NoticeCommentController {
                              .toResponseEntity();
     }
 
+    @Operation(summary = "공지사항 댓글 정보 삭제 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 데이터 1건의 use_yn을 N으로 수정합니다")
+    @DeleteMapping("notice/{team_idx}/{notice_idx}/comment/{comment_idx}")
+    public ResponseEntity<NoticeCommentVo> deleteNoticeComment(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="comment_idx", required=true, description="공통 댓글 테이블 컬럼 comment_idx") @PathVariable(name="comment_idx") long comment_idx
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || comment_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.updateNoticeCommentUseYn(NoticeCommentVo.builder()
+                                                                                                    .teamIdx(team_idx)
+                                                                                                    .noticeIdx(notice_idx)
+                                                                                                    .postIdx(notice_idx)
+                                                                                                    .commentIdx(comment_idx)
+                                                                                                    .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                                    .useYn("N")
+                                                                                                    .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
     @Operation(summary = "공지사항 댓글 좋아요 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 좋아요 기능을 수행합니다")
     @PostMapping("notice/{team_idx}/{notice_idx}/comment/{comment_idx}/like")
     public ResponseEntity<NoticeCommentVo> noticeCommentLike(
