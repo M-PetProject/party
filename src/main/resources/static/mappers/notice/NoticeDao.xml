@@ -146,16 +146,11 @@
          where notice_idx   = #{noticeIdx}
     </update>
 
-    <delete id="deleteNotice" parameterType="NoticeVo">
-        delete /* NoticeDao.deleteNotice */
-          from notice
+    <update id="updateNoticeUseYn" parameterType="NoticeVo">
+        update /* NoticeDao.updateNoticeUseYn */
+               notice
+           set use_yn = #{useYn}
          where notice_idx = #{noticeIdx}
-    </delete>
-
-    <delete id="deleteNoticeInfo" parameterType="NoticeVo">
-        delete /* NoticeDao.deleteNoticeInfo */
-          from notice_info
-         where notice_idx = #{noticeIdx}
-    </delete>
+    </update>
 
 </mapper>

@@ -113,6 +113,26 @@ public class NoticeController {
                              .toResponseEntity();
     }
 
+    @Operation(summary = "공지사항 정보 수정 API", description = "로그인 사용자의 정보와 공지사항 데이터를 전달받아 공지사항 테이블에 1건의 정보를 수정합니다")
+    @DeleteMapping("notice/{team_idx}/{notice_idx}")
+    public ResponseEntity<NoticeVo> deleteNotice(
+        HttpServletRequest request,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx" , required=true, description="공지사항 테이블 PK notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo
+    ) {
+        if ( team_idx < 1 || notice_idx < 1 ) throw new BadRequestException("필수입력값을 확인하세요");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeService.deleteNotice(NoticeVo.builder()
+                                                                          .teamIdx(team_idx)
+                                                                          .noticeIdx(notice_idx)
+                                                                          .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                          .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
     @Operation(summary = "공지사항 좋아요 API", description = "로그인 사용자의 정보와 공지사항 IDX 를 전달받아 공지사항 좋아요 건수를 1 증가시킵니다")
     @PostMapping("notice/{team_idx}/{notice_idx}/like")
     public ResponseEntity<String> noticeLike(

@@ -19,7 +19,6 @@ public interface NoticeDao {
     int updateNoticeInfoLikeCancel(NoticeVo noticeVo);
     int updateNoticeInfoUnlike(NoticeVo noticeVo);
     int updateNoticeInfoUnlikeCancel(NoticeVo noticeVo);
-    int deleteNotice(NoticeVo noticeVo);
-    int deleteNoticeInfo(NoticeVo noticeVo);
+    int updateNoticeUseYn(NoticeVo noticeVo);
 
 }

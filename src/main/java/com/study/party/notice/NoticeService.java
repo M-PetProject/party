@@ -1,6 +1,7 @@
 package com.study.party.notice;
 
 import com.study.party.comm.comment.CommCommentService;
+import com.study.party.comm.comment.vo.CommCommentVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
@@ -82,6 +83,20 @@ public class NoticeService {
 
         if (noticeDao.updateNotice(noticeVo) < 1) throw new InternalServerErrorException("공지사항 수정에 실패하였습니다");
         return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
+    }
+
+    @Transactional
+    public CommResultVo deleteNotice(NoticeVo noticeVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeVo.getTeamIdx()).memberIdx(noticeVo.getMemberIdx()).build());
+
+        NoticeVo notice = noticeDao.getNotice(noticeVo);
+        if (isEmptyObj(notice)) throw new BadRequestException("존재하지 않는 공지사항입니다");
+
+        if ( notice.getMemberIdx() != noticeVo.getMemberIdx() ) throw new UnauthorizedException("삭제는 작성자만 가능합니다");
+
+        noticeVo.setUseYn("N");
+        if (noticeDao.updateNoticeUseYn(noticeVo) < 1) throw new InternalServerErrorException("공지사항 삭제에 실패하였습니다");
+        return CommResultVo.builder().code(200).msg("삭제 되었습니다").build();
     }
 
     @Transactional
