@@ -3,9 +3,9 @@ package com.study.party.comm.comment;
 import com.study.party.comm.comment.vo.CommCommentEmotionVo;
 import com.study.party.comm.comment.vo.CommCommentVo;
 import com.study.party.comm.vo.CommPaginationResVo;
-import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
 import com.study.party.exception.InternalServerErrorException;
+import com.study.party.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +28,14 @@ public class CommCommentService {
         return commCommentDao.getCommentsTotCnt(commCommentVo);
     }
 
-    public CommPaginationResVo<List<CommCommentVo>> getCommentsPagination(CommCommentVo commCommentVo) {
+    public CommPaginationResVo getCommentsPagination(CommCommentVo commCommentVo) {
         return CommPaginationResVo.builder()
                                   .totalItems(getCommentsTotCnt(commCommentVo))
                                   .data(getComments(commCommentVo))
                                   .pageNo(commCommentVo.getPageNo())
                                   .limit(commCommentVo.getLimit())
                                   .build()
-                                  .<List<CommCommentVo>>pagination();
+                                  .pagination();
     }
 
     public CommCommentVo getComment(CommCommentVo commCommentVo) {
@@ -44,11 +44,25 @@ public class CommCommentService {
         return comment;
     }
 
+    public CommCommentVo createComment(CommCommentVo commCommentVo) {
+        if (commCommentDao.createComment(commCommentVo) < 1) throw new InternalServerErrorException("댓글 작성 중 오류가 발생하였습니다");
+        if (commCommentDao.createCommentInfo(commCommentVo) < 1) throw new InternalServerErrorException("댓글 작성 중 오류가 발생하였습니다");
+        return commCommentVo;
+    }
+
+    public CommCommentVo updateComment(CommCommentVo commCommentVo) {
+        if (isEmptyObj(commCommentVo.getTitle()) || isEmptyObj(commCommentVo.getContent()) || commCommentVo.getMemberIdx() < 1) throw new BadRequestException("필수입력값을 확인하세요");
+        CommCommentVo comment = getComment(commCommentVo);
+        if (comment.getMemberIdx() != commCommentVo.getMemberIdx()) throw new UnauthorizedException("댓글 수정은 작성자만 가능합니다");
+        if (commCommentDao.updateComment(commCommentVo) < 1) throw new InternalServerErrorException("댓글 수정 중 오류가 발생하였습니다");
+        return commCommentVo;
+    }
+
     public CommCommentVo commentView(CommCommentVo commCommentVo) {
         CommCommentVo comment = getComment(commCommentVo); // 댓글 가져오기
         if ( comment.getMemberIdx() != commCommentVo.getMemberIdx() ) {
             comment.setViewCount(comment.getViewCount()+1);
-            commCommentDao.updatecommentInfoViewCount(comment);
+            commCommentDao.updateCommentInfoViewCount(comment);
         }
         return comment;
     }
@@ -62,14 +76,14 @@ public class CommCommentService {
 
         CommCommentEmotionVo unlike = commCommentDao.getCommentUnlike(commCommentVo.toCommCommentEmotionVo());
         if (!isEmptyObj(unlike)) {
-            commCommentDao.updatecommentInfoUnlikeCancel(commCommentVo); // 싫어요 갯수 감소
+            commCommentDao.updateCommentInfoUnlikeCancel(commCommentVo); // 싫어요 갯수 감소
             commCommentDao.deleteCommentUnlike(commCommentVo.toCommCommentEmotionVo()); // 싫어요 삭제
             comment.setUnlikeCount(comment.getUnlikeCount()-1);
         }
 
         comment.setLikeCount(comment.getLikeCount()+1);
         if (commCommentDao.createCommentLike(commCommentVo.toCommCommentEmotionVo()) < 1) throw new InternalServerErrorException("댓글 좋아요 중 오류가 발생하였습니다");
-        if (commCommentDao.updatecommentInfoLike(commCommentVo) < 1) throw new InternalServerErrorException("댓글 좋아요 중 오류가 발생하였습니다");
+        if (commCommentDao.updateCommentInfoLike(commCommentVo) < 1) throw new InternalServerErrorException("댓글 좋아요 중 오류가 발생하였습니다");
         return comment;
     }
 
@@ -80,10 +94,9 @@ public class CommCommentService {
         CommCommentEmotionVo like = commCommentDao.getCommentLike(commCommentVo.toCommCommentEmotionVo());
         if (isEmptyObj(like)) throw new BadRequestException("좋아요한 적이 없습니다");
 
-
         comment.setLikeCount(comment.getLikeCount()-1);
         if (commCommentDao.deleteCommentLike(commCommentVo.toCommCommentEmotionVo()) < 1) throw new InternalServerErrorException("댓글 좋아요 취소 중 오류가 발생하였습니다");
-        if (commCommentDao.updatecommentInfoLikeCancel(commCommentVo) < 1) throw new InternalServerErrorException("댓글 좋아요 취소 중 오류가 발생하였습니다");
+        if (commCommentDao.updateCommentInfoLikeCancel(commCommentVo) < 1) throw new InternalServerErrorException("댓글 좋아요 취소 중 오류가 발생하였습니다");
         return comment;
     }
 
@@ -97,13 +110,13 @@ public class CommCommentService {
         CommCommentEmotionVo like = commCommentDao.getCommentLike(commCommentVo.toCommCommentEmotionVo());
         if (!isEmptyObj(like)) {
             commCommentDao.deleteCommentLike(commCommentVo.toCommCommentEmotionVo()); // 좋아요 갯수 감소
-            commCommentDao.updatecommentInfoLikeCancel(commCommentVo); // 좋아요 삭제
+            commCommentDao.updateCommentInfoLikeCancel(commCommentVo); // 좋아요 삭제
             comment.setLikeCount(comment.getLikeCount()-1);
         }
 
         comment.setUnlikeCount(comment.getUnlikeCount()+1);
         if(commCommentDao.createCommentUnlike(commCommentVo.toCommCommentEmotionVo()) < 1) throw new InternalServerErrorException("댓글 싫어요 중 오류가 발생하였습니다");
-        if(commCommentDao.updatecommentInfoUnlike(commCommentVo) < 1) throw new InternalServerErrorException("댓글 싫어요 중 오류가 발생하였습니다");
+        if(commCommentDao.updateCommentInfoUnlike(commCommentVo) < 1) throw new InternalServerErrorException("댓글 싫어요 중 오류가 발생하였습니다");
         return comment;
     }
 
@@ -116,7 +129,7 @@ public class CommCommentService {
 
         comment.setUnlikeCount(comment.getUnlikeCount()+1);
         if (commCommentDao.deleteCommentUnlike(commCommentVo.toCommCommentEmotionVo()) < 1) throw new InternalServerErrorException("댓글 싫어요 취소 중 오류가 발생하였습니다");
-        if (commCommentDao.updatecommentInfoUnlikeCancel(commCommentVo) < 1) throw new InternalServerErrorException("댓글 싫어요 취소 중 오류가 발생하였습니다");
+        if (commCommentDao.updateCommentInfoUnlikeCancel(commCommentVo) < 1) throw new InternalServerErrorException("댓글 싫어요 취소 중 오류가 발생하였습니다");
         return comment;
     }
 }

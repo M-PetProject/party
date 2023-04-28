@@ -2,6 +2,7 @@ package com.study.party.notice_comment;
 
 
 import com.study.party.auth.vo.CustomUserDetailsVo;
+import com.study.party.comm.comment.vo.CommCommentVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.exception.BadRequestException;
@@ -40,6 +41,7 @@ public class NoticeCommentController {
                              .resultVo(noticeCommentService.getNoticeComments(NoticeCommentVo.builder()
                                                                                              .teamIdx(team_idx)
                                                                                              .noticeIdx(notice_idx)
+                                                                                             .postIdx(notice_idx)
                                                                                              .memberIdx(customUserDetailsVo.getMemberIdx())
                                                                                              .pageNo(pageNo)
                                                                                              .limit(limit)
@@ -50,14 +52,12 @@ public class NoticeCommentController {
 
     @Operation(summary = "공지사항 댓글 상세 정보 조회 API", description = "공지사항 댓글 상세 정보를 조회합니다")
     @GetMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}")
-    public ResponseEntity<NoticeCommentVo> getNoticeComment(
+    public ResponseEntity<CommCommentVo> getNoticeComment(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
         @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
-        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx,
-        @Parameter(name="pageNo", required=false, description="현재 페이지 번호") @RequestParam(name="pageNo", required=false, defaultValue="1") int pageNo,
-        @Parameter(name="limit", required=false, description="조회할 갯수 기본 5개") @RequestParam(name="limit", required=false, defaultValue="5") int limit
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx
     ) {
         if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
@@ -65,10 +65,9 @@ public class NoticeCommentController {
                              .resultVo(noticeCommentService.getNoticeComment(NoticeCommentVo.builder()
                                                                                             .teamIdx(team_idx)
                                                                                             .noticeIdx(notice_idx)
-                                                                                            .noticeCommentIdx(notice_comment_idx)
+                                                                                            .postIdx(notice_idx)
+                                                                                            .commentIdx(notice_comment_idx)
                                                                                             .memberIdx(customUserDetailsVo.getMemberIdx())
-                                                                                            .pageNo(pageNo)
-                                                                                            .limit(limit)
                                                                                             .build()))
                              .build()
                              .toResponseEntity();
@@ -86,6 +85,7 @@ public class NoticeCommentController {
         if(team_idx < 1 || notice_idx < 1 || isEmptyObj(noticeCommentVo.getTitle()) || isEmptyObj(noticeCommentVo.getContent())) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         noticeCommentVo.setTeamIdx(team_idx);
+        noticeCommentVo.setPostIdx(notice_idx);
         noticeCommentVo.setNoticeIdx(notice_idx);
         noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
         return CommResponseVo.builder()
@@ -94,7 +94,7 @@ public class NoticeCommentController {
                              .toResponseEntity();
     }
 
-    @Operation(summary = "공지사항 댓글 정보 생성 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 데이터를 1건 생성합니다")
+    @Operation(summary = "공지사항 댓글 정보 수정 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 데이터를 1건 수정합니다")
     @PutMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}")
     public ResponseEntity<NoticeCommentVo> updateNoticeComment(
         HttpServletRequest request,
@@ -107,11 +107,100 @@ public class NoticeCommentController {
         if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 || isEmptyObj(noticeCommentVo.getTitle()) || isEmptyObj(noticeCommentVo.getContent())) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
 
         noticeCommentVo.setTeamIdx(team_idx);
+        noticeCommentVo.setPostIdx(notice_idx);
         noticeCommentVo.setNoticeIdx(notice_idx);
         noticeCommentVo.setMemberIdx(customUserDetailsVo.getMemberIdx());
-        noticeCommentVo.setNoticeCommentIdx(notice_comment_idx);
+        noticeCommentVo.setCommentIdx(notice_comment_idx);
         return CommResponseVo.builder()
                              .resultVo(noticeCommentService.updateNoticeComment(noticeCommentVo))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 댓글 좋아요 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 좋아요 기능을 수행합니다")
+    @PostMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}/like")
+    public ResponseEntity<NoticeCommentVo> noticeCommentLike(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.noticeCommentLike(NoticeCommentVo.builder()
+                                                                                             .commentIdx(notice_comment_idx)
+                                                                                             .noticeIdx(notice_idx)
+                                                                                             .teamIdx(team_idx)
+                                                                                             .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                             .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 댓글 좋아요 취소 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 좋아요 취소 기능을 수행합니다")
+    @DeleteMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}/like")
+    public ResponseEntity<NoticeCommentVo> noticeCommentLikeCancel(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.noticeCommentLikeCancel(NoticeCommentVo.builder()
+                                                                                                   .commentIdx(notice_comment_idx)
+                                                                                                   .noticeIdx(notice_idx)
+                                                                                                   .teamIdx(team_idx)
+                                                                                                   .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                                   .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 댓글 싫어요 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 싫어요 기능을 수행합니다")
+    @PostMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}/unlike")
+    public ResponseEntity<NoticeCommentVo> noticeCommentUnlike(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.noticeCommentUnlike(NoticeCommentVo.builder()
+                                                                                             .commentIdx(notice_comment_idx)
+                                                                                             .noticeIdx(notice_idx)
+                                                                                             .teamIdx(team_idx)
+                                                                                             .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                             .build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "공지사항 댓글 싫어요 취소 API", description = "로그인 사용자의 정보와 공지사항 댓글 데이터를 전달받아 공지사항 댓글 싫어요 취소 기능을 수행합니다")
+    @DeleteMapping("notice/{team_idx}/{notice_idx}/comment/{notice_comment_idx}/unlike")
+    public ResponseEntity<NoticeCommentVo> noticeCommentUnlikeCancel(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx" , required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="notice_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_idx") @PathVariable(name="notice_idx") long notice_idx,
+        @Parameter(name="notice_comment_idx", required=true, description="공지사항 댓글 테이블 컬럼 notice_comment_idx") @PathVariable(name="notice_comment_idx") long notice_comment_idx
+    ) {
+        if(team_idx < 1 || notice_idx < 1 || notice_comment_idx < 1 ) throw new BadRequestException("올바르지 않은 정보가 전달되었습니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(noticeCommentService.noticeCommentUnlikeCancel(NoticeCommentVo.builder()
+                                                                                                     .commentIdx(notice_comment_idx)
+                                                                                                     .noticeIdx(notice_idx)
+                                                                                                     .teamIdx(team_idx)
+                                                                                                     .memberIdx(customUserDetailsVo.getMemberIdx())
+                                                                                                     .build()))
                              .build()
                              .toResponseEntity();
     }

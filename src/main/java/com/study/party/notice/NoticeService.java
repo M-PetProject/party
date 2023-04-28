@@ -1,5 +1,6 @@
 package com.study.party.notice;
 
+import com.study.party.comm.comment.CommCommentService;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
@@ -9,6 +10,7 @@ import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeHistoryVo;
 import com.study.party.notice.vo.NoticeVo;
 import com.study.party.notice_comment.NoticeCommentDao;
+import com.study.party.notice_comment.vo.NoticeCommentVo;
 import com.study.party.team_member.TeamMemberService;
 import com.study.party.team_member.vo.TeamMemberVo;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,10 @@ import static com.study.party.comm.util.StringUtil.isEmptyObj;
 public class NoticeService {
 
     private final NoticeDao noticeDao;
-
     private final NoticeHistoryDao noticeHistoryDao;
-
     private final NoticeCommentDao noticeCommentDao;
-
     private final TeamMemberService teamMemberService;
+    private final CommCommentService commCommentService;
 
     public CommResultVo getNotices(NoticeVo noticeVo) {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeVo.getTeamIdx()).memberIdx(noticeVo.getMemberIdx()).build());
@@ -56,13 +56,11 @@ public class NoticeService {
         }
 
         NoticeDetailVo result = notice.toNoticeDetailVo();
-        result.setNoticeComments(CommPaginationResVo.builder()
-                                                    .totalItems(noticeCommentDao.getNoticeCommentsTotCnt(noticeDetailVo.toNoticeCommentVo()))
-                                                    .data(noticeCommentDao.getNoticeComments(noticeDetailVo.toNoticeCommentVo()))
-                                                    .pageNo(noticeDetailVo.getPageNo())
-                                                    .limit(noticeDetailVo.getLimit())
-                                                    .build()
-                                                    .pagination());
+        result.setNoticeComments(commCommentService.getCommentsPagination(NoticeCommentVo.builder()
+                                                                                         .postIdx(noticeDetailVo.getNoticeIdx())
+                                                                                         .pageNo(noticeDetailVo.getPageNo())
+                                                                                         .limit(noticeDetailVo.getLimit())
+                                                                                         .build()));
         return CommResultVo.builder().code(200).data(result).build();
     }
 

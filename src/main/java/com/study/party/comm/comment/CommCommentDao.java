@@ -12,12 +12,14 @@ public interface CommCommentDao {
     List<CommCommentVo> getComments(CommCommentVo commCommentVo);
     int getCommentsTotCnt(CommCommentVo commCommentVo);
     CommCommentVo getComment(CommCommentVo commCommentVo);
-    int updatecommentInfoViewCount(CommCommentVo commCommentVo);
-    int updatecommentInfoLike(CommCommentVo commCommentVo);
-    int updatecommentInfoLikeCancel(CommCommentVo commCommentVo);
-    int updatecommentInfoUnlike(CommCommentVo commCommentVo);
-    int updatecommentInfoUnlikeCancel(CommCommentVo commCommentVo);
-
+    int createComment(CommCommentVo commCommentVo);
+    int createCommentInfo(CommCommentVo commCommentVo);
+    int updateComment(CommCommentVo commCommentVo);
+    int updateCommentInfoViewCount(CommCommentVo commCommentVo);
+    int updateCommentInfoLike(CommCommentVo commCommentVo);
+    int updateCommentInfoLikeCancel(CommCommentVo commCommentVo);
+    int updateCommentInfoUnlike(CommCommentVo commCommentVo);
+    int updateCommentInfoUnlikeCancel(CommCommentVo commCommentVo);
     CommCommentEmotionVo getCommentLike(CommCommentEmotionVo commCommentEmotionVo);
     CommCommentEmotionVo getCommentUnlike(CommCommentEmotionVo commCommentEmotionVo);
     int createCommentLike(CommCommentEmotionVo commCommentEmotionVo);

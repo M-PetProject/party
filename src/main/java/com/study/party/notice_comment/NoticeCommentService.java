@@ -1,5 +1,7 @@
 package com.study.party.notice_comment;
 
+import com.study.party.comm.comment.CommCommentService;
+import com.study.party.comm.comment.vo.CommCommentVo;
 import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
@@ -15,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.study.party.comm.util.ObjectMapperUtil.castClass;
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
+import static com.study.party.notice_comment.vo.NoticeCommentVo.fromCommCommentVo;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +28,8 @@ public class NoticeCommentService {
     private final NoticeDao noticeDao;
     private final NoticeCommentDao noticeCommentDao;
     private final NoticeCommentHistoryDao noticeCommentHistoryDao;
-
     private final TeamMemberService teamMemberService;
+    private final CommCommentService commCommentService;
 
     public CommResultVo getNoticeComments(NoticeCommentVo noticeCommentVo) {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
@@ -33,13 +37,7 @@ public class NoticeCommentService {
 
         return CommResultVo.builder()
                            .code(200)
-                           .data(CommPaginationResVo.builder()
-                                                    .totalItems(noticeCommentDao.getNoticeCommentsTotCnt(noticeCommentVo))
-                                                    .data(noticeCommentDao.getNoticeComments(noticeCommentVo))
-                                                    .pageNo(noticeCommentVo.getPageNo())
-                                                    .limit(noticeCommentVo.getLimit())
-                                                    .build()
-                                                    .pagination())
+                           .data(commCommentService.getCommentsPagination(noticeCommentVo))
                            .build();
     }
 
@@ -47,13 +45,8 @@ public class NoticeCommentService {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
         checkNotice(noticeCommentVo.toNoticeVo());
 
-        NoticeCommentVo noticeComment = noticeCommentDao.getNoticeComment(noticeCommentVo);
-        if (isEmptyObj(noticeComment)) throw new BadRequestException("존재하지 않는 공지사항 댓글입니다");
-
-        if (noticeComment.getMemberIdx() != noticeCommentVo.getMemberIdx()) {
-            noticeComment.setViewCount(noticeComment.getViewCount()+1);
-            noticeCommentDao.updateNoticeCommentInfoViewCount(noticeComment);
-        }
+        CommCommentVo noticeComment = commCommentService.getComment(noticeCommentVo); // 댓글 가져오기
+        commCommentService.commentView(noticeCommentVo); // 조회수 증가
 
         return CommResultVo.builder()
                            .code(200)
@@ -66,8 +59,7 @@ public class NoticeCommentService {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
         checkNotice(noticeCommentVo.toNoticeVo());
 
-        if ( noticeCommentDao.createNoticeComment(noticeCommentVo) < 1 ) throw new InternalServerErrorException("공지사항 댓글 작성에 실패하였습니다");
-        if ( noticeCommentDao.createNoticeCommentInfo(noticeCommentVo) < 1 ) throw new InternalServerErrorException("공지사항 댓글 작성에 실패하였습니다");
+        commCommentService.createComment(noticeCommentVo);
         return CommResultVo.builder().code(200).msg("작성 하였습니다").build();
     }
 
@@ -76,12 +68,7 @@ public class NoticeCommentService {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
         checkNotice(noticeCommentVo.toNoticeVo());
 
-        NoticeCommentVo noticeComment = noticeCommentDao.getNoticeComment(noticeCommentVo);
-        if (isEmptyObj(noticeComment)) throw new BadRequestException("존재하지 않는 공지사항 댓글입니다");
-
-        if (noticeComment.getMemberIdx() != noticeCommentVo.getMemberIdx()) throw new UnauthorizedException("수정은 작성자만 가능합니다");
-
-        if ( noticeCommentDao.updateNoticeComment(noticeCommentVo) < 1 ) throw new InternalServerErrorException("공지사항 댓글 작성에 실패하였습니다");
+        commCommentService.updateComment(noticeCommentVo);
         return CommResultVo.builder().code(200).msg("수정 되었습니다").build();
     }
 
@@ -90,23 +77,35 @@ public class NoticeCommentService {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
         checkNotice(noticeCommentVo.toNoticeVo());
 
-        NoticeCommentVo noticeComment = noticeCommentDao.getNoticeComment(noticeCommentVo);
-        if (isEmptyObj(noticeComment)) throw new BadRequestException("존재하지 않는 공지사항 댓글입니다");
-
-        // 이미 좋아요를 한 경우
-        NoticeCommentHistoryVo likeHistory = noticeCommentHistoryDao.getLikeHistory(noticeCommentVo.toNoticeCommentHistoryVo());
-        if (!isEmptyObj(likeHistory)) throw new BadRequestException("이미 좋아요 하셨습니다");
-
-        // 싫어요 이력이 있으면 싫어요 취소
-        NoticeCommentHistoryVo unlikeHistory = noticeCommentHistoryDao.getUnlikeHistory(noticeCommentVo.toNoticeCommentHistoryVo());
-        if (!isEmptyObj(unlikeHistory)) {
-            noticeCommentHistoryDao.deleteUnlikeHistory(noticeCommentVo.toNoticeCommentHistoryVo()); // 싫어요 이력 삭제
-            noticeCommentDao.updateNoticeCommentInfoUnlikeCancel(noticeCommentVo); // 싫어요 건수 감소
-        }
-
-        if (noticeCommentHistoryDao.createLikeHistory(noticeCommentVo.toNoticeCommentHistoryVo()) < 1) throw new InternalServerErrorException("오류가 발생하였습니다"); // 좋아요 이력 생성
-        if (noticeCommentDao.updateNoticeCommentInfoLike(noticeCommentVo) < 1) throw new InternalServerErrorException("오류가 발생하였습니다"); // 좋아요 건수 증가
+        commCommentService.commentLike(noticeCommentVo);
         return CommResultVo.builder().code(200).msg("좋아요").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeCommentLikeCancel(NoticeCommentVo noticeCommentVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkNotice(noticeCommentVo.toNoticeVo());
+
+        commCommentService.commentLikeCancel(noticeCommentVo);
+        return CommResultVo.builder().code(200).msg("좋아요 취소").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeCommentUnlike(NoticeCommentVo noticeCommentVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkNotice(noticeCommentVo.toNoticeVo());
+
+        commCommentService.commentUnlike(noticeCommentVo);
+        return CommResultVo.builder().code(200).msg("싫어요").build();
+    }
+
+    @Transactional
+    public CommResultVo noticeCommentUnlikeCancel(NoticeCommentVo noticeCommentVo) {
+        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkNotice(noticeCommentVo.toNoticeVo());
+
+        commCommentService.commentUnlikeCancel(noticeCommentVo);
+        return CommResultVo.builder().code(200).msg("싫어요 취소").build();
     }
 
     private void checkTeamMember(TeamMemberVo teamMemberVo) {

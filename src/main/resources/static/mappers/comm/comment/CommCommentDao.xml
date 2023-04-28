@@ -100,36 +100,82 @@
          where m.comment_idx = #{commentIdx}
     </select>
 
-    <update id="updatecommentInfoViewCount" parameterType="CommCommentVo">
-        update /* CommCommentDao.updatecommentInfoViewCount */
+    <insert id="createComment" parameterType="CommCommentVo" useGeneratedKeys="true" keyProperty="commentIdx">
+        insert /* CommCommentDao.createComment */
+          into comment (
+               comment_cd
+             , post_idx
+             , member_idx
+             , title
+             , content
+             , parent_comment_idx
+             , use_yn
+             , reg_date
+        ) values (
+               #{commentCd}
+             , #{postIdx}
+             , #{memberIdx}
+             , #{title}
+             , #{content}
+             , #{parentCommentIdx}
+             , #{useYn}
+             , date_format(current_timestamp(),'%Y%m%d%H%i%s')
+        )
+    </insert>
+
+    <insert id="createCommentInfo" parameterType="CommCommentVo">
+        insert /* CommCommentDao.createCommentInfo */
+          into comment_info (
+               comment_idx
+             , view_count
+             , like_count
+             , unlike_count
+        ) values (
+               #{commentIdx}
+             , 0
+             , 0
+             , 0
+        )
+    </insert>
+
+    <update id="updateComment" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateComment */
+               comment
+           set title   = #{title}
+             , content = #{content}
+         where comment_idx = #{commentIdx}
+    </update>
+
+    <update id="updateCommentInfoViewCount" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateCommentInfoViewCount */
                comment_info
            set view_count  = view_count + 1
          where comment_idx = #{commentIdx}
     </update>
 
-    <update id="updatecommentInfoLike" parameterType="CommCommentVo">
-        update /* CommCommentDao.updatecommentInfoLike */
+    <update id="updateCommentInfoLike" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateCommentInfoLike */
                comment_info
            set like_count  = like_count + 1
          where comment_idx = #{commentIdx}
     </update>
 
-    <update id="updatecommentInfoLikeCancel" parameterType="CommCommentVo">
-        update /* CommCommentDao.updatecommentInfoLikeCancel */
+    <update id="updateCommentInfoLikeCancel" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateCommentInfoLikeCancel */
                comment_info
            set like_count  = like_count - 1
          where comment_idx = #{commentIdx}
     </update>
 
-    <update id="updatecommentInfoUnlike" parameterType="CommCommentVo">
-        update /* CommCommentDao.updatecommentInfoUnlike */
+    <update id="updateCommentInfoUnlike" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateCommentInfoUnlike */
                comment_info
            set unlike_count = unlike_count + 1
          where comment_idx  = #{commentIdx}
     </update>
 
-    <update id="updatecommentInfoUnlikeCancel" parameterType="CommCommentVo">
-        update /* CommCommentDao.updatecommentInfoUnlikeCancel */
+    <update id="updateCommentInfoUnlikeCancel" parameterType="CommCommentVo">
+        update /* CommCommentDao.updateCommentInfoUnlikeCancel */
                comment_info
            set unlike_count = unlike_count - 1
          where comment_idx  = #{commentIdx}

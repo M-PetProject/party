@@ -53,4 +53,5 @@ public class CommCommentVo extends CommPaginationReqVo {
     public CommCommentEmotionVo toCommCommentEmotionVo() {
         return CommCommentEmotionVo.builder().commentIdx(this.commentIdx).memberIdx(this.memberIdx).build();
     }
+
 }
