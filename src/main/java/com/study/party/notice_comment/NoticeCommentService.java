@@ -2,14 +2,11 @@ package com.study.party.notice_comment;
 
 import com.study.party.comm.comment.CommCommentService;
 import com.study.party.comm.comment.vo.CommCommentVo;
-import com.study.party.comm.vo.CommPaginationResVo;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
-import com.study.party.exception.InternalServerErrorException;
 import com.study.party.exception.UnauthorizedException;
 import com.study.party.notice.NoticeDao;
 import com.study.party.notice.vo.NoticeVo;
-import com.study.party.notice_comment.vo.NoticeCommentHistoryVo;
 import com.study.party.notice_comment.vo.NoticeCommentVo;
 import com.study.party.team_member.TeamMemberService;
 import com.study.party.team_member.vo.TeamMemberVo;
@@ -17,17 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.study.party.comm.util.ObjectMapperUtil.castClass;
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
-import static com.study.party.notice_comment.vo.NoticeCommentVo.fromCommCommentVo;
 
 @Service
 @RequiredArgsConstructor
 public class NoticeCommentService {
 
     private final NoticeDao noticeDao;
-    private final NoticeCommentDao noticeCommentDao;
-    private final NoticeCommentHistoryDao noticeCommentHistoryDao;
     private final TeamMemberService teamMemberService;
     private final CommCommentService commCommentService;
 

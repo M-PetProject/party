@@ -29,13 +29,6 @@ public class NoticeCommentVo extends CommCommentVo {
         return NoticeVo.builder().noticeIdx(getNoticeIdx()).build();
     }
 
-    public NoticeCommentHistoryVo toNoticeCommentHistoryVo() {
-        return NoticeCommentHistoryVo.builder()
-                                     .noticeCommentIdx(getCommentIdx())
-                                     .memberIdx(getMemberIdx())
-                                     .build();
-    }
-
     public static NoticeCommentVo fromCommCommentVo(CommCommentVo commCommentVo) {
         return NoticeCommentVo.builder()
                               .commentIdx(commCommentVo.getCommentIdx())
