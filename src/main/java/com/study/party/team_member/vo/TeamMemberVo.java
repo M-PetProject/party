@@ -31,4 +31,7 @@ public class TeamMemberVo {
     @Schema(description="팀 소속 멤버 table 컬럼 팀 소속 멤버 타입", example="MEMBER")
     private String memberType;
 
+    @Schema(description="팀 소속 멤버 table 컬럼 팀_가입_일", example="yyyy-mm-dd")
+    private String regDate;
+
 }

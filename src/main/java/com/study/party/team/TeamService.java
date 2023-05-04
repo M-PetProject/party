@@ -28,7 +28,9 @@ public class TeamService {
     }
 
     public TeamVo getTeam(TeamVo teamVo) {
-        return teamDao.getTeam(teamVo);
+        TeamVo resultTeamVo = teamDao.getTeam(teamVo);
+        resultTeamVo.setTeamMemberVoList(teamMemberService.getMembersByTeamIdx(teamVo.getTeamIdx()));
+        return resultTeamVo;
     }
 
     public CommResultVo getTeamByJoinCode(TeamVo teamVo) {

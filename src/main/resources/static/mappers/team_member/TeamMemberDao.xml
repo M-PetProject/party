@@ -4,12 +4,13 @@
 <mapper namespace="com.study.party.team_member.TeamMemberDao">
 
     <sql id="sql_selectTeamMember">
-        select m.team_idx     as team_idx
-             , d1.team_nm     as team_nm
-             , m.member_idx   as member_idx
-             , d2.member_id   as member_id
-             , d2.member_name as member_name
-             , m.member_type  as member_type
+        select m.team_idx                         as team_idx
+             , d1.team_nm                         as team_nm
+             , m.member_idx                       as member_idx
+             , d2.member_id                       as member_id
+             , d2.member_name                     as member_name
+             , m.member_type                      as member_type
+             , date_format(m.reg_dtm, '%Y-%m-%d') as reg_date
           from           team_member m
                left join team        d1 on m.team_idx   = d1.team_idx
                left join member_info d2 on m.member_idx = d2.member_idx

@@ -37,10 +37,15 @@ public class MemberService {
                            .build();
     }
 
-    public CommResultVo getMember(MemberVo memberVo) {
-        MemberVo result = memberDao.getMember(memberVo);
-        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
+    public MemberVo getMember(long memberIdx) {
+        MemberVo memberVo = MemberVo.builder().memberIdx(memberIdx).build();
+        return memberDao.getMember(memberVo);
+    }
 
+    public CommResultVo getMember(MemberVo memberVo) {
+        MemberVo result = getMember(memberVo.getMemberIdx());
+
+        if ( isEmptyObj(result) ) throw new BadRequestException("존재하지 않는 회원입니다");
         result = getMemberInfoEtc(result);
         return CommResultVo.builder().code(200).data(result).build();
     }

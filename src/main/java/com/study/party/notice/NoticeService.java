@@ -7,6 +7,8 @@ import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.BadRequestException;
 import com.study.party.exception.InternalServerErrorException;
 import com.study.party.exception.UnauthorizedException;
+import com.study.party.member.MemberService;
+import com.study.party.member.vo.MemberVo;
 import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeHistoryVo;
 import com.study.party.notice.vo.NoticeVo;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
 @Service
@@ -25,17 +29,24 @@ public class NoticeService {
 
     private final NoticeDao noticeDao;
     private final NoticeHistoryDao noticeHistoryDao;
+    private final MemberService memberService;
     private final TeamMemberService teamMemberService;
     private final CommCommentService commCommentService;
 
     public CommResultVo getNotices(NoticeVo noticeVo) {
         checkTeamMember(TeamMemberVo.builder().teamIdx(noticeVo.getTeamIdx()).memberIdx(noticeVo.getMemberIdx()).build());
 
+        List<NoticeVo> noticeList = noticeDao.getNotices(noticeVo);
+        noticeList.forEach(notice -> {
+            MemberVo memberVo = memberService.getMember(notice.getMemberIdx());
+            notice.setMemberVo(memberVo);
+        });
+
         return CommResultVo.builder()
                            .code(200)
                            .data(CommPaginationResVo.builder()
                                                     .totalItems(noticeDao.getNoticesTotCnt(noticeVo))
-                                                    .data(noticeDao.getNotices(noticeVo))
+                                                    .data(noticeList)
                                                     .pageNo(noticeVo.getPageNo())
                                                     .limit(noticeVo.getLimit())
                                                     .build()

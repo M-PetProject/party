@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -38,6 +40,9 @@ public class TeamVo {
 
     @Schema(description="팀 table 컬럼 팀_1명당_금액", example="0")
     private long memberAmt;
+
+    @Schema(description="팀에 소속된 팀_멤버 목록", example="List<TeamMemberVo>")
+    List<TeamMemberVo> teamMemberVoList;
 
     public TeamMemberVo toTeamMemberVo() {
         return TeamMemberVo.builder().teamIdx(this.teamIdx).memberIdx(this.memberIdx).memberType(this.memberType).build();

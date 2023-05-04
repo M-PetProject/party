@@ -1,6 +1,7 @@
 package com.study.party.notice.vo;
 
 import com.study.party.comm.vo.CommPaginationReqVo;
+import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,6 +48,9 @@ public class NoticeVo extends CommPaginationReqVo {
     @Schema(description="공지사항_정보 테이블 컬럼 싫어요 수", example="1")
     private long unlikeCount;
 
+    @Schema(description="공지사항_정보 회원정보", example="1")
+    private MemberVo memberVo;
+
     public NoticeDetailVo toNoticeDetailVo() {
         return NoticeDetailVo.builder()
                              .noticeIdx(this.noticeIdx)
@@ -69,4 +73,5 @@ public class NoticeVo extends CommPaginationReqVo {
                               .memberIdx(this.memberIdx)
                               .build();
     }
+
 }

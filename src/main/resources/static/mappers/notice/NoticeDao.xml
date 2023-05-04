@@ -9,8 +9,9 @@
              , m.team_idx        as team_idx
              , m.member_idx      as member_idx
              , m.title           as title
-             , m.notice_dt_start as notice_dt_start
-             , m.notice_dt_end   as notice_dt_end
+             , m.content         as content
+             , DATE_FORMAT(m.notice_dt_start, '%Y-%m-%d') as notice_dt_start
+             , DATE_FORMAT(m.notice_dt_end, '%Y-%m-%d')   as notice_dt_end
              , m.use_yn          as use_yn
              , d1.view_count     as view_count
              , d1.like_count     as like_count
