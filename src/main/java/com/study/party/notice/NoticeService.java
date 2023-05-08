@@ -66,6 +66,7 @@ public class NoticeService {
         }
 
         NoticeDetailVo result = notice.toNoticeDetailVo();
+        result.setMemberVo(memberService.getMember(noticeDetailVo.getMemberIdx()));
         result.setNoticeComments(commCommentService.getCommentsPagination(NoticeCommentVo.builder()
                                                                                          .postIdx(noticeDetailVo.getNoticeIdx())
                                                                                          .pageNo(noticeDetailVo.getPageNo())

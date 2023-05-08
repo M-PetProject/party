@@ -24,6 +24,10 @@ public class CommCommentVo extends CommPaginationReqVo {
     private long postIdx;
     @Schema(description="공통 댓글 테이블 컬럼 회원_IDX", example="1")
     private long memberIdx;
+    @Schema(description="공통 댓글 테이블 컬럼 회원_ID", example="admin")
+    private String memberId;
+    @Schema(description="공통 댓글 테이블 컬럼 회원_이름", example="홍길동")
+    private String memberName;
     @Schema(description="공통 댓글 테이블 컬럼 제목", example="제목입니다")
     private String title;
     @Schema(description="공통 댓글 테이블 컬럼 내용", example="내용입니다")

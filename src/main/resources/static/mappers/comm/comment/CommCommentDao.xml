@@ -10,8 +10,10 @@
              , c1.cd_nm                                                                        as comment_cd_nm
              , m.post_idx                                                                      as post_idx
              , m.member_idx                                                                    as member_idx
-             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.title   )                                as title
-             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.content )                                as content
+             , mi.member_id                                                                    as member_id
+             , mi.member_name                                                                  as member_name
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.title   )                                 as title
+             , if(m.use_yn = 'N', '삭제된 댓글입니다', m.content )                                 as content
              , m.parent_comment_idx                                                            as parent_comment_idx
              , m.use_yn                                                                        as use_yn
              , m.reg_date                                                                      as reg_date
@@ -26,6 +28,7 @@
                left  join comment_info_like   d2 on m.comment_idx = d2.comment_idx and d2.member_idx = #{memberIdx}
                left  join comment_info_unlike d3 on m.comment_idx = d3.comment_idx and d3.member_idx = #{memberIdx}
                left  join cm_cd               c1 on c1.grp_cd     = 'CMMT'         and m.comment_cd  = c1.cd
+               inner join member_info         mi on m.member_idx  = mi.member_idx
          where 1=1
            and m.parent_comment_idx = #{parentCommentIdx}
         <if test=' commentCd != null and commentCd != "" '>

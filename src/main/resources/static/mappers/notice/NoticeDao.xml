@@ -62,6 +62,7 @@
              , d1.unlike_count   as unlike_count
           from            notice m
                inner join notice_info d1 on m.notice_idx = d1.notice_idx
+               inner join member_info mi on m.member_idx = mi.member_idx
          where m.notice_idx = #{noticeIdx}
     </select>
 

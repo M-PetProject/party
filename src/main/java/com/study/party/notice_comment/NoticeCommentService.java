@@ -25,7 +25,13 @@ public class NoticeCommentService {
     private final CommCommentService commCommentService;
 
     public CommResultVo getNoticeComments(NoticeCommentVo noticeCommentVo) {
-        checkTeamMember(TeamMemberVo.builder().teamIdx(noticeCommentVo.getTeamIdx()).memberIdx(noticeCommentVo.getMemberIdx()).build());
+        checkTeamMember(
+                TeamMemberVo
+                                .builder()
+                                .teamIdx(noticeCommentVo.getTeamIdx())
+                                .memberIdx(noticeCommentVo.getMemberIdx())
+                                .build()
+        );
         checkNotice(noticeCommentVo.toNoticeVo());
 
         return CommResultVo.builder()
