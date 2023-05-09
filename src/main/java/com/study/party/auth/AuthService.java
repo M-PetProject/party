@@ -1,9 +1,6 @@
 package com.study.party.auth;
 
-import com.study.party.auth.vo.LoginReqVo;
-import com.study.party.auth.vo.LoginResVo;
-import com.study.party.auth.vo.SignupReqVo;
-import com.study.party.auth.vo.SignupResVo;
+import com.study.party.auth.vo.*;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.comm.vo.TokenVo;
@@ -12,6 +9,7 @@ import com.study.party.exception.BadRequestException;
 import com.study.party.exception.InternalServerErrorException;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
+import static com.study.party.comm.util.StringUtil.nvl;
 
 @Service
 @RequiredArgsConstructor
@@ -74,4 +73,29 @@ public class AuthService {
     }
 
 
+    public ResponseEntity reissue(TokenVo tokenVo) {
+        System.out.println("토큰 재발급");
+        // 1. 전달받은 토큰 검증
+        if(!tokenProvider.validateToken(tokenVo.getRefreshToken())) {
+            throw new BadRequestException("Refresh Token 만료");
+        }
+
+        Claims claims = tokenProvider.parseClaims(tokenVo.getAccessToken());
+        MemberVo memberVo = MemberVo.builder()
+                .memberIdx(Long.parseLong(nvl(claims.get("member_idx"), "0")))
+                .memberId(nvl(claims.get("member_id"), ""))
+                .memberName(nvl(claims.get("member_name"), ""))
+                .build();
+
+        Authentication authentication = tokenProvider.getAuthentication(tokenVo.getAccessToken());
+
+        TokenVo reissuedToken = tokenProvider.generateEntityToken(authentication, memberVo);
+
+        return CommResponseVo.builder()
+                .body(LoginResVo.builder()
+                        .accessToken(reissuedToken.getAccessToken())
+                        .build())
+                .build()
+                .ok();
+    }
 }

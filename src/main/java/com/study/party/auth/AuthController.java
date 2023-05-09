@@ -4,6 +4,7 @@ import com.study.party.auth.vo.LoginReqVo;
 import com.study.party.auth.vo.LoginResVo;
 import com.study.party.auth.vo.SignupReqVo;
 import com.study.party.comm.vo.CommResponseVo;
+import com.study.party.comm.vo.TokenVo;
 import com.study.party.exception.BadRequestException;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
@@ -57,6 +58,17 @@ public class AuthController {
         if ( isEmptyObj(loginReqVo.getMemberId()) || isEmptyObj(loginReqVo.getMemberPassword()) ) throw new BadRequestException("필수입력값을 확인하세요");
 
         return authService.login(loginReqVo);
+    }
+
+    @Operation(summary = "토큰 재발행", description = "AT가 만료되었을 경우, RT로 AT를 재발행한다.")
+    @PostMapping("reissue")
+    public ResponseEntity<TokenVo> reissue(
+        HttpServletRequest request,
+        @RequestBody TokenVo tokenVo
+    ) {
+        if ( isEmptyObj(tokenVo.getAccessToken()) || isEmptyObj(tokenVo.getRefreshToken()) ) throw new BadRequestException("필수입력값을 확인하세요");
+
+        return authService.reissue(tokenVo);
     }
 
 }
