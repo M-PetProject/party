@@ -3,6 +3,7 @@ package com.study.party.comm.food;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.jpa.entity.cm_food.CmFoodEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Tag(name="comm-food-controller", description="공통 음식 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("comm")

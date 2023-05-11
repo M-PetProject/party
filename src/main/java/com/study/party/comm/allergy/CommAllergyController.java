@@ -4,6 +4,7 @@ import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.jpa.entity.cm_allergy.CmAllergyEntity;
 import com.study.party.jpa.entity.cm_food.CmFoodEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Tag(name="comm-allergy-controller", description="공통 알러지 정보 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("comm")
