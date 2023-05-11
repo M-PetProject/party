@@ -6,6 +6,7 @@ import com.study.party.exception.BadRequestException;
 import com.study.party.team.vo.TeamVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
+@Tag(name="team-controller", description="팀 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class TeamController {

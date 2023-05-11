@@ -10,6 +10,7 @@ import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
+
+@Tag(name="auth-controller", description="로그인, 회원가입, 회원가입 시 ID 중복체크")
 @RestController
 @RequestMapping("auth")
 @RequiredArgsConstructor

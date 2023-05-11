@@ -9,6 +9,7 @@ import com.study.party.notice.vo.NoticeDetailVo;
 import com.study.party.notice.vo.NoticeVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
+@Tag(name="notice-controller", description="공지사항 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class NoticeController {
