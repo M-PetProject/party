@@ -31,6 +31,8 @@ public class TeamService {
 
     public TeamVo getTeam(TeamVo teamVo) {
         TeamVo resultTeamVo = teamDao.getTeam(teamVo);
+        if (isEmptyObj(resultTeamVo)) throw new BadRequestException("존재하지 않는 모임입니다");
+
         resultTeamVo.setTeamMemberVoList(teamMemberService.getMembersByTeamIdx(teamVo.getTeamIdx()));
         return resultTeamVo;
     }
