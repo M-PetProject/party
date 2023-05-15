@@ -32,4 +32,15 @@ public class PlaceController {
                 .build().ok();
     }
 
+    @Operation(summary = "장소정보 등록 API", description = "장소등록")
+    @PostMapping("place")
+    public ResponseEntity<List<PlaceEntity>> createPlace(
+        HttpServletRequest request,
+        @RequestBody PlaceEntity placeEntity
+    ) {
+        return CommResponseVo.builder()
+                .resultVo(placeService.createPlace(placeEntity))
+                .build().toResponseEntity();
+    }
+
 }

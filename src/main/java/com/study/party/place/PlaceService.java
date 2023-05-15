@@ -1,5 +1,6 @@
 package com.study.party.place;
 
+import com.study.party.comm.util.StringUtil;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.InternalServerErrorException;
 import com.study.party.jpa.entity.place.PlaceEntity;
@@ -24,6 +25,13 @@ public class PlaceService {
 
     @Transactional
     public CommResultVo createPlace(PlaceEntity placeEntity) {
+        if(StringUtil.isEmptyObj(placeEntity.getPublicYn())) {
+            placeEntity.setPublicYn("Y");
+        }
+        if(StringUtil.isEmptyObj(placeEntity.getDeleteYn())) {
+            placeEntity.setDeleteYn("Y");
+        }
+
         placeRepository.save(placeEntity);
         return CommResultVo.builder().code(200).msg("장소가 등록되었습니다.").build();
     }
