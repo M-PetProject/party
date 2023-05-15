@@ -18,14 +18,14 @@ import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
-@Tag(name="team-controller", description="팀 관련 API")
+@Tag(name="team-controller", description="모임 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class TeamController {
 
     private final TeamService teamService;
 
-    @Operation(summary = "팀 목록 조회 API", description = "테이블 team에 등록된 목록 정보를 조회합니다")
+    @Operation(summary = "모임 목록 조회 API", description = "테이블 team에 등록된 목록 정보를 조회합니다")
     @GetMapping("/teams")
     public ResponseEntity<List<TeamVo>> getTeams(
         HttpServletRequest request,
@@ -34,7 +34,7 @@ public class TeamController {
         return CommResponseVo.builder().body(teamService.getTeams(TeamVo.builder().teamNm(team_nm).build())).build().ok();
     }
 
-    @Operation(summary = "팀 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
+    @Operation(summary = "모임 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/team/{team_idx}")
     public ResponseEntity<TeamVo> getTeam(
         HttpServletRequest request,
@@ -45,7 +45,7 @@ public class TeamController {
         return CommResponseVo.builder().body(teamService.getTeam(TeamVo.builder().teamIdx(team_idx).build())).build().ok();
     }
 
-    @Operation(summary = "팀 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
+    @Operation(summary = "모임 team_idx 기반 단건 조회 API", description = "테이블 team 의 PK 인 team_idx를 파라미터로 전달 받아 데이터 1건을 조회합니다")
     @GetMapping("/team/join-code/{join_code}")
     public ResponseEntity<TeamVo> getTeamByJoinCode(
         HttpServletRequest request,
@@ -61,7 +61,7 @@ public class TeamController {
                              .toResponseEntity();
     }
 
-    @Operation(summary = "팀 생성 API", description = "테이블 team 에 데이터 1건을 생성합니다")
+    @Operation(summary = "모임 생성 API", description = "테이블 team 에 데이터 1건을 생성합니다")
     @PostMapping("team")
     public ResponseEntity createTeam(
         HttpServletRequest request,
@@ -75,7 +75,7 @@ public class TeamController {
         return CommResponseVo.builder().resultVo(teamService.createTeam(teamVo)).build().toResponseEntity();
     }
 
-    @Operation(summary = "팀 참가 API", description = "테이블 team 에 데이터 1건을 생성합니다")
+    @Operation(summary = "모임 참가 API", description = "테이블 team 에 데이터 1건을 생성합니다")
     @PostMapping("team/{team_idx}")
     public ResponseEntity joinTeam(
         HttpServletRequest request,
@@ -93,7 +93,7 @@ public class TeamController {
                              .toResponseEntity();
     }
 
-    @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
+    @Operation(summary = "모임 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
     @PutMapping("team")
     public ResponseEntity updateTeam(
         HttpServletRequest request,
@@ -120,7 +120,9 @@ public class TeamController {
                              .toResponseEntity();
     }
 
-    @Operation(summary = "팀 회원 탈퇴 API", description = "테이블 team_member 에 데이터 1건을 삭제합니다. team 의 MASTER가 삭제된 경우 다음에 가입한 일반 멤버를 MASTER로 수정합니다")
+    @Operation(summary = "모임 회원 탈퇴 API", description = "테이블 team_member 에 데이터 1건을 삭제합니다.<br>"
+                                                         + "모임의 <b>MASTER</b>가 탈퇴한 경우 먼저 가입한 <b>일반 멤버</b>를 <b>MASTER</b>로 수정합니다<br>"
+                                                         + "모임에 더 이상 멤버가 존재하지 않을 경우 해당 모임을 <b>종료(삭제)</b>합니다")
     @DeleteMapping("team/{team_idx}/member/{member_idx}")
     public ResponseEntity deleteTeamMember(
         HttpServletRequest request,
