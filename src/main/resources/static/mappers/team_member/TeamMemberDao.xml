@@ -20,7 +20,8 @@
         /* TeamMemberDao.getMembersByTeamIdx */
         <include refid="sql_selectTeamMember"></include>
          where 1=1
-           and m.team_idx   = #{teamIdx}
+           and m.team_idx = #{teamIdx}
+         order by m.reg_dtm, m.member_idx
     </select>
 
     <select id="getTeamsByMemberIdx" parameterType="TeamMemberVo" resultType="TeamMemberVo">

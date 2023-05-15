@@ -4,6 +4,7 @@ import com.study.party.auth.vo.CustomUserDetailsVo;
 import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.exception.BadRequestException;
 import com.study.party.team.vo.TeamVo;
+import com.study.party.team_member.vo.TeamMemberVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -104,16 +105,41 @@ public class TeamController {
         return CommResponseVo.builder().resultVo(teamService.updateTeam(teamVo)).build().toResponseEntity();
     }
 
-    @Operation(summary = "팀 수정 API", description = "테이블 team 에 데이터 1건을 수정합니다")
+    @Operation(summary = "[모임종료]팀 삭제 API", description = "테이블 team 에 데이터 1건을 삭제합니다")
     @DeleteMapping("team/{team_idx}")
     public ResponseEntity deleteTeam(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
-        @PathVariable(name="team_idx") long team_idx
+        @Parameter(name="team_idx", required=true, description="공지사항 테이블 컬럼 team_idx") @PathVariable(name="team_idx") long team_idx
     ) {
         if ( team_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
 
-        return CommResponseVo.builder().resultVo(teamService.deleteTeam(TeamVo.builder().teamIdx(team_idx).build())).build().toResponseEntity();
+        return CommResponseVo.builder()
+                             .resultVo(teamService.deleteTeam(TeamVo.builder().teamIdx(team_idx).memberIdx(customUserDetailsVo.getMemberIdx()).build()))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "팀 회원 탈퇴 API", description = "테이블 team_member 에 데이터 1건을 삭제합니다. team 의 MASTER가 삭제된 경우 다음에 가입한 일반 멤버를 MASTER로 수정합니다")
+    @DeleteMapping("team/{team_idx}/member/{member_idx}")
+    public ResponseEntity deleteTeamMember(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="team_idx", required=true, description="탈퇴할 팀 team_idx") @PathVariable(name="team_idx") long team_idx,
+        @Parameter(name="member_idx", required=true, description="탈퇴할 회원 member_idx") @PathVariable(name="member_idx") long member_idx
+    ) {
+        if ( team_idx < 1 || member_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
+
+        return CommResponseVo.builder()
+                             .resultVo(teamService.deleteTeamMember(TeamVo.builder()
+                                                                          .teamIdx(team_idx)
+                                                                          .memberIdx(customUserDetailsVo.getMemberIdx()) // 현재 로그인한 멤버
+                                                                          .teamMemberVoList(List.of(TeamMemberVo.builder()
+                                                                                                                .memberIdx(member_idx)
+                                                                                                                .build())) // 제거 대상 멤버
+                                                                          .build()))
+                             .build()
+                             .toResponseEntity();
     }
 
 }
