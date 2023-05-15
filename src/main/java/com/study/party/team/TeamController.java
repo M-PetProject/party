@@ -96,6 +96,7 @@ public class TeamController {
     @PutMapping("team")
     public ResponseEntity updateTeam(
         HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @RequestBody TeamVo teamVo
     ) {
         if ( isEmptyObj(teamVo.getTeamIdx()) || teamVo.getTeamIdx() < 1 || isEmptyObj(teamVo.getTeamNm()) || isEmptyObj(teamVo.getTeamDesc()) )  throw new BadRequestException("필수입력값을 확인하세요");
@@ -107,6 +108,7 @@ public class TeamController {
     @DeleteMapping("team/{team_idx}")
     public ResponseEntity deleteTeam(
         HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
         @PathVariable(name="team_idx") long team_idx
     ) {
         if ( team_idx < 1 )  throw new BadRequestException("필수입력값을 확인하세요");
