@@ -1,6 +1,7 @@
 package com.study.party.place;
 
 import com.study.party.jpa.entity.place.PlaceEntity;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,4 +22,50 @@ class PlaceServiceTest {
         List<PlaceEntity> places = placeService.getPlaces();
         System.out.println(places);
     }
+
+    @Test
+    void createPlace() {
+        PlaceEntity placeEntity = PlaceEntity.builder()
+                .creatorMemberIdx(1)
+                .name("다디치1")
+                .intro("intro")
+                .rating(3.4)
+                .businessHours("pm 6")
+                .imageUrl("image url")
+                .extUrl("ext Url")
+                .publicYn("Y")
+                .deleteYn("N")
+                .build();
+
+        placeService.createPlace(placeEntity);
+    }
+
+    @Test
+    void updatePlace() {
+        PlaceEntity placeEntity = PlaceEntity.builder()
+                .placeBasicInfoIdx(1)
+                .creatorMemberIdx(1)
+                .name("다디치2")
+                .intro("intro2")
+                .rating(53.0)
+                .businessHours("pm 6")
+                .imageUrl("image url")
+                .extUrl("ext Url")
+                .publicYn("Y")
+                .deleteYn("N")
+                .build();
+
+        placeService.updatePlace(placeEntity);
+    }
+
+    @Test
+    void deletePlace() {
+        PlaceEntity placeEntity = PlaceEntity.builder()
+                .placeBasicInfoIdx(1)
+                .build();
+
+        placeService.deletePlace(placeEntity);
+    }
+
+
 }

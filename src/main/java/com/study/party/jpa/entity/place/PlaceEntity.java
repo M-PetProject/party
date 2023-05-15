@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "place_basic_info")
@@ -19,7 +22,7 @@ public class PlaceEntity extends DefaultEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema
     @Column(name = "place_basic_info_idx")
-    private long placeBasicInfo;
+    private long placeBasicInfoIdx;
 
     @Schema @Column(name = "creator_member_idx")
     private long creatorMemberIdx;
@@ -39,4 +42,5 @@ public class PlaceEntity extends DefaultEntity {
     private String publicYn;
     @Schema @Column(name = "delete_yn")
     private String deleteYn;
+
 }
