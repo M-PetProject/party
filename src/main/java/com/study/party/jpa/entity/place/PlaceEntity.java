@@ -1,5 +1,6 @@
 package com.study.party.jpa.entity.place;
 
+import com.study.party.jpa.entity.comm.BaseEntity;
 import com.study.party.jpa.entity.comm.DefaultEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "place_basic_info")
 @Schema(description="장소 정보")
-public class PlaceEntity extends DefaultEntity {
+public class PlaceEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +44,7 @@ public class PlaceEntity extends DefaultEntity {
     private String publicYn;
     @Schema @Column(name = "delete_yn")
     private String deleteYn;
+
+
 
 }
