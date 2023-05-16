@@ -1,14 +1,12 @@
 package com.study.party.place;
 
 import com.study.party.jpa.entity.place.PlaceEntity;
-import org.junit.jupiter.api.AfterAll;
+import com.study.party.place.vo.PlaceVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PlaceServiceTest {
@@ -19,7 +17,7 @@ class PlaceServiceTest {
 
     @Test
     void getPlaces() {
-        List<PlaceEntity> places = placeService.getPlaces();
+        List<PlaceVo> places = placeService.getPlaces();
         System.out.println(places);
     }
 
@@ -65,6 +63,13 @@ class PlaceServiceTest {
                 .build();
 
         placeService.deletePlace(placeEntity);
+    }
+
+    @Test
+    void getPlace(){
+        long idx = 2;
+        PlaceVo place = placeService.getPlace(idx);
+        System.out.println(place);
     }
 
 

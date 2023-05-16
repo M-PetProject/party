@@ -1,26 +1,75 @@
 package com.study.party.place;
 
+import com.study.party.comm.comment.CommCommentService;
+import com.study.party.comm.comment.vo.CommCommentVo;
 import com.study.party.comm.util.StringUtil;
 import com.study.party.comm.vo.CommResultVo;
 import com.study.party.exception.InternalServerErrorException;
 import com.study.party.jpa.entity.place.PlaceEntity;
 import com.study.party.jpa.repository.place.PlaceRepository;
+import com.study.party.member.MemberService;
+import com.study.party.member.vo.MemberVo;
+import com.study.party.place.vo.PlaceVo;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final MemberService memberService;
+    private final CommCommentService commCommentService;
 
     @Transactional
-    public List<PlaceEntity> getPlaces() {
-        return placeRepository.findAll();
+    public List<PlaceVo> getPlaces() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<PlaceEntity> placeEntityList = placeRepository.findAll();
+
+        List<PlaceVo> placeVoList = placeEntityList.stream()
+                .map(entity -> {
+                    PlaceVo placeVo = modelMapper.map(entity, PlaceVo.class);
+                    MemberVo member = memberService.getMember(placeVo.getCreatorMemberIdx());
+                    if(member != null) {
+                        placeVo.setCreatorMemberName(member.getMemberName());
+                    }
+
+                    return placeVo;
+                })
+                .collect(Collectors.toList());
+
+        return placeVoList;
+    }
+
+    @Transactional
+    public PlaceVo getPlace(Long idx) {
+        Optional<PlaceEntity> placeEntity = placeRepository.findById(idx);
+
+
+        if(placeEntity.isEmpty()) throw new InternalServerErrorException("장소 정보가 없습니다.");
+
+        ModelMapper modelMapper = new ModelMapper();
+        PlaceVo placeVo = modelMapper.map(placeEntity.get(), PlaceVo.class);
+        MemberVo member = memberService.getMember(placeVo.getCreatorMemberIdx());
+        if(member != null) {
+            placeVo.setCreatorMemberName(member.getMemberName());
+        }
+        int commentCount = commCommentService.getCommentsTotCnt(
+                CommCommentVo.builder()
+                        .commentCd("PLAC")
+                        .postIdx(placeVo.getPlaceBasicInfoIdx())
+                        .build()
+        );
+        placeVo.setCommentCount(commentCount);
+
+        return placeVo;
     }
 
     @Transactional
