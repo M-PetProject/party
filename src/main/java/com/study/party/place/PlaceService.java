@@ -79,12 +79,12 @@ public class PlaceService {
 
     @Transactional
     public CommResultVo createPlace(PlaceDto placeDto) {
-        if(StringUtil.isEmptyObj(placeDto.getPublicYn())) {
-            placeDto.setPublicYn("Y");
-        }
-        if(StringUtil.isEmptyObj(placeDto.getDeleteYn())) {
-            placeDto.setDeleteYn("N");
-        }
+//        if(StringUtil.isEmptyObj(placeDto.getPublicYn())) {
+//            placeDto.setPublicYn("Y");
+//        }
+//        if(StringUtil.isEmptyObj(placeDto.getDeleteYn())) {
+//            placeDto.setDeleteYn("N");
+//        }
 
         PlaceEntity placeEntity = new ModelMapper().map(placeDto, PlaceEntity.class);
         placeRepository.save(placeEntity);
