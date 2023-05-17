@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<PlaceEntity, Long> {
-
+    List<PlaceEntity> findAllByDeleteYn(String deleteYn);
 }

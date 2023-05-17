@@ -1,13 +1,9 @@
-package com.study.party.place.vo;
+package com.study.party.place.dto;
 
-import com.study.party.jpa.entity.place.PlaceEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
-import javax.persistence.Column;
+import lombok.*;
 
 @Data
-public class PlaceVo {
+public class PlaceDto {
 
     private long placeBasicInfoIdx;
 

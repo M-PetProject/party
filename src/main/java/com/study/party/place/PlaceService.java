@@ -9,9 +9,8 @@ import com.study.party.jpa.entity.place.PlaceEntity;
 import com.study.party.jpa.repository.place.PlaceRepository;
 import com.study.party.member.MemberService;
 import com.study.party.member.vo.MemberVo;
-import com.study.party.place.vo.PlaceVo;
+import com.study.party.place.dto.PlaceDto;
 import lombok.AllArgsConstructor;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
@@ -29,76 +28,98 @@ public class PlaceService {
     private final CommCommentService commCommentService;
 
     @Transactional
-    public List<PlaceVo> getPlaces() {
+    public List<PlaceDto> getPlaces() {
         ModelMapper modelMapper = new ModelMapper();
-        List<PlaceEntity> placeEntityList = placeRepository.findAll();
+        List<PlaceEntity> placeEntityList = placeRepository.findAllByDeleteYn("N");
 
-        List<PlaceVo> placeVoList = placeEntityList.stream()
+        List<PlaceDto> placeDtoList = placeEntityList.stream()
                 .map(entity -> {
-                    PlaceVo placeVo = modelMapper.map(entity, PlaceVo.class);
-                    MemberVo member = memberService.getMember(placeVo.getCreatorMemberIdx());
+                    PlaceDto placeDto = modelMapper.map(entity, PlaceDto.class);
+                    MemberVo member = memberService.getMember(placeDto.getCreatorMemberIdx());
                     if(member != null) {
-                        placeVo.setCreatorMemberName(member.getMemberName());
+                        placeDto.setCreatorMemberName(member.getMemberName());
                     }
-
-                    return placeVo;
+                    int commentCount = commCommentService.getCommentsTotCnt(
+                            CommCommentVo.builder()
+                                    .commentCd("PLAC")
+                                    .postIdx(placeDto.getPlaceBasicInfoIdx())
+                                    .build()
+                    );
+                    placeDto.setCommentCount(commentCount);
+                    return placeDto;
                 })
                 .collect(Collectors.toList());
 
-        return placeVoList;
+        return placeDtoList;
     }
 
     @Transactional
-    public PlaceVo getPlace(Long idx) {
+    public PlaceDto getPlace(Long idx) {
         Optional<PlaceEntity> placeEntity = placeRepository.findById(idx);
 
 
         if(placeEntity.isEmpty()) throw new InternalServerErrorException("장소 정보가 없습니다.");
 
         ModelMapper modelMapper = new ModelMapper();
-        PlaceVo placeVo = modelMapper.map(placeEntity.get(), PlaceVo.class);
-        MemberVo member = memberService.getMember(placeVo.getCreatorMemberIdx());
+        PlaceDto placeDto = modelMapper.map(placeEntity.get(), PlaceDto.class);
+        MemberVo member = memberService.getMember(placeDto.getCreatorMemberIdx());
         if(member != null) {
-            placeVo.setCreatorMemberName(member.getMemberName());
+            placeDto.setCreatorMemberName(member.getMemberName());
         }
         int commentCount = commCommentService.getCommentsTotCnt(
                 CommCommentVo.builder()
                         .commentCd("PLAC")
-                        .postIdx(placeVo.getPlaceBasicInfoIdx())
+                        .postIdx(placeDto.getPlaceBasicInfoIdx())
                         .build()
         );
-        placeVo.setCommentCount(commentCount);
+        placeDto.setCommentCount(commentCount);
 
-        return placeVo;
+        return placeDto;
     }
 
     @Transactional
-    public CommResultVo createPlace(PlaceEntity placeEntity) {
-        if(StringUtil.isEmptyObj(placeEntity.getPublicYn())) {
-            placeEntity.setPublicYn("Y");
+    public CommResultVo createPlace(PlaceDto placeDto) {
+        if(StringUtil.isEmptyObj(placeDto.getPublicYn())) {
+            placeDto.setPublicYn("Y");
         }
-        if(StringUtil.isEmptyObj(placeEntity.getDeleteYn())) {
-            placeEntity.setDeleteYn("Y");
+        if(StringUtil.isEmptyObj(placeDto.getDeleteYn())) {
+            placeDto.setDeleteYn("N");
         }
 
+        PlaceEntity placeEntity = new ModelMapper().map(placeDto, PlaceEntity.class);
         placeRepository.save(placeEntity);
         return CommResultVo.builder().code(200).msg("장소가 등록되었습니다.").build();
     }
 
     @Transactional
-    public CommResultVo updatePlace(PlaceEntity placeEntity) {
+    public CommResultVo updatePlace(PlaceDto placeDto, long userIdx) {
+        Optional<PlaceEntity> place = placeRepository.findById(placeDto.getPlaceBasicInfoIdx());
+        if(place.isEmpty()) {
+            throw new InternalServerErrorException("정보 수정에 실패했습니다.");
+        }
+        if(place.get().getCreatorMemberIdx() != userIdx) {
+            throw new InternalServerErrorException("장소수정은 작성자만 가능합니다.");
+        }
+
+        PlaceEntity placeEntity = new ModelMapper().map(placeDto, PlaceEntity.class);
         placeRepository.save(placeEntity);
         return CommResultVo.builder().code(200).msg("장소가 수정되었습니다.").build();
     }
+
     @Transactional
-    public CommResultVo deletePlace(PlaceEntity placeEntity) {
-        Optional<PlaceEntity> place = placeRepository.findById(placeEntity.getPlaceBasicInfoIdx());
-        if(!place.isEmpty()) {
-            placeRepository.delete(place.get());
-        } else {
+    public CommResultVo deletePlace(long placeBasicInfoIdx, long userIdx) {
+        Optional<PlaceEntity> placeEntity = placeRepository.findById(placeBasicInfoIdx);
+        if(placeEntity.isEmpty()) {
             throw new InternalServerErrorException("장소 삭제에 실패했습니다.");
         }
+        if(placeEntity.get().getCreatorMemberIdx() != userIdx) {
+            throw new InternalServerErrorException("장소삭제는 작성자만 가능합니다.");
+        }
+
+        placeEntity.get().setDeleteYn("Y");
+//        placeRepository.save(placeEntity);
 
         return CommResultVo.builder().code(200).msg("장소가 삭제되었습니다.").build();
     }
+
 }

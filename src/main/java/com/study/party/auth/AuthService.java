@@ -76,9 +76,9 @@ public class AuthService {
     public ResponseEntity reissue(TokenVo tokenVo) {
         System.out.println("토큰 재발급");
         // 1. 전달받은 토큰 검증 (RT 유효시간만큼, 서비스 접속이 없을 경우, RT 만료)
-        if(!tokenProvider.validateToken(tokenVo.getRefreshToken())) {
-            throw new BadRequestException("Refresh Token 만료");
-        }
+//        if(!tokenProvider.validateToken(tokenVo.getRefreshToken())) {
+//            throw new BadRequestException("Refresh Token 만료");
+//        }
 
         Claims claims = tokenProvider.parseClaims(tokenVo.getRefreshToken());
         MemberVo memberVo = MemberVo.builder()
