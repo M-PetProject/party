@@ -29,7 +29,7 @@ public class CommAllergyController {
         return CommResponseVo.builder().body(commAllergyService.getCmAllergies(allergy_nm)).build().ok();
     }
 
-    @Operation(summary = "음식 목록 정보 조회 API", description = "사용자가 좋아하는/싫어하는 음식 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다")
+    @Operation(summary = "알러지 목록 정보 생성 API", description = "사용자가 입력한 알러지 정보를 전달받아 등록 후 해당 정보를 전달합니다")
     @PostMapping("allergy/{allergy_nm}")
     public ResponseEntity<CmFoodEntity> createCmAllergy(
         HttpServletRequest request,
