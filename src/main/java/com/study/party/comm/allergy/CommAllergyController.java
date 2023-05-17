@@ -20,7 +20,8 @@ public class CommAllergyController {
 
     private final CommAllergyService commAllergyService;
 
-    @Operation(summary = "알러지 목록 정보 조회 API", description = "사용자가 입력한 알러지 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다")
+    @Operation(summary = "알러지 목록 정보 조회 API", description = "사용자가 입력한 알러지 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다"
+                                                              + "사용자가 입력한 알러지 정보가 DB에 존재하지 않을 경우 해당 정보를 DB에 등록 후 Return 합니다")
     @GetMapping("allergy/{allergy_nm}")
     public ResponseEntity<List<CmAllergyEntity>> getCmAllergies(
         HttpServletRequest request,

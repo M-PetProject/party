@@ -20,7 +20,8 @@ public class CommFoodController {
 
     private final CommFoodService commFoodService;
 
-    @Operation(summary = "음식 목록 정보 조회 API", description = "사용자가 좋아하는/싫어하는 음식 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다")
+    @Operation(summary = "음식 목록 정보 조회 API", description = "사용자가 좋아하는/싫어하는 음식 정보를 LIKE 검색을 하여 데이터 목록 정보를 조회합니다<br>"
+                                                             + "사용자가 입력한 좋아하는/싫어하는 음식의 정보가 DB에 존재하지 않을 경우 해당 정보를 DB에 등록 후 Return 합니다")
     @GetMapping("food/{food_nm}")
     public ResponseEntity<List<CmFoodEntity>> getCmFoods(
         HttpServletRequest request,
