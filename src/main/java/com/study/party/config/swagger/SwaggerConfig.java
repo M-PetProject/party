@@ -41,7 +41,6 @@ public class SwaggerConfig {
                                                    .apis(RequestHandlerSelectors.basePackage("com.study.party"))
                                                    .paths(PathSelectors.any())
                                                    .build()
-                                                   .groupName("all")
                                                    .useDefaultResponseMessages(false)
                                                    .apiInfo(apiInfo());
     }

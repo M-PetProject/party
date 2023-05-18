@@ -4,6 +4,7 @@ import com.study.party.comm.code.vo.CommCodeVo;
 import com.study.party.comm.code.vo.CommGrpCodeVo;
 import com.study.party.comm.vo.CommResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
+@Tag(name="comm-code-controller", description="공통 코드 정보 API")
 @RestController
 @RequestMapping("comm")
 @RequiredArgsConstructor

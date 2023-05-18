@@ -41,7 +41,10 @@ public class TeamVo {
     @Schema(description="팀 table 컬럼 팀_1명당_금액", example="0")
     private long memberAmt;
 
-    @Schema(description="팀에 소속된 팀_멤버 목록", example="List<TeamMemberVo>")
+    @Schema(description="모임에 소속된 멤버수", example="0")
+    private int memberCnt;
+
+    @Schema(description="모임에 소속된 팀_멤버 목록", example="List<TeamMemberVo>")
     List<TeamMemberVo> teamMemberVoList;
 
     public TeamMemberVo toTeamMemberVo() {

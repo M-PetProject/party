@@ -6,6 +6,7 @@ import com.study.party.comm.vo.CommResponseVo;
 import com.study.party.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.study.party.comm.util.StringUtil.isEmptyObj;
 
+@Tag(name="comm-test-controller", description="테스트를 위한 초기 API")
 @RestController
 @RequiredArgsConstructor
 public class CommTestController {

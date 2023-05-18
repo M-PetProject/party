@@ -5,19 +5,20 @@
 
     <select id="getTeams" parameterType="TeamVo" resultType="TeamVo">
         select /* TeamDao.getTeams */
-               team_idx                                      as team_idx
-             , team_nm                                       as team_nm
-             , team_desc                                     as team_desc
-             , date_format(create_date, '%Y-%m-%d %H:%i:%s') as create_date
-             , join_code                                     as join_code
-             , member_amt                                    as member_amt
-          from team
+               m.team_idx                                                             as team_idx
+             , m.team_nm                                                              as team_nm
+             , m.team_desc                                                            as team_desc
+             , date_format(m.create_date, '%Y-%m-%d %H:%i:%s')                        as create_date
+             , m.join_code                                                            as join_code
+             , m.member_amt                                                           as member_amt
+             , (select count(*) from team_member i_d where m.team_idx = i_d.team_idx) as member_cnt
+          from team m
          where 1=1
         <if test=' teamIdx != null and teamIdx != "" '>
-           and team_idx = #{teamIdx}
+           and m.team_idx = #{teamIdx}
         </if>
         <if test=' teamNm != null and teamNm != "" '>
-           and team_nm  = #{teamNm}
+           and m.team_nm  like concat('%',#{teamNm},'%')
         </if>
     </select>
 

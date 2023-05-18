@@ -21,17 +21,17 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @Api(tags = {"투표 API"})
 public class VoteController {
-    @Operation(summary = "투표대상인 장소목록 조회 API", description = "특정회식에 등록된 투표대상 장소목록을 가져온다")
+    @Operation(summary = "투표대상인 장소목록 조회  API", description = "특정회식에 등록된 투표대상 장소목록을 가져온다")
     @GetMapping("/vote/places")
     public ResponseEntity<List<VoteListInfo>> getListOfPlaceForVote(HttpServletRequest request
             , @Parameter(name="vote_idx" , required=true, description="투표정보 idx") long vote_idx){
         return getDummyDataForVoteList(vote_idx, VoteListInfo.class);
     }
 
-    private <T> ResponseEntity<List<VoteListInfo>> getDummyDataForVoteList(long vote_idx, Class<T> prmClass) {
+    private <T> ResponseEntity<List<T>> getDummyDataForVoteList(long vote_idx, Class<T> prmClass) {
         List<T> resultList = IntStream.range(1, 10)
                                         .mapToObj(p -> new ObjectMapper().convertValue(ImmutableMap.<String,Object>builder()
-                                                                                                .put("teamIdx", vote_idx)
+                                                                                                .put("voteIdx", vote_idx)
                                                                                                 .build()
                                                                                     , prmClass))
                                         .collect(Collectors.toList());
