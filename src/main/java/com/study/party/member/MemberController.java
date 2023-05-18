@@ -31,7 +31,7 @@ public class MemberController {
                              .resultVo(memberService.getMember(MemberVo.builder().memberIdx(customUserDetailsVo.getMemberIdx()).build()))
                              .build()
                              .toResponseEntity();
-        //테스트
+        //테스트1
     }
 
     @Operation(summary = "로그인 회원 정보 수정 API", description = "로그인 사용자의 Token 값 기반으로 변경 정보를 파라미터로 전달 받아 테이블 member_info 의 데이터 1건의 정보를 수정합니다")
