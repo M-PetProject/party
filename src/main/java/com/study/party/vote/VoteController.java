@@ -28,10 +28,10 @@ public class VoteController {
         return getDummyDataForVoteList(vote_idx, VoteListInfo.class);
     }
 
-    private <T> ResponseEntity<List<VoteListInfo>> getDummyDataForVoteList(long vote_idx, Class<T> prmClass) {
+    private <T> ResponseEntity<List<T>> getDummyDataForVoteList(long vote_idx, Class<T> prmClass) {
         List<T> resultList = IntStream.range(1, 10)
                                         .mapToObj(p -> new ObjectMapper().convertValue(ImmutableMap.<String,Object>builder()
-                                                                                                .put("teamIdx", vote_idx)
+                                                                                                .put("voteIdx", vote_idx)
                                                                                                 .build()
                                                                                     , prmClass))
                                         .collect(Collectors.toList());

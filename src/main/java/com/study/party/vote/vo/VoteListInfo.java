@@ -16,7 +16,7 @@ import java.util.List;
 @Schema(description = "투표목록정보 VO")
 public class VoteListInfo {
     @Schema(description="조회투표키", example="1")
-    private long vote_idx;
+    private long voteIdx;
 
     @Schema(description="장소명", example="망원회관")
     private String placeNm;
