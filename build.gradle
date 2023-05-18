@@ -17,6 +17,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	//maven { url "https://repo1.maven.org/maven2/" }
 }
 
 dependencies {
@@ -43,6 +44,8 @@ dependencies {
 
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	implementation 'com.google.collections:google-collections:1.0-rc2'
 
 }
 
