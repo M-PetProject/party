@@ -1,6 +1,6 @@
 package com.study.party.vote;
 
-import com.study.party.vote.vo.VoteListInfo;
+import com.study.party.vote.vo.VotePlaceInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +23,7 @@ class VoteControllerTest {
         try {
             VoteController voteController = ctx.getBean(VoteController.class);
             HttpServletRequest mockHttpServletRequest = mock(HttpServletRequest.class);
-            ResponseEntity<List<VoteListInfo>> listResponseEntity = voteController.getListOfPlaceForVote(mockHttpServletRequest, 111);
+            ResponseEntity<List<VotePlaceInfo>> listResponseEntity = voteController.getListOfPlaceForVote(mockHttpServletRequest, 111);
             System.out.println(String.format("TEST완료\n=>[%s]", listResponseEntity));
         }catch (Exception e){
             System.out.println(String.format("TEST 호출중 오류발생[%s]", e.getMessage()));

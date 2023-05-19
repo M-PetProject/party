@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "투표목록정보 VO")
-public class VoteListInfo {
+public class VotePlaceInfo {
     @Schema(description="조회투표키", example="1")
     private long voteIdx;
 
@@ -22,6 +22,6 @@ public class VoteListInfo {
     private String placeNm;
 
     @Schema(description="투표자정보", example="Array")
-    private List<VoteMember> voteMemberList = new ArrayList<>();
+    private List<VoteMember> voteMemberList;
 
 }
